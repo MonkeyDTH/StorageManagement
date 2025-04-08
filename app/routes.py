@@ -103,20 +103,6 @@ def add_item():
     
     return render_template('add_item.html')
 
-@app.route('/sell/<int:item_id>', methods=['GET', 'POST'])
-def sell_item(item_id):
-    item = next((i for i in items if i.id == item_id), None)
-    if not item:
-        return redirect(url_for('index'))
-    
-    if request.method == 'POST':
-        item.sold_price = float(request.form['sold_price'])
-        item.sold_date = datetime.strptime(request.form['sold_date'], '%Y-%m-%d')
-        app.storage.save_items()  # 修改为调用app.storage.save_items()
-        return redirect(url_for('index'))
-    
-    return render_template('sell_item.html', item=item)
-
 @app.route('/edit/<int:item_id>', methods=['GET', 'POST'])
 def edit_item(item_id):
     item = next((i for i in items if i.id == item_id), None)
@@ -129,9 +115,15 @@ def edit_item(item_id):
         item.purchase_price = float(request.form['price'])
         item.quantity = int(request.form['quantity'])
         item.purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
-        item.purchase_channel = request.form.get('purchase_channel')  # 新增
-        item.condition = request.form.get('condition')  # 新增
-        item.remark = request.form.get('remark')  # 新增
+        item.purchase_channel = request.form.get('purchase_channel')
+        item.condition = request.form.get('condition')
+        item.remark = request.form.get('remark')
+        
+        # 处理卖出信息
+        sold_price = request.form.get('sold_price')
+        item.sold_price = float(sold_price) if sold_price else None
+        sold_date = request.form.get('sold_date')
+        item.sold_date = datetime.strptime(sold_date, '%Y-%m-%d') if sold_date else None
         
         # 处理图片更新
         if 'image' in request.files:
@@ -147,7 +139,7 @@ def edit_item(item_id):
                         f.write(compressed_img.read())
                     item.image = filename
         
-        app.storage.save_items()  # 修改为调用app.storage.save_items()
+        app.storage.save_items()
         return redirect(url_for('index'))
     
     return render_template('edit_item.html', item=item)

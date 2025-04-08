@@ -28,7 +28,52 @@
         box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         border: none;
         transition: all 0.3s ease;
-        height: 100%; /* 确保卡片高度一致 */
+        height: 100%;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* 添加悬停效果 */
+    .item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    /* 添加点击效果 */
+    .item-card:active {
+        transform: translateY(-2px) scale(0.98);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* 添加点击后的涟漪效果 */
+    .item-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(52, 152, 219, 0.3);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%, -50%);
+        transform-origin: 50% 50%;
+    }
+    
+    .item-card:active::after {
+        animation: ripple 0.6s ease-out;
+    }
+    
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0) translate(-50%, -50%);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(20, 20) translate(-50%, -50%);
+            opacity: 0;
+        }
     }
     
     /* 图片容器优化 */
@@ -134,7 +179,7 @@
     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
         {% for item in items %}
         <div class="col">
-            <div class="card item-card">
+            <div class="card item-card" data-id="{{ item.id }}">
                 <div class="item-image-container">
                     {% if item.image %}
                     <img src="{{ url_for('static', filename='uploads/' + item.image) }}" 
@@ -166,20 +211,38 @@
                     </div>
                 </div>
 
+                <!-- 修改操作按钮部分 -->
                 <div class="item-actions">
-                    <a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">编辑</a>
-                    {% if not item.sold_date %}
-                    <a href="{{ url_for('sell_item', item_id=item.id) }}" class="btn btn-sm btn-outline-danger">卖出</a>
-                    {% endif %}
+                    <!-- 移除卖出按钮 -->
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 
+    <!-- 在footer前添加JavaScript -->
+    <!-- 修改JavaScript部分 -->
+    <script>
+        document.querySelectorAll('.item-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // 获取当前卡片的物品ID
+                const itemId = this.closest('.col').querySelector('.item-card').getAttribute('data-id') || 
+                              this.closest('.col').querySelector('a[href*="/edit/"]')?.getAttribute('href')?.match(/\d+/)[0];
+                
+                if (itemId && !e.target.closest('.btn-outline-danger')) {
+                    // 添加点击动画类
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        window.location.href = `/edit/${itemId}`;
+                    }, 300);
+                }
+            });
+        });
+    </script>
+
     <footer>
         <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--primary);">
-            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.0.2</p>
+            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.0</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">作者: TH | 最后更新: 2025.04.08</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">本产品仅供个人使用</p>
         </div>

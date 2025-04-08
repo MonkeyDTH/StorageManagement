@@ -11,7 +11,7 @@
     "condition": "有损",
     "sold_date": null,
     "sold_price": null,
-    "remark": "缺眼镜，手断过固定"
+    "remark": "运费：顺丰到付16\r\n成色：缺眼镜，手断过固定"
   },
   {
     "id": 2,
@@ -21,11 +21,11 @@
     "quantity": 1,
     "image": "2025-04-06_12-37-56_IMG_8039.JPG",
     "purchase_date": "2025-04-05",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@Love卯",
+    "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": "运费：包邮"
   },
   {
     "id": 3,
@@ -35,11 +35,11 @@
     "quantity": 1,
     "image": "2025-03-31_12-07-29_IMG_7831.JPG",
     "purchase_date": "2025-03-31",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@曹图图呀",
+    "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": "运费：包邮"
   },
   {
     "id": 4,
@@ -49,10 +49,10 @@
     "quantity": 1,
     "image": "2024-07-03_20-49-33_IMG_3320.JPG",
     "purchase_date": "2024-06-30",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "拼多多",
+    "condition": "全新",
     "sold_date": "2025-01-13",
     "sold_price": 140.0,
-    "remark": null
+    "remark": "运费：包邮"
   }
 ]
