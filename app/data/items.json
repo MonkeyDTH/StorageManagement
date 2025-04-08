@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "POP SA 布鲁克",
+    "category": "手办-POP",
+    "purchase_price": 230.0,
+    "quantity": 1,
+    "image": "2025-04-02_16-41-57_IMG_7881.JPG",
+    "purchase_date": "2025-04-02",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 2,
+    "name": "DXF 雷利",
+    "category": "手办-DXF",
+    "purchase_price": 23.6,
+    "quantity": 1,
+    "image": "2025-04-06_12-37-56_IMG_8039.JPG",
+    "purchase_date": "2025-04-05",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 3,
+    "name": "DXF 冯克雷",
+    "category": "手办-DXF",
+    "purchase_price": 90.0,
+    "quantity": 1,
+    "image": "THC04814.jpeg",
+    "purchase_date": "2025-03-31",
+    "sold_date": null,
+    "sold_price": null
+  }
+]
