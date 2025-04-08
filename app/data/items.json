@@ -54,5 +54,19 @@
     "sold_date": "2025-01-13",
     "sold_price": 140.0,
     "remark": "运费：包邮"
+  },
+  {
+    "id": 5,
+    "name": "DXF 红发香克斯",
+    "category": "手办-DXF",
+    "purchase_price": 35.0,
+    "quantity": 1,
+    "image": "2025-03-25_21-03-04_IMG_7729.JPG",
+    "purchase_date": "2025-03-25",
+    "purchase_channel": "闲鱼@凯里凯里，猫步群友@凯里",
+    "condition": "无损有盒",
+    "sold_date": null,
+    "sold_price": null,
+    "remark": "运费：包邮\r\n其他：和DXF马尔科打包65包邮，带约束底座"
   }
 ]

@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash  # 添加flash导入
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
@@ -10,7 +10,8 @@ items = app.storage.items
 
 class Item:
     def __init__(self, name, category, purchase_price, quantity=1, image=None, 
-                 purchase_date=None, sold_date=None, sold_price=None, id=None):
+                 purchase_date=None, sold_date=None, sold_price=None, id=None,
+                 purchase_channel=None, condition=None, remark=None):  # 添加新参数
         self.id = id or len(items) + 1
         self.name = name
         self.category = category
@@ -20,7 +21,10 @@ class Item:
         self.purchase_date = purchase_date or datetime.now()
         self.sold_date = sold_date
         self.sold_price = sold_price
-        
+        self.purchase_channel = purchase_channel  # 新增
+        self.condition = condition  # 新增
+        self.remark = remark  # 新增
+
     @property
     def dict(self):
         return {
@@ -41,6 +45,8 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
+    # 确保列表按买入日期倒序
+    items = sorted(app.storage.items, key=lambda x: x.purchase_date, reverse=True)
     return render_template('index.html', items=items)
 
 def compress_image(file, max_size=(800, 800), quality=85):
@@ -62,44 +68,63 @@ def compress_image(file, max_size=(800, 800), quality=85):
 @app.route('/add', methods=['GET', 'POST'])
 def add_item():
     if request.method == 'POST':
-        name = request.form['name']
-        category = request.form['category']
-        price = float(request.form['price'])
-        quantity = int(request.form['quantity'])
-        purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
-        purchase_channel = request.form.get('purchase_channel')  # 新增
-        condition = request.form.get('condition')  # 新增
-        remark = request.form.get('remark')  # 新增
-        
-        # 处理图片上传
-        image = None
-        if 'image' in request.files:
-            file = request.files['image']
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+        try:
+            name = request.form.get('name', '').strip()
+            category = request.form.get('category', '').strip()
+            price = request.form.get('price', '0').strip()
+            quantity = request.form.get('quantity', '1').strip()
+            
+            if not name or not category:
+                flash('物品名称和类别不能为空', 'error')
+                return redirect(url_for('add_item'))
                 
-                # 压缩图片
-                compressed_img = compress_image(file)
-                if compressed_img:
-                    with open(upload_path, 'wb') as f:
-                        f.write(compressed_img.read())
-                    image = filename
+            # 转换数值类型
+            try:
+                price = float(price)
+                quantity = int(quantity)
+            except ValueError:
+                flash('价格和数量必须是有效数字', 'error')
+                return redirect(url_for('add_item'))
+                
+            purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
+            purchase_channel = request.form.get('purchase_channel')  # 新增
+            condition = request.form.get('condition')  # 新增
+            remark = request.form.get('remark')  # 新增
+            
+            # 处理图片上传
+            image = None
+            if 'image' in request.files:
+                file = request.files['image']
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                    
+                    # 压缩图片
+                    compressed_img = compress_image(file)
+                    if compressed_img:
+                        with open(upload_path, 'wb') as f:
+                            f.write(compressed_img.read())
+                        image = filename
         
-        items.append(Item(
-            name=name,
-            category=category,
-            purchase_price=price,
-            quantity=quantity,
-            image=image,
-            purchase_date=purchase_date,
-            purchase_channel=purchase_channel,
-            condition=condition,
-            remark=remark  # 确保这行末尾没有多余的逗号
-        ))  # 确保括号正确闭合
-        app.storage.save_items()
-        return redirect(url_for('index'))
+            items.append(Item(
+                name=name,
+                category=category,
+                purchase_price=price,
+                quantity=quantity,
+                image=image,
+                purchase_date=purchase_date,
+                purchase_channel=purchase_channel,
+                condition=condition,
+                remark=remark  # 确保这行末尾没有多余的逗号
+            ))  # 确保括号正确闭合
+            app.storage.save_items()
+            return redirect(url_for('index'))
+        
+        except Exception as e:
+            app.logger.error(f"添加物品出错: {str(e)}")
+            flash('添加物品时发生错误', 'error')
+            return redirect(url_for('add_item'))
     
     return render_template('add_item.html')
 

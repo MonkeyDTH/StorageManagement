@@ -74,4 +74,18 @@ class StorageManager:
 storage = StorageManager()
 app.storage = storage  # 将storage实例附加到app对象
 
+def load_items(self):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                self.items = []
+                for item_data in data:
+                    # ... 原有日期转换代码保持不变 ...
+                    self.items.append(Item(**item_data))
+                
+                # 添加排序逻辑
+                self.items.sort(key=lambda x: x.purchase_date, reverse=True)
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.items = []
+
 from . import routes
