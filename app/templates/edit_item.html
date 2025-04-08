@@ -20,6 +20,26 @@
         <input type="date" class="form-control" name="purchase_date" 
                value="{{ item.purchase_date.strftime('%Y-%m-%d') if item.purchase_date else '' }}">
     </div>
+    <!-- 在购买日期字段后添加 -->
+    <div class="mb-3">
+        <label class="form-label">买入渠道</label>
+        <input type="text" class="form-control" name="purchase_channel" value="{{ item.purchase_channel or '' }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">成色</label>
+        <select class="form-select" name="condition">
+            <option value="">请选择</option>
+            <option value="全新" {% if item.condition == '全新' %}selected{% endif %}>全新</option>
+            <option value="无损有盒" {% if item.condition == '无损有盒' %}selected{% endif %}>无损有盒</option>
+            <option value="无损无盒" {% if item.condition == '无损无盒' %}selected{% endif %}>无损无盒</option>
+            <option value="有损" {% if item.condition == '有损' %}selected{% endif %}>有损</option>
+        </select>
+    </div>
+    <!-- 在成色字段后添加 -->
+    <div class="mb-3">
+        <label class="form-label">备注</label>
+        <textarea class="form-control" name="remark" rows="3">{{ item.remark or '' }}</textarea>
+    </div>
     <div class="mb-3">
         <label class="form-label">数量</label>
         <input type="number" class="form-control" name="quantity" value="{{ item.quantity }}" required>

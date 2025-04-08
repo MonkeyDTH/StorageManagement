@@ -34,10 +34,29 @@
         <small class="text-muted">上传的图片将自动压缩至800x800像素</small>
         <img id="imagePreview" src="#" alt="图片预览">
     </div>
-    <!-- 在现有表单字段后添加 -->
+    <!-- 在购买日期字段后添加 -->
     <div class="mb-3">
         <label class="form-label">购买日期</label>
         <input type="date" class="form-control" name="purchase_date">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">买入渠道</label>
+        <input type="text" class="form-control" name="purchase_channel">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">成色</label>
+        <select class="form-select" name="condition">
+            <option value="">请选择</option>
+            <option value="全新">全新</option>
+            <option value="无损有盒">无损有盒</option>
+            <option value="无损无盒">无损无盒</option>
+            <option value="有损">有损</option>
+        </select>
+    </div>
+    <!-- 在成色字段后添加 -->
+    <div class="mb-3">
+        <label class="form-label">备注</label>
+        <textarea class="form-control" name="remark" rows="3"></textarea>
     </div>
     
     <button type="submit" class="btn btn-primary">提交</button>

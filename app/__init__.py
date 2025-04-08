@@ -14,7 +14,8 @@ DATA_FILE = Path(__file__).parent / 'data' / 'items.json'
 # 将Item类定义移到__init__.py中
 class Item:
     def __init__(self, name, category, purchase_price, quantity=1, image=None, 
-                 purchase_date=None, sold_date=None, sold_price=None, id=None):
+                 purchase_date=None, sold_date=None, sold_price=None, id=None,
+                 purchase_channel=None, condition=None, remark=None):  # 新增remark参数
         self.id = id or len(app.storage.items) + 1
         self.name = name
         self.category = category
@@ -22,8 +23,11 @@ class Item:
         self.quantity = quantity
         self.image = image
         self.purchase_date = purchase_date or datetime.now()
+        self.purchase_channel = purchase_channel  # 新增买入渠道
+        self.condition = condition  # 新增成色
         self.sold_date = sold_date
         self.sold_price = sold_price
+        self.remark = remark  # 新增备注属性
         
     @property
     def dict(self):
@@ -35,8 +39,11 @@ class Item:
             'quantity': self.quantity,
             'image': self.image,
             'purchase_date': self.purchase_date.strftime('%Y-%m-%d') if self.purchase_date else None,
+            'purchase_channel': self.purchase_channel,  # 新增
+            'condition': self.condition,  # 新增
             'sold_date': self.sold_date.strftime('%Y-%m-%d') if self.sold_date else None,
-            'sold_price': self.sold_price
+            'sold_price': self.sold_price,
+            'remark': self.remark  # 新增
         }
 
 class StorageManager:

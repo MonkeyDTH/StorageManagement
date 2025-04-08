@@ -7,8 +7,11 @@
     "quantity": 1,
     "image": "2025-04-02_16-41-57_IMG_7881.JPG",
     "purchase_date": "2025-04-02",
+    "purchase_channel": "闲鱼@隐形的鸡翅膀，猫步交易-Y",
+    "condition": "有损",
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": "缺眼镜，手断过固定"
   },
   {
     "id": 2,
@@ -18,8 +21,11 @@
     "quantity": 1,
     "image": "2025-04-06_12-37-56_IMG_8039.JPG",
     "purchase_date": "2025-04-05",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null
   },
   {
     "id": 3,
@@ -29,8 +35,11 @@
     "quantity": 1,
     "image": "2025-03-31_12-07-29_IMG_7831.JPG",
     "purchase_date": "2025-03-31",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null
   },
   {
     "id": 4,
@@ -40,7 +49,10 @@
     "quantity": 1,
     "image": "2024-07-03_20-49-33_IMG_3320.JPG",
     "purchase_date": "2024-06-30",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": "2025-01-13",
-    "sold_price": 140.0
+    "sold_price": 140.0,
+    "remark": null
   }
 ]

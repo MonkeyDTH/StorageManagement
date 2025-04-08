@@ -59,7 +59,6 @@ def compress_image(file, max_size=(800, 800), quality=85):
         app.logger.error(f"图片压缩失败: {e}")
         return None
 
-# 修改路由函数，使用app.save_items()代替直接调用
 @app.route('/add', methods=['GET', 'POST'])
 def add_item():
     if request.method == 'POST':
@@ -68,6 +67,9 @@ def add_item():
         price = float(request.form['price'])
         quantity = int(request.form['quantity'])
         purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
+        purchase_channel = request.form.get('purchase_channel')  # 新增
+        condition = request.form.get('condition')  # 新增
+        remark = request.form.get('remark')  # 新增
         
         # 处理图片上传
         image = None
@@ -91,9 +93,12 @@ def add_item():
             purchase_price=price,
             quantity=quantity,
             image=image,
-            purchase_date=purchase_date
-        ))
-        app.storage.save_items()  # 修改为调用app.storage.save_items()
+            purchase_date=purchase_date,
+            purchase_channel=purchase_channel,
+            condition=condition,
+            remark=remark  # 确保这行末尾没有多余的逗号
+        ))  # 确保括号正确闭合
+        app.storage.save_items()
         return redirect(url_for('index'))
     
     return render_template('add_item.html')
@@ -124,6 +129,9 @@ def edit_item(item_id):
         item.purchase_price = float(request.form['price'])
         item.quantity = int(request.form['quantity'])
         item.purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
+        item.purchase_channel = request.form.get('purchase_channel')  # 新增
+        item.condition = request.form.get('condition')  # 新增
+        item.remark = request.form.get('remark')  # 新增
         
         # 处理图片更新
         if 'image' in request.files:
