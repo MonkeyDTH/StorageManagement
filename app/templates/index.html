@@ -2,48 +2,128 @@
 
 {% block content %}
 <style>
-    .item-card {
+    /* 标题样式优化 */
+    h2 {
+        font-weight: 600;
+        color: #2c3e50;
+        letter-spacing: 0.5px;
+    }
+    
+    /* 添加物品按钮优化 */
+    .btn-primary {
+        background-color: #3498db;
+        border-color: #3498db;
+        box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
         transition: all 0.3s ease;
-        height: 100%;
     }
-    .item-card:hover {
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
     }
+    
+    /* 卡片样式优化 */
+    .item-card {
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        border: none;
+        transition: all 0.3s ease;
+        height: 100%; /* 确保卡片高度一致 */
+    }
+    
+    /* 图片容器优化 */
     .item-image-container {
-        height: 150px;
-        overflow: hidden;
+        width: 100%;
+        aspect-ratio: 1/1;
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: #f8f9fa;
+        padding: 10px;
+        margin-bottom: 10px; /* 添加底部间距 */
     }
+    
+    /* 图片样式优化 */
     .item-image {
+        max-width: 100%; /* 稍微缩小图片 */
         max-height: 100%;
-        max-width: 100%;
         object-fit: contain;
     }
-    .item-info {
-        padding: 15px;
+    
+    /* 行间距调整 */
+    .row {
+        margin-bottom: 15px; /* 增加行间距 */
     }
-    .item-title {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 5px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    /* 价格标签优化 */
+    .purchase-price {
+        color: #3498db; /* 改为蓝色 */
+        font-weight: bold;
     }
-    .item-meta {
+    .sold-price {
+        color: #e74c3c; /* 改为红色 */
+        font-weight: bold;
+    }
+    .date-info {
         font-size: 0.85rem;
         color: #6c757d;
     }
-    .item-price {
+    .purchase-date {
+        color: #3498db; /* 买入日期蓝色 */
+    }
+    .sold-date {
+        color: #e74c3c; /* 卖出日期红色 */
+    }
+    
+    /* 统一价格和日期样式 */
+    .price-info,
+    .purchase-price,
+    .sold-price,
+    .date-info,
+    .purchase-date,
+    .sold-date {
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        letter-spacing: 0.3px;
+        font-size: 1rem; /* 统一字体大小 */
+    }
+    
+    /* 价格样式 */
+    .purchase-price {
+        color: #3498db;
         font-weight: bold;
-        color: #28a745;
+    }
+    .sold-price {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    
+    /* 日期颜色 */
+    .purchase-date {
+        color: #3498db;
+    }
+    .sold-date {
+        color: #e74c3c;
+    }
+    
+    /* 价格信息容器样式 */
+    .price-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* 日期样式保持不变 */
+    .date-info {
+        text-align: left;
+    }
+    
+    /* 价格样式保持不变 */
+    .purchase-price, .sold-price {
+        text-align: right;
     }
 </style>
 
-<div class="container">
+<!-- 在container div中添加顶部内边距 -->
+<div class="container pt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">物品库存</h2>
         <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
@@ -51,7 +131,7 @@
         </a>
     </div>
 
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
         {% for item in items %}
         <div class="col">
             <div class="card item-card">
@@ -64,24 +144,34 @@
                     <div class="text-muted">无图片</div>
                     {% endif %}
                 </div>
+
+                <!-- 在item-info中添加卖出信息 -->
                 <div class="item-info">
-                    <h5 class="item-title">{{ item.name }}</h5>
-                    <div class="d-flex justify-content-between mb-2">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h5 class="item-title">{{ item.name }}</h5>
                         <span class="badge bg-light text-dark">{{ item.category }}</span>
-                        <span class="item-price">¥{{ item.purchase_price }}</span>
                     </div>
-                    <div class="item-meta">
-                        <div>数量: {{ item.quantity }}</div>
-                        <div>购买日期: {{ item.purchase_date.strftime('%m-%d') }}</div>
+                    
+                    <div class="price-date-info">
+                        <div class="price-info">
+                            <span class="date-info purchase-date">{{ item.purchase_date.strftime('%Y-%m-%d') }}</span>
+                            <span class="purchase-price">¥{{ item.purchase_price }}</span>
+                        </div>
+                        {% if item.sold_date %}
+                        <div class="price-info mt-1">
+                            <span class="date-info sold-date">{{ item.sold_date.strftime('%Y-%m-%d') }}</span>
+                            <span class="sold-price">¥{{ item.sold_price }}</span>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
-                <!-- 在物品卡片底部添加，放在卖出按钮旁边 -->
-                {% if not item.sold_date %}
-                <a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">编辑</a>
-                <a href="{{ url_for('sell_item', item_id=item.id) }}" class="btn btn-sm btn-outline-danger">卖出</a>
-                {% else %}
-                <span class="badge bg-secondary">已卖出</span>
-                {% endif %}
+
+                <div class="item-actions">
+                    <a href="{{ url_for('edit_item', item_id=item.id) }}" class="btn btn-sm btn-outline-primary">编辑</a>
+                    {% if not item.sold_date %}
+                    <a href="{{ url_for('sell_item', item_id=item.id) }}" class="btn btn-sm btn-outline-danger">卖出</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -89,10 +179,76 @@
 
     <footer>
         <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--primary);">
-            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.0.0</p>
+            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.0.1</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">作者: TH | 最后更新: 2025.04.08</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">本产品仅供个人使用</p>
         </div>
     </footer>
 </div>
 {% endblock %}
+
+<style>
+    /* 物品名称和标签容器样式 */
+    .item-title {
+        margin: 0;
+        flex-grow: 1;
+    }
+    
+    .badge.bg-light {
+        margin-left: 10px;
+    }
+    
+    /* 按钮样式优化 - 科技感 */
+    .btn {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        box-shadow: 0 2px 10px rgba(52, 152, 219, 0.4);
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 1px solid #3498db;
+        color: #3498db;
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+    }
+    
+    .btn-outline-danger {
+        background: transparent;
+        border: 1px solid #e74c3c;
+        color: #e74c3c;
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+    }
+    
+    /* 悬停效果 */
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-outline-primary:hover {
+        background: #3498db;
+        color: white;
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    
+    .btn-outline-danger:hover {
+        background: #e74c3c;
+        color: white;
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+    }
+    
+    /* 按钮内图标动画 */
+    .btn i {
+        transition: transform 0.3s ease;
+    }
+    
+    .btn:hover i {
+        transform: scale(1.1);
+    }
+</style>

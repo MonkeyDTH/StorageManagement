@@ -27,9 +27,20 @@
     "category": "手办-DXF",
     "purchase_price": 90.0,
     "quantity": 1,
-    "image": "THC04814.jpeg",
+    "image": "2025-03-31_12-07-29_IMG_7831.JPG",
     "purchase_date": "2025-03-31",
     "sold_date": null,
     "sold_price": null
+  },
+  {
+    "id": 4,
+    "name": "万象白胡子",
+    "category": "手办-祖国版",
+    "purchase_price": 190.0,
+    "quantity": 1,
+    "image": "2024-07-03_20-49-33_IMG_3320.JPG",
+    "purchase_date": "2024-06-30",
+    "sold_date": "2025-01-13",
+    "sold_price": 140.0
   }
 ]

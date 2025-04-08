@@ -123,6 +123,7 @@ def edit_item(item_id):
         item.category = request.form['category']
         item.purchase_price = float(request.form['price'])
         item.quantity = int(request.form['quantity'])
+        item.purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
         
         # 处理图片更新
         if 'image' in request.files:
