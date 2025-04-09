@@ -15,7 +15,7 @@ DATA_FILE = Path(__file__).parent / 'data' / 'items.json'
 class Item:
     def __init__(self, name, category, purchase_price, quantity=1, image=None, 
                  purchase_date=None, sold_date=None, sold_price=None, id=None,
-                 purchase_channel=None, condition=None, remark=None):  # 新增remark参数
+                 purchase_channel=None, condition=None, remark=None, shipping_fee=0):  # 新增shipping_fee参数
         self.id = id or len(app.storage.items) + 1
         self.name = name
         self.category = category
@@ -23,12 +23,13 @@ class Item:
         self.quantity = quantity
         self.image = image
         self.purchase_date = purchase_date or datetime.now()
-        self.purchase_channel = purchase_channel  # 新增买入渠道
-        self.condition = condition  # 新增成色
+        self.purchase_channel = purchase_channel
+        self.condition = condition
         self.sold_date = sold_date
         self.sold_price = sold_price
-        self.remark = remark  # 新增备注属性
-        
+        self.remark = remark
+        self.shipping_fee = shipping_fee  # 新增运费属性
+
     @property
     def dict(self):
         return {
@@ -39,11 +40,12 @@ class Item:
             'quantity': self.quantity,
             'image': self.image,
             'purchase_date': self.purchase_date.strftime('%Y-%m-%d') if self.purchase_date else None,
-            'purchase_channel': self.purchase_channel,  # 新增
-            'condition': self.condition,  # 新增
+            'purchase_channel': self.purchase_channel,
+            'condition': self.condition,
             'sold_date': self.sold_date.strftime('%Y-%m-%d') if self.sold_date else None,
             'sold_price': self.sold_price,
-            'remark': self.remark  # 新增
+            'remark': self.remark,
+            'shipping_fee': self.shipping_fee  # 新增运费字段
         }
 
 class StorageManager:
@@ -57,6 +59,9 @@ class StorageManager:
                 data = json.load(f)
                 self.items = []
                 for item_data in data:
+                    # 确保旧数据有shipping_fee字段
+                    if 'shipping_fee' not in item_data:
+                        item_data['shipping_fee'] = 0
                     # 转换日期字符串为datetime对象
                     if 'purchase_date' in item_data and item_data['purchase_date']:
                         item_data['purchase_date'] = datetime.strptime(item_data['purchase_date'], '%Y-%m-%d')

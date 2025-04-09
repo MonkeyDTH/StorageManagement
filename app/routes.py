@@ -155,6 +155,7 @@ def edit_item(item_id):
         item.name = request.form['name']
         item.category = request.form['category']
         item.purchase_price = float(request.form['price'])
+        item.shipping_fee = float(request.form.get('shipping_fee', 0))  # 新增运费处理
         item.quantity = int(request.form['quantity'])
         item.purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
         item.purchase_channel = request.form.get('purchase_channel')

@@ -11,7 +11,8 @@
     "condition": "有损",
     "sold_date": null,
     "sold_price": null,
-    "remark": "运费：顺丰到付16\r\n成色：缺眼镜，手断过固定"
+    "remark": "缺眼镜，手断过固定",
+    "shipping_fee": 16.0
   },
   {
     "id": 2,
@@ -25,7 +26,8 @@
     "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": "运费：包邮"
+    "remark": "",
+    "shipping_fee": 0
   },
   {
     "id": 3,
@@ -39,7 +41,8 @@
     "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": "运费：包邮"
+    "remark": "",
+    "shipping_fee": 0
   },
   {
     "id": 4,
@@ -53,7 +56,8 @@
     "condition": "全新",
     "sold_date": "2025-01-13",
     "sold_price": 140.0,
-    "remark": "运费：包邮"
+    "remark": "运费：包邮",
+    "shipping_fee": 0
   },
   {
     "id": 5,
@@ -63,11 +67,12 @@
     "quantity": 1,
     "image": "2025-03-25_21-03-04_IMG_7729.JPG",
     "purchase_date": "2025-03-25",
-    "purchase_channel": "闲鱼@凯里凯里，猫步群友@凯里",
+    "purchase_channel": "闲鱼@凯里凯里 —— 猫步群友@凯里",
     "condition": "无损有盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": "运费：包邮\r\n其他：和DXF马尔科打包65包邮，带约束底座"
+    "remark": "和DXF马尔科打包65包邮，带约束底座",
+    "shipping_fee": 0
   },
   {
     "id": 6,
@@ -77,11 +82,12 @@
     "quantity": 1,
     "image": "2025-03-25_20-58-31_THC04793.JPG",
     "purchase_date": "2025-03-25",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@凯里凯里 —— 猫步群友@凯里",
+    "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": "和DXF红发打包65包邮，带约束底座",
+    "shipping_fee": 0
   },
   {
     "id": 7,
@@ -91,11 +97,12 @@
     "quantity": 1,
     "image": "2025-03-19_20-50-47_THC04768.JPG",
     "purchase_date": "2025-03-17",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "星星模玩微信群拍卖，卖家：我有一只小毛驴",
+    "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": "拆摆，微瑕，无盒，阿穷家翻模",
+    "shipping_fee": 13.0
   },
   {
     "id": 8,
@@ -105,11 +112,12 @@
     "quantity": 1,
     "image": "2025-03-15_17-27-02_THC04594.JPG",
     "purchase_date": "2025-03-13",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "",
+    "condition": "",
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": "",
+    "shipping_fee": 17.0
   },
   {
     "id": 9,
@@ -119,11 +127,12 @@
     "quantity": 1,
     "image": "2025-03-06_15-36-47_THC04529.JPG",
     "purchase_date": "2025-03-06",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@黄焖鸡米饭 —— 猫步群友@黄焖鸡米饭",
+    "condition": "无损有盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": "",
+    "shipping_fee": 27.0
   },
   {
     "id": 10,
@@ -133,11 +142,12 @@
     "quantity": 1,
     "image": "2025-02-26_21-14-45_IMG_6848.JPG",
     "purchase_date": "2025-02-23",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@玩具总动员",
+    "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": "高配+低配地台",
+    "shipping_fee": 54.85
   },
   {
     "id": 11,
@@ -151,7 +161,8 @@
     "condition": null,
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 12,
@@ -165,7 +176,8 @@
     "condition": null,
     "sold_date": null,
     "sold_price": null,
-    "remark": null
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 13,
@@ -175,8 +187,12 @@
     "quantity": 1,
     "image": "2025-01-12_14-01-11_THC04001.JPG",
     "purchase_date": "2025-01-09",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 14,
@@ -186,8 +202,12 @@
     "quantity": 1,
     "image": "2025-04-09_12-27-30_IMG_8127.JPG",
     "purchase_date": "2024-12-30",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 15,
@@ -197,8 +217,12 @@
     "quantity": 1,
     "image": "2025-01-01_16-17-50_IMG_5845.JPG",
     "purchase_date": "2024-12-28",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 16,
@@ -208,7 +232,26 @@
     "quantity": 1,
     "image": "2024-12-28_14-24-29_THC03702.JPG",
     "purchase_date": "2024-12-24",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
+  },
+  {
+    "id": 17,
+    "name": "SOFVIMATES 乔巴 蛋头岛",
+    "category": "手办-SOFVIMATES",
+    "purchase_price": 44.5,
+    "quantity": 1,
+    "image": "2024-12-28_14-28-09_THC03713.JPG",
+    "purchase_date": "2024-12-24",
+    "purchase_channel": null,
+    "condition": null,
+    "sold_date": null,
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   }
 ]
