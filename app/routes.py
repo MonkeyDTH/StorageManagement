@@ -51,14 +51,20 @@ def index():
     else:
         items = app.storage.items
     
-    # 获取所有不重复的类别
-    categories = list(set(item.category for item in app.storage.items))
+    # 计算统计信息
+    total_purchase = sum(item.purchase_price * item.quantity for item in items)
+    total_sold = sum(item.sold_price * item.quantity 
+                    for item in items if item.sold_price is not None)
     
+    categories = list(set(item.category for item in app.storage.items))
     items = sorted(items, key=lambda x: x.purchase_date, reverse=True)
+    
     return render_template('index.html', 
-                         items=items, 
+                         items=items,
                          categories=categories,
-                         current_category=category)
+                         current_category=category,
+                         total_purchase=total_purchase,
+                         total_sold=total_sold)
 
 def compress_image(file, max_size=(800, 800), quality=85):
     """压缩图片并返回BytesIO对象"""

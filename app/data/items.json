@@ -147,6 +147,20 @@
     "quantity": 1,
     "image": "2025-01-18_13-55-57_THC04221.JPG",
     "purchase_date": "2025-01-17",
+    "purchase_channel": null,
+    "condition": null,
+    "sold_date": null,
+    "sold_price": null,
+    "remark": null
+  },
+  {
+    "id": 12,
+    "name": "POP SA 乌索普",
+    "category": "手办-POP",
+    "purchase_price": 490.0,
+    "quantity": 1,
+    "image": "2025-01-19_14-56-54_THC04255.JPG",
+    "purchase_date": "2025-01-17",
     "sold_date": null,
     "sold_price": null
   }

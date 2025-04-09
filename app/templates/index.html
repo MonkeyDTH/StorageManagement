@@ -186,6 +186,59 @@
         </div>
     </div>
 
+    <!-- 在标题和筛选器下方添加统计信息 -->
+    <!-- 优化统计卡片样式 -->
+    <div class="stats-container mb-4">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="stat-card purchase-stat p-4 rounded-3 shadow-sm">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon me-3">
+                            <i class="bi bi-cart4 fs-2 text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-white-50 mb-1">总买入价格</h5>
+                            <p class="purchase-price mb-0 fs-3 fw-bold">¥{{ "%.2f"|format(total_purchase) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stat-card sold-stat p-4 rounded-3 shadow-sm">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon me-3">
+                            <i class="bi bi-cash-coin fs-2 text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-white-50 mb-1">总卖出价格</h5>
+                            <p class="sold-price mb-0 fs-3 fw-bold">¥{{ "%.2f"|format(total_sold) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 在样式部分添加优化后的统计卡片样式 -->
+    <style>
+        .stats-container {
+            margin-bottom: 2rem;
+        }
+        .purchase-stat {
+            background: linear-gradient(135deg, #2874a6, #1b4f72);
+            border-left: 4px solid #154360;
+        }
+        .sold-stat {
+            background: linear-gradient(135deg, #cb4335, #943126);
+            border-left: 4px solid #7b241c;
+        }
+        .stat-card .purchase-price,
+        .stat-card .sold-price {
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+    </style>
+
     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
         {% for item in items %}
         <div class="col">
@@ -252,7 +305,7 @@
 
     <footer>
         <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--primary);">
-            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.2</p>
+            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.3</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">作者: TH | 最后更新: 2025.04.09</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">本产品仅供个人使用</p>
         </div>
