@@ -11,7 +11,7 @@ if __name__ == '__main__':
     
     # 运行应用
     app.run(
-        debug=True,
-        host='0.0.0.0',  # 允许外部访问
+        debug=True,  # 启用调试模式
+        host='0.0.0.0',
         port=5000
     )

@@ -45,9 +45,20 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    # 确保列表按买入日期倒序
-    items = sorted(app.storage.items, key=lambda x: x.purchase_date, reverse=True)
-    return render_template('index.html', items=items)
+    category = request.args.get('category')
+    if category:
+        items = [item for item in app.storage.items if item.category == category]
+    else:
+        items = app.storage.items
+    
+    # 获取所有不重复的类别
+    categories = list(set(item.category for item in app.storage.items))
+    
+    items = sorted(items, key=lambda x: x.purchase_date, reverse=True)
+    return render_template('index.html', 
+                         items=items, 
+                         categories=categories,
+                         current_category=category)
 
 def compress_image(file, max_size=(800, 800), quality=85):
     """压缩图片并返回BytesIO对象"""
