@@ -56,8 +56,8 @@
     "condition": "全新",
     "sold_date": "2025-01-13",
     "sold_price": 140.0,
-    "remark": "运费：包邮",
-    "shipping_fee": 0
+    "remark": "",
+    "shipping_fee": 0.0
   },
   {
     "id": 5,
@@ -112,11 +112,11 @@
     "quantity": 1,
     "image": "2025-03-15_17-27-02_THC04594.JPG",
     "purchase_date": "2025-03-13",
-    "purchase_channel": "",
-    "condition": "",
+    "purchase_channel": "闲鱼@Mr 蔡 —— 猫步交易群：了不起的盖茨比",
+    "condition": "无损有盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": "",
+    "remark": "少一根烟",
     "shipping_fee": 17.0
   },
   {
@@ -131,7 +131,7 @@
     "condition": "无损有盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": "",
+    "remark": "胸口有小瑕疵",
     "shipping_fee": 27.0
   },
   {
@@ -157,12 +157,12 @@
     "quantity": 1,
     "image": "2025-01-18_13-55-57_THC04221.JPG",
     "purchase_date": "2025-01-17",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@三十代儿",
+    "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0
+    "remark": "运费23，用券后-23，实付0元，卖家错寄特快，补偿5元",
+    "shipping_fee": -5.0
   },
   {
     "id": 12,
@@ -172,12 +172,12 @@
     "quantity": 1,
     "image": "2025-01-19_14-56-54_THC04255.JPG",
     "purchase_date": "2025-01-17",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@是姜姜姜姜呀",
+    "condition": "无损有盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0
+    "remark": "无底座，后购入文物底座 32",
+    "shipping_fee": 0.0
   },
   {
     "id": 13,
@@ -187,12 +187,12 @@
     "quantity": 1,
     "image": "2025-01-12_14-01-11_THC04001.JPG",
     "purchase_date": "2025-01-09",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@托尼bw",
+    "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0
+    "remark": "后购入文物底座 25",
+    "shipping_fee": 0.0
   },
   {
     "id": 14,
@@ -202,12 +202,12 @@
     "quantity": 1,
     "image": "2025-04-09_12-27-30_IMG_8127.JPG",
     "purchase_date": "2024-12-30",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "闲鱼@秋刀鱼wink杂货铺 —— 猫步交易群@wink",
+    "condition": "无损有盒",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0
+    "remark": "后购入文物底座35",
+    "shipping_fee": 0.0
   },
   {
     "id": 15,
@@ -217,12 +217,12 @@
     "quantity": 1,
     "image": "2025-01-01_16-17-50_IMG_5845.JPG",
     "purchase_date": "2024-12-28",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "拼多多",
+    "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0
+    "remark": "",
+    "shipping_fee": 0.0
   },
   {
     "id": 16,
@@ -232,12 +232,12 @@
     "quantity": 1,
     "image": "2024-12-28_14-24-29_THC03702.JPG",
     "purchase_date": "2024-12-24",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "拼多多",
+    "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0
+    "remark": "",
+    "shipping_fee": 0.0
   },
   {
     "id": 17,
@@ -247,11 +247,11 @@
     "quantity": 1,
     "image": "2024-12-28_14-28-09_THC03713.JPG",
     "purchase_date": "2024-12-24",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "拼多多",
+    "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0
+    "remark": "",
+    "shipping_fee": 0.0
   }
 ]
