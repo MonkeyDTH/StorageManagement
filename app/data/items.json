@@ -212,7 +212,7 @@
   {
     "id": 15,
     "name": "SOFVIMATES 乔巴",
-    "category": "手办-SOFVIMATES",
+    "category": "手办-景品",
     "purchase_price": 47.0,
     "quantity": 1,
     "image": "2025-01-01_16-17-50_IMG_5845.JPG",
@@ -227,7 +227,7 @@
   {
     "id": 16,
     "name": "SOFVIMATES 乔巴 鱼人岛",
-    "category": "手办-SOFVIMATES",
+    "category": "手办-景品",
     "purchase_price": 48.0,
     "quantity": 1,
     "image": "2024-12-28_14-24-29_THC03702.JPG",
@@ -242,7 +242,7 @@
   {
     "id": 17,
     "name": "SOFVIMATES 乔巴 蛋头岛",
-    "category": "手办-SOFVIMATES",
+    "category": "手办-景品",
     "purchase_price": 44.5,
     "quantity": 1,
     "image": "2024-12-28_14-28-09_THC03713.JPG",
@@ -253,5 +253,16 @@
     "sold_price": null,
     "remark": "",
     "shipping_fee": 0.0
+  },
+  {
+    "id": 18,
+    "name": "蜜蜂草帽包乔巴",
+    "category": "手办-景品",
+    "purchase_price": 65.0,
+    "quantity": 1,
+    "image": "2024-12-29_23-17-53_IMG_5802.JPG",
+    "purchase_date": "2024-12-24",
+    "sold_date": null,
+    "sold_price": null
   }
 ]

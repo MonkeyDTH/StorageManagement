@@ -180,6 +180,9 @@
                 </option>
                 {% endfor %}
             </select>
+            <button class="btn btn-outline-secondary view-toggle" id="toggleView">
+                <i class="bi bi-grid"></i> 切换视图
+            </button>
             <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus"></i> 添加物品
             </a>
@@ -290,9 +293,63 @@
         {% endfor %}
     </div>
 
+    <!-- 添加表格视图 -->
+    <div class="table-view" id="tableView">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>类别</th>
+                    <th>买入日期</th>
+                    <th>买入价格</th>
+                    <th>运费</th>
+                    <th>卖出日期</th>
+                    <th>卖出价格</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.purchase_date.strftime('%Y-%m-%d') }}</td>
+                    <td>¥{{ item.purchase_price }}</td>
+                    <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
+                    <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
+                    <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
+                    <td>
+                        <a href="/edit/{{ item.id }}" class="btn btn-sm btn-outline-primary">编辑</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
     <!-- 在footer前添加JavaScript -->
     <!-- 修改JavaScript部分 -->
     <script>
+        // 视图切换功能
+        document.getElementById('toggleView').addEventListener('click', function() {
+            const galleryView = document.querySelector('.row.row-cols-2');
+            const tableView = document.getElementById('tableView');
+            const toggleBtn = this;
+            
+            if (galleryView.style.display === 'none') {
+                // 切换回画廊视图
+                galleryView.style.display = 'flex';
+                tableView.style.display = 'none';
+                toggleBtn.innerHTML = '<i class="bi bi-grid"></i> 切换视图';
+            } else {
+                // 切换到表格视图
+                galleryView.style.display = 'none';
+                tableView.style.display = 'block';
+                toggleBtn.innerHTML = '<i class="bi bi-images"></i> 切换视图';
+            }
+        });
+        
+        // 保留原有的卡片点击事件
         document.querySelectorAll('.item-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 // 获取当前卡片的物品ID
@@ -391,5 +448,29 @@
         border-top: 1px dashed #dee2e6;
         padding-top: 3px;
         margin-top: 3px;
+    }
+</style>
+
+<style>
+    /* 表格视图样式 */
+    .table-view {
+        display: none;
+        margin-top: 20px;
+    }
+    .table-view table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .table-view th, .table-view td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .table-view th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+    .table-view tr:hover {
+        background-color: #f8f9fa;
     }
 </style>
