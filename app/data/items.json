@@ -264,5 +264,71 @@
     "purchase_date": "2024-12-24",
     "sold_date": null,
     "sold_price": null
+  },
+  {
+    "id": 19,
+    "name": "POP SA 娜美",
+    "category": "手办-POP",
+    "purchase_price": 130.0,
+    "quantity": 1,
+    "image": "2025-04-04_17-55-56_IMG_7992.JPG",
+    "purchase_date": "2024-12-20",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 20,
+    "name": "Grandista 萨博",
+    "category": "手办-景品",
+    "purchase_price": 50.0,
+    "quantity": 1,
+    "image": "2025-01-11_14-19-48_THC03915.JPG",
+    "purchase_date": "2024-12-15",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 21,
+    "name": "Grandista 艾斯",
+    "category": "手办-景品",
+    "purchase_price": 70.0,
+    "quantity": 1,
+    "image": "2025-01-11_14-32-15_THC03939.JPG",
+    "purchase_date": "2024-12-15",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 22,
+    "name": "Grandista 索隆",
+    "category": "手办-景品",
+    "purchase_price": 68.0,
+    "quantity": 1,
+    "image": "2024-11-23_21-31-29_IMG_5167.JPG",
+    "purchase_date": "2024-11-23",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 23,
+    "name": "Grandista 路飞",
+    "category": "手办-景品",
+    "purchase_price": 67.0,
+    "quantity": 1,
+    "image": "2024-11-23_20-50-38_IMG_5144.JPG",
+    "purchase_date": "2024-11-23",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 24,
+    "name": "KOA 尼卡路飞 2.0 电镀色",
+    "category": "手办-景品",
+    "purchase_price": 249.0,
+    "quantity": 1,
+    "image": "2024-11-24_20-27-32_IMG_5214.JPG",
+    "purchase_date": "2024-11-23",
+    "sold_date": null,
+    "sold_price": null
   }
 ]

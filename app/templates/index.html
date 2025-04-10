@@ -330,6 +330,12 @@
     <!-- 在footer前添加JavaScript -->
     <!-- 修改JavaScript部分 -->
     <script>
+        // 页面加载时确保只显示画廊视图
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.row.row-cols-2').style.display = 'flex';
+            document.getElementById('tableView').style.display = 'none';
+        });
+
         // 视图切换功能
         document.getElementById('toggleView').addEventListener('click', function() {
             const galleryView = document.querySelector('.row.row-cols-2');
@@ -369,7 +375,7 @@
 
     <footer>
         <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--primary);">
-            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.5</p>
+            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.6</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">作者: TH | 最后更新: 2025.04.10</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">本产品仅供个人使用</p>
         </div>
@@ -452,9 +458,13 @@
 </style>
 
 <style>
+    /* 确保画廊视图默认显示 */
+    .row.row-cols-2 {
+        display: flex;
+    }
     /* 表格视图样式 */
     .table-view {
-        display: none;
+        display: none;  /* 确保默认隐藏 */
         margin-top: 20px;
     }
     .table-view table {
