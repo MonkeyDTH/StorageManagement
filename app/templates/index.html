@@ -214,6 +214,78 @@
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+    
+    .table-view table {
+        margin-bottom: 0;
+    }
+    
+    .table-view th {
+        background-color: #1A1A1A;
+        color: #9E9E9E;
+        font-weight: 500;
+        border-bottom: 1px solid #3D3D3D;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    
+    .table-view td {
+        border-color: #3D3D3D;
+        vertical-align: middle;
+        color: #E0E0E0;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+    
+    .table-view tr:hover {
+        background-color: rgba(101, 99, 255, 0.1);
+    }
+    
+    /* 表格中的按钮样式 */
+    .table-view .btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+    }
+    
+    /* 表格中的价格和日期样式 */
+    .table-view td:nth-child(3), 
+    .table-view td:nth-child(6) {
+        color: #8785FF; /* 日期颜色 */
+    }
+    
+    .table-view td:nth-child(4), 
+    .table-view td:nth-child(5) {
+        color: #8785FF; /* 购买价格颜色 */
+        font-weight: 500;
+    }
+    
+    .table-view td:nth-child(7) {
+        color: #FF6B6B; /* 卖出价格颜色 */
+        font-weight: 500;
+    }
+    
+    /* 表格中的类别样式 */
+    .table-view td:nth-child(2) {
+        position: relative;
+    }
+    
+    .table-view .category-badge {
+        background-color: #1A1A1A;
+        color: #9E9E9E;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        display: inline-block;
+    }
+    
+    /* 表格中的空单元格样式 */
+    .table-view td:empty::after {
+        content: "—";
+        color: #3D3D3D;
     }
     
     .table-view table {
@@ -444,38 +516,40 @@
     </div>
 
     <!-- 表格视图 -->
-    <div class="table-view" id="tableView">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>名称</th>
-                    <th>类别</th>
-                    <th>购买日期</th>
-                    <th>购买价格</th>
-                    <th>运费</th>
-                    <th>卖出日期</th>
-                    <th>卖出价格</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.category }}</td>
-                    <td>{{ item.purchase_date.strftime('%Y-%m-%d') }}</td>
-                    <td>¥{{ item.purchase_price }}</td>
-                    <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
-                    <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
-                    <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
-                    <td>
-                        <a href="/edit/{{ item.id }}" class="btn btn-sm btn-outline-primary">编辑</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <div class="table-view" id="tableView" style="display: none;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类别</th>
+                        <th>购买日期</th>
+                        <th>购买价格</th>
+                        <th>运费</th>
+                        <th>卖出日期</th>
+                        <th>卖出价格</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td><span class="category-badge">{{ item.category }}</span></td>
+                        <td>{{ item.purchase_date.strftime('%Y-%m-%d') }}</td>
+                        <td>¥{{ item.purchase_price }}</td>
+                        <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
+                        <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
+                        <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
+                        <td>
+                            <a href="/edit/{{ item.id }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> 编辑
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
     <!-- JavaScript -->
     <script>
