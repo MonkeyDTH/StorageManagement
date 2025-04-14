@@ -91,7 +91,7 @@
   },
   {
     "id": 7,
-    "name": "Wakuwaku 踢水阿尼亚 翻模",
+    "name": "Wakuwaku 踢水阿尼亚",
     "category": "手办-GK",
     "purchase_price": 110.0,
     "quantity": 1,
@@ -328,6 +328,50 @@
     "quantity": 1,
     "image": "2024-11-24_20-27-32_IMG_5214.JPG",
     "purchase_date": "2024-11-23",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 25,
+    "name": "地台社 再见艾斯 1/6",
+    "category": "手办-GK",
+    "purchase_price": 666.0,
+    "quantity": 1,
+    "image": "2024-11-14_21-55-02_THC03006.JPG",
+    "purchase_date": "2024-11-11",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 26,
+    "name": "天绘霸王色路飞",
+    "category": "手办-GK",
+    "purchase_price": 599.0,
+    "quantity": 1,
+    "image": "2024-12-18_22-04-31_THC03604.JPG",
+    "purchase_date": "2024-12-17",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 27,
+    "name": "地台社 路飞 1/6",
+    "category": "手办-GK",
+    "purchase_price": 860.0,
+    "quantity": 1,
+    "image": "2025-01-16_21-32-37_THC04129.JPG",
+    "purchase_date": "2025-01-06",
+    "sold_date": null,
+    "sold_price": null
+  },
+  {
+    "id": 28,
+    "name": "LX尼卡路飞-雕像哥",
+    "category": "手办-祖国版",
+    "purchase_price": 19.8,
+    "quantity": 1,
+    "image": "2024-08-18_23-04-24_IMG_3795.JPG",
+    "purchase_date": "2024-08-16",
     "sold_date": null,
     "sold_price": null
   }

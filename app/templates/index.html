@@ -5,39 +5,41 @@
     /* 标题样式优化 */
     h2 {
         font-weight: 600;
-        color: #2c3e50;
+        color: #E0E0E0;
         letter-spacing: 0.5px;
     }
     
     /* 添加物品按钮优化 */
     .btn-primary {
-        background-color: #3498db;
-        border-color: #3498db;
-        box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+        background: linear-gradient(135deg, #6563FF, #8785FF);
+        border: none;
+        box-shadow: 0 2px 5px rgba(101, 99, 255, 0.3);
         transition: all 0.3s ease;
     }
     .btn-primary:hover {
-        background-color: #2980b9;
+        background: linear-gradient(135deg, #8785FF, #6563FF);
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+        box-shadow: 0 4px 8px rgba(101, 99, 255, 0.4);
     }
     
     /* 卡片样式优化 */
     .item-card {
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        border: 1px solid #3D3D3D;
         transition: all 0.3s ease;
         height: 100%;
         cursor: pointer;
         position: relative;
         overflow: hidden;
+        background-color: #2D2D2D;
     }
     
     /* 添加悬停效果 */
     .item-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 20px rgba(101, 99, 255, 0.2);
+        border-color: #6563FF;
     }
     
     /* 添加点击效果 */
@@ -54,69 +56,87 @@
         left: 50%;
         width: 5px;
         height: 5px;
-        background: rgba(52, 152, 219, 0.3);
+        background: rgba(101, 99, 255, 0.3);
         opacity: 0;
         border-radius: 100%;
-        transform: scale(1, 1) translate(-50%, -50%);
+        transform: scale(1, 1) translate(-50%);
         transform-origin: 50% 50%;
     }
     
-    .item-card:active::after {
-        animation: ripple 0.6s ease-out;
+    .item-card.clicked::after {
+        animation: ripple 1s ease-out;
     }
     
     @keyframes ripple {
         0% {
-            transform: scale(0, 0) translate(-50%, -50%);
+            transform: scale(0, 0);
             opacity: 0.5;
         }
         100% {
-            transform: scale(20, 20) translate(-50%, -50%);
+            transform: scale(100, 100);
             opacity: 0;
         }
     }
     
-    /* 图片容器优化 */
-    .item-image-container {
-        width: 100%;
-        aspect-ratio: 1/1;
+    /* 卡片内容样式 */
+    .card-body {
+        padding: 1.25rem;
+    }
+    
+    /* 卡片标题样式 */
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #E0E0E0;
+    }
+    
+    /* 卡片图片容器样式 */
+    .card-img-top-container {
+        height: 180px;
+        overflow: hidden;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        background-color: #1A1A1A;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #f8f9fa;
-        padding: 10px;
-        margin-bottom: 10px; /* 添加底部间距 */
     }
     
-    /* 图片样式优化 */
-    .item-image {
-        max-width: 100%; /* 稍微缩小图片 */
-        max-height: 100%;
+    /* 卡片图片样式 */
+    .card-img-top {
         object-fit: contain;
+        max-height: 100%;
+        max-width: 100%;
+        transition: transform 0.3s ease;
     }
     
-    /* 行间距调整 */
-    .row {
-        margin-bottom: 15px; /* 增加行间距 */
+    .item-card:hover .card-img-top {
+        transform: scale(1.05);
     }
-    /* 价格标签优化 */
-    .purchase-price {
-        color: #3498db; /* 改为蓝色 */
-        font-weight: bold;
+    
+    /* 卖出状态标签样式 */
+    .sold-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: linear-gradient(135deg, #FF6B6B, #FF9F9F);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(255, 107, 107, 0.3);
+        z-index: 2;
     }
-    .sold-price {
-        color: #e74c3c; /* 改为红色 */
-        font-weight: bold;
-    }
-    .date-info {
-        font-size: 0.85rem;
-        color: #6c757d;
-    }
+    
+    /* 购买日期和卖出日期样式 */
     .purchase-date {
-        color: #3498db; /* 买入日期蓝色 */
+        color: #8785FF; /* 购买日期蓝色 */
     }
+    
     .sold-date {
-        color: #e74c3c; /* 卖出日期红色 */
+        color: #FF6B6B; /* 卖出日期红色 */
     }
     
     /* 统一价格和日期样式 */
@@ -133,20 +153,12 @@
     
     /* 价格样式 */
     .purchase-price {
-        color: #3498db;
+        color: #8785FF;
         font-weight: bold;
     }
     .sold-price {
-        color: #e74c3c;
+        color: #FF6B6B;
         font-weight: bold;
-    }
-    
-    /* 日期颜色 */
-    .purchase-date {
-        color: #3498db;
-    }
-    .sold-date {
-        color: #e74c3c;
     }
     
     /* 价格信息容器样式 */
@@ -165,9 +177,167 @@
     .purchase-price, .sold-price {
         text-align: right;
     }
+    
+    /* 统计卡片样式 */
+    .stats-container {
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .purchase-stat {
+        background: linear-gradient(135deg, #6563FF, #8785FF);
+    }
+    
+    .sold-stat {
+        background: linear-gradient(135deg, #FF6B6B, #FF9F9F);
+    }
+    
+    .stat-icon {
+        background-color: rgba(255, 255, 255, 0.2);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* 表格视图样式 */
+    .table-view {
+        background-color: #2D2D2D;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .table-view table {
+        margin-bottom: 0;
+    }
+    
+    .table-view th {
+        background-color: #1A1A1A;
+        color: #9E9E9E;
+        font-weight: 500;
+        border-bottom: 1px solid #3D3D3D;
+    }
+    
+    .table-view td {
+        border-color: #3D3D3D;
+        vertical-align: middle;
+        color: #E0E0E0;
+    }
+    
+    .table-view tr:hover {
+        background-color: rgba(101, 99, 255, 0.05);
+    }
+    
+    /* 按钮样式优化 */
+    .btn {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-radius: 8px;
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 1px solid #6563FF;
+        color: #6563FF;
+    }
+    
+    .btn-outline-danger {
+        background: transparent;
+        border: 1px solid #FF6B6B;
+        color: #FF6B6B;
+    }
+    
+    /* 悬停效果 */
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-outline-primary:hover {
+        background: #6563FF;
+        color: white;
+        box-shadow: 0 5px 15px rgba(101, 99, 255, 0.4);
+    }
+    
+    .btn-outline-danger:hover {
+        background: #FF6B6B;
+        color: white;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+    
+    /* 按钮内图标动画 */
+    .btn i {
+        transition: transform 0.3s ease;
+    }
+    
+    .btn:hover i {
+        transform: scale(1.1);
+    }
+    
+    .shipping-info {
+        font-size: 0.8rem;
+        color: #9E9E9E;
+        border-top: 1px dashed #3D3D3D;
+        padding-top: 3px;
+        margin-top: 3px;
+    }
+    
+    /* 筛选器样式 */
+    .form-select {
+        background-color: #1A1A1A;
+        color: #E0E0E0;
+        border: 1px solid #3D3D3D;
+    }
+    
+    .view-toggle {
+        background-color: #1A1A1A;
+        color: #E0E0E0;
+        border: 1px solid #3D3D3D;
+    }
+    
+    .view-toggle:hover {
+        background-color: #6563FF;
+        color: white;
+        border-color: #6563FF;
+    }
+    
+    /* 页脚样式 */
+    footer {
+        border-top: 1px dashed #3D3D3D;
+        margin-top: 40px;
+        padding-top: 20px;
+        text-align: center;
+        color: #9E9E9E;
+    }
+    
+    /* 全局背景和容器样式 */
+    body {
+        background-color: #1A1A1A;
+        color: #E0E0E0;
+    }
+    
+    .container {
+        background-color: #2D2D2D;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* 确保表格内容可见 */
+    .table {
+        color: #E0E0E0;
+    }
 </style>
 
-<!-- 在container div中添加顶部内边距 -->
 <div class="container pt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">物品库存</h2>
@@ -180,7 +350,7 @@
                 </option>
                 {% endfor %}
             </select>
-            <button class="btn btn-outline-secondary view-toggle" id="toggleView">
+            <button class="btn view-toggle" id="toggleView">
                 <i class="bi bi-grid"></i> 切换视图
             </button>
             <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
@@ -189,8 +359,7 @@
         </div>
     </div>
 
-    <!-- 在标题和筛选器下方添加统计信息 -->
-    <!-- 优化统计卡片样式 -->
+    <!-- 统计信息 -->
     <div class="stats-container mb-4">
         <div class="row g-3">
             <div class="col-md-6">
@@ -201,7 +370,7 @@
                         </div>
                         <div>
                             <h5 class="text-white-50 mb-1">总买入价格</h5>
-                            <p class="purchase-price mb-0 fs-3 fw-bold">¥{{ "%.2f"|format(total_purchase) }}</p>
+                            <p class="purchase-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_purchase) }}</p>
                         </div>
                     </div>
                 </div>
@@ -214,7 +383,7 @@
                         </div>
                         <div>
                             <h5 class="text-white-50 mb-1">总卖出价格</h5>
-                            <p class="sold-price mb-0 fs-3 fw-bold">¥{{ "%.2f"|format(total_sold) }}</p>
+                            <p class="sold-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_sold) }}</p>
                         </div>
                     </div>
                 </div>
@@ -222,86 +391,67 @@
         </div>
     </div>
 
-    <!-- 在样式部分添加优化后的统计卡片样式 -->
-    <style>
-        .stats-container {
-            margin-bottom: 2rem;
-        }
-        .purchase-stat {
-            background: linear-gradient(135deg, #2874a6, #1b4f72);
-            border-left: 4px solid #154360;
-        }
-        .sold-stat {
-            background: linear-gradient(135deg, #cb4335, #943126);
-            border-left: 4px solid #7b241c;
-        }
-        .stat-card .purchase-price,
-        .stat-card .sold-price {
-            color: white !important;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-    </style>
-
-    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3">
+    <!-- 画廊视图 -->
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
         {% for item in items %}
         <div class="col">
-            <div class="card item-card" data-id="{{ item.id }}">
-                <div class="item-image-container">
+            <div class="item-card" data-id="{{ item.id }}">
+                {% if item.sold_date %}
+                <div class="sold-badge">已售出</div>
+                {% endif %}
+                <div class="card-img-top-container">
                     {% if item.image %}
-                    <img src="{{ url_for('static', filename='uploads/' + item.image) }}" 
-                         class="item-image" 
-                         alt="{{ item.name }}">
+                    <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top" alt="{{ item.name }}">
                     {% else %}
-                    <div class="text-muted">无图片</div>
+                    <img src="{{ url_for('static', filename='placeholder.png') }}" class="card-img-top" alt="无图片">
                     {% endif %}
                 </div>
-
-                <!-- 在item-info中添加卖出信息 -->
-                <div class="item-info">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h5 class="item-title">{{ item.name }}</h5>
-                        <span class="badge bg-light text-dark">{{ item.category }}</span>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <span class="badge bg-secondary">{{ item.category }}</span>
                     </div>
-                    
-                    <div class="price-date-info">
-                        <div class="price-info">
-                            <span class="date-info purchase-date">{{ item.purchase_date.strftime('%Y-%m-%d') }}</span>
-                            <span class="purchase-price">¥{{ item.purchase_price }}</span>
-                        </div>
+                    <div class="date-info mb-2">
+                        <small class="purchase-date">
+                            <i class="bi bi-calendar-check"></i> {{ item.purchase_date.strftime('%Y-%m-%d') }}
+                        </small>
                         {% if item.sold_date %}
-                        <div class="price-info mt-1">
-                            <span class="date-info sold-date">{{ item.sold_date.strftime('%Y-%m-%d') }}</span>
-                            <span class="sold-price">¥{{ item.sold_price }}</span>
-                        </div>
+                        <small class="sold-date ms-2">
+                            <i class="bi bi-calendar-x"></i> {{ item.sold_date.strftime('%Y-%m-%d') }}
+                        </small>
                         {% endif %}
                     </div>
-
-                    <!-- 添加运费信息 -->
+                    <div class="price-info">
+                        <span class="purchase-price">¥{{ item.purchase_price }}</span>
+                        {% if item.sold_price %}
+                        <span class="sold-price">¥{{ item.sold_price }}</span>
+                        {% endif %}
+                    </div>
                     {% if item.shipping_fee and item.shipping_fee != 0 %}
-                    <div class="shipping-info mb-1">
-                        <small class="text-muted">运费: ¥{{ item.shipping_fee }}</small>
+                    <div class="shipping-info">
+                        <small><i class="bi bi-truck"></i> 运费: ¥{{ item.shipping_fee }}</small>
                     </div>
                     {% endif %}
-                </div>
-
-                <!-- 修改操作按钮部分 -->
-                <div class="item-actions">
-                    <!-- 移除卖出按钮 -->
+                    <div class="mt-3">
+                        <a href="/edit/{{ item.id }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-pencil"></i> 编辑
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 
-    <!-- 添加表格视图 -->
+    <!-- 表格视图 -->
     <div class="table-view" id="tableView">
-        <table class="table table-hover">
+        <table class="table">
             <thead>
                 <tr>
                     <th>名称</th>
                     <th>类别</th>
-                    <th>买入日期</th>
-                    <th>买入价格</th>
+                    <th>购买日期</th>
+                    <th>购买价格</th>
                     <th>运费</th>
                     <th>卖出日期</th>
                     <th>卖出价格</th>
@@ -327,8 +477,7 @@
         </table>
     </div>
 
-    <!-- 在footer前添加JavaScript -->
-    <!-- 修改JavaScript部分 -->
+    <!-- JavaScript -->
     <script>
         // 页面加载时确保只显示画廊视图
         document.addEventListener('DOMContentLoaded', function() {
@@ -355,14 +504,13 @@
             }
         });
         
-        // 保留原有的卡片点击事件
+        // 卡片点击事件
         document.querySelectorAll('.item-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 // 获取当前卡片的物品ID
-                const itemId = this.closest('.col').querySelector('.item-card').getAttribute('data-id') || 
-                              this.closest('.col').querySelector('a[href*="/edit/"]')?.getAttribute('href')?.match(/\d+/)[0];
+                const itemId = this.getAttribute('data-id');
                 
-                if (itemId && !e.target.closest('.btn-outline-danger')) {
+                if (itemId && !e.target.closest('.btn-outline-danger') && !e.target.closest('.btn-outline-primary')) {
                     // 添加点击动画类
                     this.classList.add('clicked');
                     setTimeout(() => {
@@ -374,113 +522,11 @@
     </script>
 
     <footer>
-        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--primary);">
-            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.6</p>
-            <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">作者: TH | 最后更新: 2025.04.10</p>
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px;">
+            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.7</p>
+            <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">作者: TH | 最后更新: 2025.04.14</p>
             <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">本产品仅供个人使用</p>
         </div>
     </footer>
 </div>
 {% endblock %}
-
-<style>
-    /* 物品名称和标签容器样式 */
-    .item-title {
-        margin: 0;
-        flex-grow: 1;
-    }
-    
-    .badge.bg-light {
-        margin-left: 10px;
-    }
-    
-    /* 按钮样式优化 - 科技感 */
-    .btn {
-        position: relative;
-        overflow: hidden;
-        border: none;
-        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-        box-shadow: 0 2px 10px rgba(52, 152, 219, 0.4);
-    }
-    
-    .btn-outline-primary {
-        background: transparent;
-        border: 1px solid #3498db;
-        color: #3498db;
-        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
-    }
-    
-    .btn-outline-danger {
-        background: transparent;
-        border: 1px solid #e74c3c;
-        color: #e74c3c;
-        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
-    }
-    
-    /* 悬停效果 */
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .btn-outline-primary:hover {
-        background: #3498db;
-        color: white;
-        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-    }
-    
-    .btn-outline-danger:hover {
-        background: #e74c3c;
-        color: white;
-        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-    }
-    
-    /* 按钮内图标动画 */
-    .btn i {
-        transition: transform 0.3s ease;
-    }
-    
-    .btn:hover i {
-        transform: scale(1.1);
-    }
-
-    .shipping-info {
-        font-size: 0.8rem;
-        color: #6c757d;
-        border-top: 1px dashed #dee2e6;
-        padding-top: 3px;
-        margin-top: 3px;
-    }
-</style>
-
-<style>
-    /* 确保画廊视图默认显示 */
-    .row.row-cols-2 {
-        display: flex;
-    }
-    /* 表格视图样式 */
-    .table-view {
-        display: none;  /* 确保默认隐藏 */
-        margin-top: 20px;
-    }
-    .table-view table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .table-view th, .table-view td {
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 1px solid #dee2e6;
-    }
-    .table-view th {
-        background-color: #f8f9fa;
-        font-weight: 600;
-    }
-    .table-view tr:hover {
-        background-color: #f8f9fa;
-    }
-</style>
