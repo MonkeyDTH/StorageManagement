@@ -544,6 +544,35 @@
         }
     }
 
+    /* 容器最大宽度调整 */
+    @media (min-width: 1400px) {
+        .container {
+            max-width: 1600px;
+        }
+    }
+
+    /* PC端画廊视图列数调整 */
+    @media (min-width: 1400px) {
+        #galleryView.row > .col {
+            width: 20%;
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+    }
+
+    /* 调整侧边栏和主内容区域比例 */
+    @media (min-width: 992px) {
+        .col-lg-3 {
+            flex: 0 0 auto;
+            width: 20%;
+        }
+        
+        .col-lg-9 {
+            flex: 0 0 auto;
+            width: 80%;
+        }
+    }
+
     /* 侧边栏样式 */
     .sidebar {
         background-color: #1A1A1A;
