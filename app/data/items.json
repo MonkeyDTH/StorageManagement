@@ -262,8 +262,12 @@
     "quantity": 1,
     "image": "2024-12-29_23-17-53_IMG_5802.JPG",
     "purchase_date": "2024-12-24",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 19,
@@ -273,8 +277,12 @@
     "quantity": 1,
     "image": "2025-04-04_17-55-56_IMG_7992.JPG",
     "purchase_date": "2024-12-20",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 20,
@@ -284,8 +292,12 @@
     "quantity": 1,
     "image": "2025-01-11_14-19-48_THC03915.JPG",
     "purchase_date": "2024-12-15",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 21,
@@ -295,8 +307,12 @@
     "quantity": 1,
     "image": "2025-01-11_14-32-15_THC03939.JPG",
     "purchase_date": "2024-12-15",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 22,
@@ -306,8 +322,12 @@
     "quantity": 1,
     "image": "2024-11-23_21-31-29_IMG_5167.JPG",
     "purchase_date": "2024-11-23",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 23,
@@ -317,8 +337,12 @@
     "quantity": 1,
     "image": "2024-11-23_20-50-38_IMG_5144.JPG",
     "purchase_date": "2024-11-23",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 24,
@@ -328,8 +352,12 @@
     "quantity": 1,
     "image": "2024-11-24_20-27-32_IMG_5214.JPG",
     "purchase_date": "2024-11-23",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 25,
@@ -339,8 +367,12 @@
     "quantity": 1,
     "image": "2024-11-14_21-55-02_THC03006.JPG",
     "purchase_date": "2024-11-11",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 26,
@@ -350,8 +382,12 @@
     "quantity": 1,
     "image": "2024-12-18_22-04-31_THC03604.JPG",
     "purchase_date": "2024-12-17",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 27,
@@ -361,8 +397,12 @@
     "quantity": 1,
     "image": "2025-01-16_21-32-37_THC04129.JPG",
     "purchase_date": "2025-01-06",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 28,
@@ -372,8 +412,12 @@
     "quantity": 1,
     "image": "2024-08-18_23-04-24_IMG_3795.JPG",
     "purchase_date": "2024-08-16",
+    "purchase_channel": null,
+    "condition": null,
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": null,
+    "shipping_fee": 0
   },
   {
     "id": 29,
@@ -383,7 +427,11 @@
     "quantity": 1,
     "image": "IMG_8267.jpeg",
     "purchase_date": "2025-03-05",
+    "purchase_channel": "淘宝@绘君衣旗舰店",
+    "condition": "全新",
     "sold_date": null,
-    "sold_price": null
+    "sold_price": null,
+    "remark": "",
+    "shipping_fee": 0.0
   }
 ]

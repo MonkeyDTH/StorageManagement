@@ -11,7 +11,7 @@ items = app.storage.items
 class Item:
     def __init__(self, name, category, purchase_price, quantity=1, image=None, 
                  purchase_date=None, sold_date=None, sold_price=None, id=None,
-                 purchase_channel=None, condition=None, remark=None):  # 添加新参数
+                 purchase_channel=None, condition=None, remark=None, shipping_fee=0):  # 添加shipping_fee参数
         self.id = id or len(items) + 1
         self.name = name
         self.category = category
@@ -21,9 +21,10 @@ class Item:
         self.purchase_date = purchase_date or datetime.now()
         self.sold_date = sold_date
         self.sold_price = sold_price
-        self.purchase_channel = purchase_channel  # 新增
-        self.condition = condition  # 新增
-        self.remark = remark  # 新增
+        self.purchase_channel = purchase_channel
+        self.condition = condition
+        self.remark = remark
+        self.shipping_fee = shipping_fee  # 添加运费属性
 
     @property
     def dict(self):
@@ -36,7 +37,11 @@ class Item:
             'image': self.image,
             'purchase_date': self.purchase_date.strftime('%Y-%m-%d') if self.purchase_date else None,
             'sold_date': self.sold_date.strftime('%Y-%m-%d') if self.sold_date else None,
-            'sold_price': self.sold_price
+            'sold_price': self.sold_price,
+            'purchase_channel': self.purchase_channel,
+            'condition': self.condition,
+            'remark': self.remark,
+            'shipping_fee': self.shipping_fee
         }
 
 def allowed_file(filename):
@@ -99,14 +104,16 @@ def add_item():
             try:
                 price = float(price)
                 quantity = int(quantity)
+                # 处理运费
+                shipping_fee = float(request.form.get('shipping_fee', '0').strip() or '0')
             except ValueError:
-                flash('价格和数量必须是有效数字', 'error')
+                flash('价格、数量或运费必须是有效数字', 'error')
                 return redirect(url_for('add_item'))
                 
             purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
-            purchase_channel = request.form.get('purchase_channel')  # 新增
-            condition = request.form.get('condition')  # 新增
-            remark = request.form.get('remark')  # 新增
+            purchase_channel = request.form.get('purchase_channel')
+            condition = request.form.get('condition')
+            remark = request.form.get('remark')
             
             # 处理图片上传
             image = None
@@ -124,7 +131,8 @@ def add_item():
                             f.write(compressed_img.read())
                         image = filename
         
-            items.append(Item(
+            # 创建新物品对象，确保包含所有属性
+            new_item = Item(
                 name=name,
                 category=category,
                 purchase_price=price,
@@ -133,8 +141,13 @@ def add_item():
                 purchase_date=purchase_date,
                 purchase_channel=purchase_channel,
                 condition=condition,
-                remark=remark  # 确保这行末尾没有多余的逗号
-            ))  # 确保括号正确闭合
+                remark=remark
+            )
+            
+            # 添加运费属性
+            new_item.shipping_fee = shipping_fee
+            
+            items.append(new_item)
             app.storage.save_items()
             return redirect(url_for('index'))
         
