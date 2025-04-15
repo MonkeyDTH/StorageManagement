@@ -51,22 +51,50 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     category = request.args.get('category')
+    is_main_category = request.args.get('main_category') == 'true'
+    
     if category:
-        items = [item for item in app.storage.items if item.category == category]
+        if is_main_category:
+            items = [item for item in app.storage.items if item.category.startswith(category)]
+        else:
+            items = [item for item in app.storage.items if item.category == category]
     else:
         items = app.storage.items
     
-    # 计算统计信息
-    total_purchase = sum(item.purchase_price * item.quantity for item in items)
-    total_sold = sum(item.sold_price * item.quantity 
-                    for item in items if item.sold_price is not None)
+    # Process categories for hierarchical display
+    all_categories = set(item.category for item in app.storage.items)
+    processed_categories = []
+    main_categories = set()
     
-    categories = list(set(item.category for item in app.storage.items))
-    items = sorted(items, key=lambda x: x.purchase_date, reverse=True)
+    for cat in all_categories:
+        if '-' in cat:
+            main_cat = cat.split('-')[0]
+            main_categories.add(main_cat)
+            processed_categories.append({
+                'full': cat,
+                'main': main_cat,
+                'sub': cat.split('-')[1]
+            })
+        else:
+            processed_categories.append({
+                'full': cat,
+                'main': cat,
+                'sub': None
+            })
+            main_categories.add(cat)
+    
+    # Calculate totals
+    total_purchase = sum((item.purchase_price + (item.shipping_fee or 0)) * item.quantity for item in items)
+    total_sold = sum(item.sold_price * item.quantity for item in items if item.sold_price is not None)
+    
+    # Sort categories
+    processed_categories.sort(key=lambda x: (x['main'], x['sub'] or ''))
+    main_categories = sorted(list(main_categories))
     
     return render_template('index.html', 
                          items=items,
-                         categories=categories,
+                         categories=processed_categories,
+                         main_categories=main_categories,
                          current_category=category,
                          total_purchase=total_purchase,
                          total_sold=total_sold)
