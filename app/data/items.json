@@ -374,5 +374,16 @@
     "purchase_date": "2024-08-16",
     "sold_date": null,
     "sold_price": null
+  },
+  {
+    "id": 29,
+    "name": "进击的巨人卫衣",
+    "category": "衣服-卫衣",
+    "purchase_price": 90.12,
+    "quantity": 1,
+    "image": "IMG_8267.jpeg",
+    "purchase_date": "2025-03-05",
+    "sold_date": null,
+    "sold_price": null
   }
 ]

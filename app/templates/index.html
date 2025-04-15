@@ -408,199 +408,468 @@
     .table {
         color: #E0E0E0;
     }
+
+    /* 移动端适配样式 */
+    @media (max-width: 767px) {
+        /* 顶部标题和操作区域 */
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .d-flex.justify-content-between > div {
+            margin-top: 15px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .form-select {
+            width: 100% !important;
+            margin-right: 0 !important;
+        }
+        
+        .view-toggle, .btn-primary {
+            flex: 1;
+        }
+        
+        /* 统计卡片 */
+        .stat-card {
+            padding: 1rem;
+        }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        /* 画廊视图 - 修改为支持两列 */
+        #galleryView.row {
+            margin-left: -6px;
+            margin-right: -6px;
+        }
+        
+        #galleryView > .col {
+            padding-left: 6px;
+            padding-right: 6px;
+            margin-bottom: 12px;
+            /* 确保在移动端显示两列 */
+            width: 50%;
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        
+        .card-img-top-container {
+            height: 120px;
+        }
+        
+        .card-body {
+            padding: 0.6rem;
+        }
+        
+        .card-title {
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+        }
+        
+        .date-info, .price-info {
+            font-size: 0.75rem;
+        }
+        
+        .date-info small {
+            font-size: 0.7rem;
+        }
+        
+        .shipping-info small {
+            font-size: 0.7rem;
+        }
+        
+        .btn-sm {
+            padding: 0.2rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        /* 表格视图滚动 */
+        .table-view {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table-view table {
+            min-width: 800px;
+        }
+        
+        .table-view th, .table-view td {
+            padding: 8px 12px;
+            font-size: 0.75rem;
+        }
+        
+        /* 表格视图中的按钮 */
+        .table-view .btn {
+            padding: 4px 8px;
+            font-size: 0.7rem;
+        }
+        
+        /* 页脚 */
+        footer {
+            margin-top: 30px;
+            padding-top: 15px;
+        }
+    }
+    
+    /* iPhone 15 Pro 特定优化 */
+    @media (max-width: 390px) {
+        .container {
+            padding: 12px;
+        }
+        
+        /* 保持两列布局，但调整图片高度 */
+        .card-img-top-container {
+            height: 110px;
+        }
+        
+        /* 进一步缩小字体 */
+        .card-title {
+            font-size: 0.8rem;
+        }
+        
+        .date-info, .price-info {
+            font-size: 0.7rem;
+        }
+    }
+
+    /* 侧边栏样式 */
+    .sidebar {
+        background-color: #1A1A1A;
+        border-radius: 12px;
+        padding: 20px;
+        height: fit-content;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 20px;
+    }
+    
+    .sidebar-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #E0E0E0;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #3D3D3D;
+    }
+    
+    .sidebar .form-select {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    .sidebar .btn {
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: left;
+        padding: 10px 15px;
+    }
+    
+    .sidebar .btn i {
+        margin-right: 8px;
+    }
+    
+    /* 主内容区域 */
+    .main-content {
+        width: 100%;
+    }
+    
+    /* 移动端适配 */
+    @media (max-width: 991px) {
+        .sidebar {
+            display: none;
+        }
+        
+        .mobile-controls {
+            display: flex !important;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .mobile-controls {
+            display: none !important;
+        }
+    }
+    
+    /* 移动端控制区域 */
+    .mobile-controls {
+        margin-bottom: 20px;
+    }
+
 </style>
 
+<!-- 修改顶部操作区域，增加响应式布局支持 -->
 <div class="container pt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">物品库存</h2>
-        <div>
-            <select class="form-select me-2" onchange="location = this.value;" style="width: 200px; display: inline-block;">
-                <option value="{{ url_for('index') }}">所有类别</option>
-                {% for cat in categories %}
-                <option value="{{ url_for('index', category=cat) }}" {% if current_category == cat %}selected{% endif %}>
-                    {{ cat }}
-                </option>
-                {% endfor %}
-            </select>
-            <button class="btn view-toggle" id="toggleView">
-                <i class="bi bi-grid"></i> 切换视图
-            </button>
-            <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus"></i> 添加物品
-            </a>
-        </div>
-    </div>
-
-    <!-- 统计信息 -->
-    <div class="stats-container mb-4">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="stat-card purchase-stat p-4 rounded-3 shadow-sm">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon me-3">
-                            <i class="bi bi-cart4 fs-2 text-white"></i>
-                        </div>
-                        <div>
-                            <h5 class="text-white-50 mb-1">总买入价格</h5>
-                            <p class="purchase-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_purchase) }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="stat-card sold-stat p-4 rounded-3 shadow-sm">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon me-3">
-                            <i class="bi bi-cash-coin fs-2 text-white"></i>
-                        </div>
-                        <div>
-                            <h5 class="text-white-50 mb-1">总卖出价格</h5>
-                            <p class="sold-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_sold) }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 画廊视图 -->
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-        {% for item in items %}
-        <div class="col">
-            <div class="item-card" data-id="{{ item.id }}">
-                {% if item.sold_date %}
-                <div class="sold-badge">已售出</div>
-                {% endif %}
-                <div class="card-img-top-container">
-                    {% if item.image %}
-                    <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top" alt="{{ item.name }}">
-                    {% else %}
-                    <img src="{{ url_for('static', filename='placeholder.png') }}" class="card-img-top" alt="无图片">
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="card-title">{{ item.name }}</h5>
-                        <span class="badge bg-secondary">{{ item.category }}</span>
-                    </div>
-                    <div class="date-info mb-2">
-                        <small class="purchase-date">
-                            <i class="bi bi-calendar-check"></i> {{ item.purchase_date.strftime('%Y-%m-%d') }}
-                        </small>
-                        {% if item.sold_date %}
-                        <small class="sold-date ms-2">
-                            <i class="bi bi-calendar-x"></i> {{ item.sold_date.strftime('%Y-%m-%d') }}
-                        </small>
-                        {% endif %}
-                    </div>
-                    <div class="price-info">
-                        <span class="purchase-price">¥{{ item.purchase_price }}</span>
-                        {% if item.sold_price %}
-                        <span class="sold-price">¥{{ item.sold_price }}</span>
-                        {% endif %}
-                    </div>
-                    {% if item.shipping_fee and item.shipping_fee != 0 %}
-                    <div class="shipping-info">
-                        <small><i class="bi bi-truck"></i> 运费: ¥{{ item.shipping_fee }}</small>
-                    </div>
-                    {% endif %}
-                    <div class="mt-3">
-                        <a href="/edit/{{ item.id }}" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-pencil"></i> 编辑
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    <!-- 表格视图 -->
-        <div class="table-view" id="tableView" style="display: none;">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>类别</th>
-                        <th>购买日期</th>
-                        <th>购买价格</th>
-                        <th>运费</th>
-                        <th>卖出日期</th>
-                        <th>卖出价格</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in items %}
-                    <tr>
-                        <td>{{ item.name }}</td>
-                        <td><span class="category-badge">{{ item.category }}</span></td>
-                        <td>{{ item.purchase_date.strftime('%Y-%m-%d') }}</td>
-                        <td>¥{{ item.purchase_price }}</td>
-                        <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
-                        <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
-                        <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
-                        <td>
-                            <a href="/edit/{{ item.id }}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-pencil"></i> 编辑
-                            </a>
-                        </td>
-                    </tr>
+    <!-- 移动端控制区域 -->
+    <div class="mobile-controls d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">物品库存</h2>
+            <div>
+                <select class="form-select me-2" onchange="location = this.value;" style="width: 120px; display: inline-block;">
+                    <option value="{{ url_for('index') }}">所有类别</option>
+                    {% for cat in categories %}
+                    <option value="{{ url_for('index', category=cat) }}" {% if current_category == cat %}selected{% endif %}>
+                        {{ cat }}
+                    </option>
                     {% endfor %}
-                </tbody>
-            </table>
+                </select>
+                <button class="btn view-toggle" id="mobileToggleView">
+                    <i class="bi bi-grid"></i>
+                </button>
+                <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus"></i>
+                </a>
+            </div>
         </div>
+    </div>
 
-    <!-- JavaScript -->
-    <script>
-        // 页面加载时确保只显示画廊视图
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.row.row-cols-2').style.display = 'flex';
-            document.getElementById('tableView').style.display = 'none';
-        });
+    <div class="row">
+        <!-- PC端侧边栏 -->
+        <div class="col-lg-3 mb-4">
+            <div class="sidebar">
+                <h3 class="sidebar-title">物品库存</h3>
+                
+                <div class="mb-4">
+                    <label class="form-label">类别筛选</label>
+                    <select class="form-select" id="categorySelect" onchange="location = this.value;">
+                        <option value="{{ url_for('index') }}">所有类别</option>
+                        {% for cat in categories %}
+                        <option value="{{ url_for('index', category=cat) }}" {% if current_category == cat %}selected{% endif %}>
+                            {{ cat }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">视图选项</label>
+                    <button class="btn view-toggle" id="desktopToggleView">
+                        <i class="bi bi-grid"></i> 切换视图
+                    </button>
+                </div>
+                
+                <div>
+                    <label class="form-label">操作</label>
+                    <a href="{{ url_for('add_item') }}" class="btn btn-primary">
+                        <i class="bi bi-plus"></i> 添加物品
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="col-lg-9">
+            <!-- 统计信息 -->
+            <div class="stats-container mb-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="stat-card purchase-stat p-4 rounded-3 shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon me-3">
+                                    <i class="bi bi-cart4 fs-2 text-white"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-white-50 mb-1">总买入价格</h5>
+                                    <p class="purchase-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_purchase) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card sold-stat p-4 rounded-3 shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-icon me-3">
+                                    <i class="bi bi-cash-coin fs-2 text-white"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-white-50 mb-1">总卖出价格</h5>
+                                    <p class="sold-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_sold) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        // 视图切换功能
-        document.getElementById('toggleView').addEventListener('click', function() {
-            const galleryView = document.querySelector('.row.row-cols-2');
-            const tableView = document.getElementById('tableView');
-            const toggleBtn = this;
+            <!-- 画廊视图 -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="galleryView">
+                {% for item in items %}
+                <div class="col">
+                    <div class="item-card" data-id="{{ item.id }}">
+                        {% if item.sold_date %}
+                        <div class="sold-badge">已售出</div>
+                        {% endif %}
+                        <div class="card-img-top-container">
+                            {% if item.image %}
+                            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='placeholder.png') }}" class="card-img-top" alt="无图片">
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title">{{ item.name }}</h5>
+                                <span class="badge bg-secondary">{{ item.category }}</span>
+                            </div>
+                            <div class="date-info mb-2">
+                                <small class="purchase-date">
+                                    <i class="bi bi-calendar-check"></i> {{ item.purchase_date.strftime('%Y-%m-%d') }}
+                                </small>
+                                {% if item.sold_date %}
+                                <small class="sold-date ms-2">
+                                    <i class="bi bi-calendar-x"></i> {{ item.sold_date.strftime('%Y-%m-%d') }}
+                                </small>
+                                {% endif %}
+                            </div>
+                            <div class="price-info">
+                                <span class="purchase-price">¥{{ item.purchase_price }}</span>
+                                {% if item.sold_price %}
+                                <span class="sold-price">¥{{ item.sold_price }}</span>
+                                {% endif %}
+                            </div>
+                            {% if item.shipping_fee and item.shipping_fee != 0 %}
+                            <div class="shipping-info">
+                                <small><i class="bi bi-truck"></i> 运费: ¥{{ item.shipping_fee }}</small>
+                            </div>
+                            {% endif %}
+                            <div class="mt-3">
+                                <a href="/edit/{{ item.id }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-pencil"></i> 编辑
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- 表格视图 -->
+            <div class="table-view" id="tableView" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>类别</th>
+                                <th>购买日期</th>
+                                <th>购买价格</th>
+                                <th>运费</th>
+                                <th>卖出日期</th>
+                                <th>卖出价格</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ item.name }}</td>
+                                <td><span class="category-badge">{{ item.category }}</span></td>
+                                <td>{{ item.purchase_date.strftime('%Y-%m-%d') }}</td>
+                                <td>¥{{ item.purchase_price }}</td>
+                                <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
+                                <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
+                                <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
+                                <td>
+                                    <a href="/edit/{{ item.id }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> 编辑
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 页脚 -->
+            <footer>
+                <div style="text-align: center; margin-top: clamp(20px, 5vw, 40px); padding-top: clamp(10px, 3vw, 20px);">
+                    <p style="margin: 5px 0; font-size: clamp(0.8em, 2.5vw, 0.9em);">&copy; 2025 家庭库存管理 v1.1.8</p>
+                    <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">作者: TH | 最后更新: 2025.04.15</p>
+                    <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">本产品仅供个人使用</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    // 页面加载时确保只显示画廊视图
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('galleryView').style.display = 'flex';
+        document.getElementById('tableView').style.display = 'none';
+        
+        // 根据屏幕尺寸显示相应控制区域
+        if (window.innerWidth < 992) {
+            document.querySelector('.mobile-controls').style.display = 'block';
+        }
+    });
+
+    // PC端视图切换功能
+    document.getElementById('desktopToggleView').addEventListener('click', function() {
+        toggleView(this);
+    });
+    
+    // 移动端视图切换功能
+    document.getElementById('mobileToggleView').addEventListener('click', function() {
+        toggleView(this);
+    });
+    
+    // 视图切换通用函数
+    function toggleView(toggleBtn) {
+        const galleryView = document.getElementById('galleryView');
+        const tableView = document.getElementById('tableView');
+        
+        if (galleryView.style.display === 'none') {
+            // 切换回画廊视图
+            galleryView.style.display = 'flex';
+            tableView.style.display = 'none';
+            document.getElementById('desktopToggleView').innerHTML = '<i class="bi bi-grid"></i> 切换视图';
+            document.getElementById('mobileToggleView').innerHTML = '<i class="bi bi-grid"></i>';
+        } else {
+            // 切换到表格视图
+            galleryView.style.display = 'none';
+            tableView.style.display = 'block';
+            document.getElementById('desktopToggleView').innerHTML = '<i class="bi bi-table"></i> 切换视图';
+            document.getElementById('mobileToggleView').innerHTML = '<i class="bi bi-table"></i>';
+        }
+    }
+    
+    // 卡片点击事件
+    document.querySelectorAll('.item-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // 获取当前卡片的物品ID
+            const itemId = this.getAttribute('data-id');
             
-            if (galleryView.style.display === 'none') {
-                // 切换回画廊视图
-                galleryView.style.display = 'flex';
-                tableView.style.display = 'none';
-                toggleBtn.innerHTML = '<i class="bi bi-grid"></i> 切换视图';
-            } else {
-                // 切换到表格视图
-                galleryView.style.display = 'none';
-                tableView.style.display = 'block';
-                toggleBtn.innerHTML = '<i class="bi bi-images"></i> 切换视图';
+            if (itemId && !e.target.closest('.btn-outline-danger') && !e.target.closest('.btn-outline-primary')) {
+                // 添加点击动画类
+                this.classList.add('clicked');
+                setTimeout(() => {
+                    window.location.href = `/edit/${itemId}`;
+                }, 300);
             }
         });
-        
-        // 卡片点击事件
-        document.querySelectorAll('.item-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                // 获取当前卡片的物品ID
-                const itemId = this.getAttribute('data-id');
-                
-                if (itemId && !e.target.closest('.btn-outline-danger') && !e.target.closest('.btn-outline-primary')) {
-                    // 添加点击动画类
-                    this.classList.add('clicked');
-                    setTimeout(() => {
-                        window.location.href = `/edit/${itemId}`;
-                    }, 300);
-                }
-            });
-        });
-    </script>
-
-    <footer>
-        <div style="text-align: center; margin-top: 40px; padding-top: 20px;">
-            <p style="margin: 5px 0; font-size: 0.9em;">&copy; 2025 家庭库存管理 v1.1.7</p>
-            <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">作者: TH | 最后更新: 2025.04.14</p>
-            <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">本产品仅供个人使用</p>
-        </div>
-    </footer>
-</div>
+    });
+    
+    // 响应式布局处理
+    window.addEventListener('resize', function() {
+        if (window.innerWidth < 992) {
+            document.querySelector('.mobile-controls').style.display = 'block';
+        } else {
+            document.querySelector('.mobile-controls').style.display = 'none';
+        }
+    });
+</script>
 {% endblock %}
