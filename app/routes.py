@@ -227,3 +227,46 @@ def edit_item(item_id):
         return redirect(url_for('index'))
     
     return render_template('edit_item.html', item=item)
+
+
+@app.route('/stats')
+def stats():
+    # 获取所有物品
+    items = app.storage.items
+    
+    # 处理分类
+    all_categories = set(item.category for item in items)
+    processed_categories = []
+    main_categories = set()
+    
+    for cat in all_categories:
+        if '-' in cat:
+            main_cat = cat.split('-')[0]
+            main_categories.add(main_cat)
+            processed_categories.append({
+                'full': cat,
+                'main': main_cat,
+                'sub': cat.split('-')[1]
+            })
+        else:
+            processed_categories.append({
+                'full': cat,
+                'main': cat,
+                'sub': None
+            })
+            main_categories.add(cat)
+    
+    # 计算总价值
+    total_purchase = sum((item.purchase_price + (item.shipping_fee or 0)) * item.quantity for item in items)
+    total_sold = sum(item.sold_price * item.quantity for item in items if item.sold_price is not None)
+    
+    # 排序分类
+    processed_categories.sort(key=lambda x: (x['main'], x['sub'] or ''))
+    main_categories = sorted(list(main_categories))
+    
+    return render_template('stats.html', 
+                         items=items,
+                         categories=processed_categories,
+                         main_categories=main_categories,
+                         total_purchase=total_purchase,
+                         total_sold=total_sold)

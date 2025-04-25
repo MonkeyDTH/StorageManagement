@@ -1,643 +1,13 @@
 {% extends "base.html" %}
 
+{% block title %}物品库存 - 家庭库存管理{% endblock %}
+
+{% block extra_css %}
+<!-- 引入外部CSS文件 -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
 {% block content %}
-<style>
-    /* 标题样式优化 */
-    h2 {
-        font-weight: 600;
-        color: #E0E0E0;
-        letter-spacing: 0.5px;
-    }
-    
-    /* 添加物品按钮优化 */
-    .btn-primary {
-        background: linear-gradient(135deg, #6563FF, #8785FF);
-        border: none;
-        box-shadow: 0 2px 5px rgba(101, 99, 255, 0.3);
-        transition: all 0.3s ease;
-    }
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #8785FF, #6563FF);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(101, 99, 255, 0.4);
-    }
-    
-    /* 卡片样式优化 */
-    .item-card {
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        border: 1px solid #3D3D3D;
-        transition: all 0.3s ease;
-        height: 100%;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        background-color: #2D2D2D;
-    }
-    
-    /* 添加悬停效果 */
-    .item-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(101, 99, 255, 0.2);
-        border-color: #6563FF;
-    }
-    
-    /* 添加点击效果 */
-    .item-card:active {
-        transform: translateY(-2px) scale(0.98);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    /* 添加点击后的涟漪效果 */
-    .item-card::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 5px;
-        height: 5px;
-        background: rgba(101, 99, 255, 0.3);
-        opacity: 0;
-        border-radius: 100%;
-        transform: scale(1, 1) translate(-50%);
-        transform-origin: 50% 50%;
-    }
-    
-    .item-card.clicked::after {
-        animation: ripple 1s ease-out;
-    }
-    
-    @keyframes ripple {
-        0% {
-            transform: scale(0, 0);
-            opacity: 0.5;
-        }
-        100% {
-            transform: scale(100, 100);
-            opacity: 0;
-        }
-    }
-    
-    /* 卡片内容样式 */
-    .card-body {
-        padding: 1.25rem;
-    }
-    
-    /* 卡片标题样式 */
-    .card-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #E0E0E0;
-    }
-    
-    /* 卡片图片容器样式 */
-    .card-img-top-container {
-        height: 180px;
-        overflow: hidden;
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
-        background-color: #1A1A1A;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* 卡片图片样式 */
-    .card-img-top {
-        object-fit: contain;
-        max-height: 100%;
-        max-width: 100%;
-        transition: transform 0.3s ease;
-    }
-    
-    .item-card:hover .card-img-top {
-        transform: scale(1.05);
-    }
-    
-    /* 卖出状态标签样式 */
-    .sold-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: linear-gradient(135deg, #FF6B6B, #FF9F9F);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        box-shadow: 0 2px 5px rgba(255, 107, 107, 0.3);
-        z-index: 2;
-    }
-    
-    /* 购买日期和卖出日期样式 */
-    .purchase-date {
-        color: #8785FF; /* 购买日期蓝色 */
-    }
-    
-    .sold-date {
-        color: #FF6B6B; /* 卖出日期红色 */
-    }
-    
-    /* 统一价格和日期样式 */
-    .price-info,
-    .purchase-price,
-    .sold-price,
-    .date-info,
-    .purchase-date,
-    .sold-date {
-        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        letter-spacing: 0.3px;
-        font-size: 1rem; /* 统一字体大小 */
-    }
-    
-    /* 价格样式 */
-    .purchase-price {
-        color: #8785FF;
-        font-weight: bold;
-    }
-    .sold-price {
-        color: #FF6B6B;
-        font-weight: bold;
-    }
-    
-    /* 价格信息容器样式 */
-    .price-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    /* 日期样式保持不变 */
-    .date-info {
-        text-align: left;
-    }
-    
-    /* 价格样式保持不变 */
-    .purchase-price, .sold-price {
-        text-align: right;
-    }
-    
-    /* 统计卡片样式 */
-    .stats-container {
-        margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .purchase-stat {
-        background: linear-gradient(135deg, #6563FF, #8785FF);
-    }
-    
-    .sold-stat {
-        background: linear-gradient(135deg, #FF6B6B, #FF9F9F);
-    }
-    
-    .stat-icon {
-        background-color: rgba(255, 255, 255, 0.2);
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* 表格视图样式 */
-    .table-view {
-        background-color: #2D2D2D;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-    }
-    
-    .table-view table {
-        margin-bottom: 0;
-    }
-    
-    .table-view th {
-        background-color: #1A1A1A;
-        color: #9E9E9E;
-        font-weight: 500;
-        border-bottom: 1px solid #3D3D3D;
-        padding: 12px 16px;
-        font-size: 0.9rem;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
-    
-    .table-view td {
-        border-color: #3D3D3D;
-        vertical-align: middle;
-        color: #E0E0E0;
-        padding: 12px 16px;
-        font-size: 0.95rem;
-    }
-    
-    .table-view tr:hover {
-        background-color: rgba(101, 99, 255, 0.1);
-    }
-    
-    /* 表格中的按钮样式 */
-    .table-view .btn {
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 0.85rem;
-    }
-    
-    /* 表格中的价格和日期样式 */
-    .table-view td:nth-child(3), 
-    .table-view td:nth-child(6) {
-        color: #8785FF; /* 日期颜色 */
-    }
-    
-    .table-view td:nth-child(4), 
-    .table-view td:nth-child(5) {
-        color: #8785FF; /* 购买价格颜色 */
-        font-weight: 500;
-    }
-    
-    .table-view td:nth-child(7) {
-        color: #FF6B6B; /* 卖出价格颜色 */
-        font-weight: 500;
-    }
-    
-    /* 表格中的类别样式 */
-    .table-view td:nth-child(2) {
-        position: relative;
-    }
-    
-    .table-view .category-badge {
-        background-color: #1A1A1A;
-        color: #9E9E9E;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        display: inline-block;
-    }
-    
-    /* 表格中的空单元格样式 */
-    .table-view td:empty::after {
-        content: "—";
-        color: #3D3D3D;
-    }
-    
-    .table-view table {
-        margin-bottom: 0;
-    }
-    
-    .table-view th {
-        background-color: #1A1A1A;
-        color: #9E9E9E;
-        font-weight: 500;
-        border-bottom: 1px solid #3D3D3D;
-    }
-    
-    .table-view td {
-        border-color: #3D3D3D;
-        vertical-align: middle;
-        color: #E0E0E0;
-    }
-    
-    .table-view tr:hover {
-        background-color: rgba(101, 99, 255, 0.05);
-    }
-    
-    /* 按钮样式优化 */
-    .btn {
-        position: relative;
-        overflow: hidden;
-        border: none;
-        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        border-radius: 8px;
-    }
-    
-    .btn-outline-primary {
-        background: transparent;
-        border: 1px solid #6563FF;
-        color: #6563FF;
-    }
-    
-    .btn-outline-danger {
-        background: transparent;
-        border: 1px solid #FF6B6B;
-        color: #FF6B6B;
-    }
-    
-    /* 悬停效果 */
-    .btn:hover {
-        transform: translateY(-2px);
-    }
-    
-    .btn-outline-primary:hover {
-        background: #6563FF;
-        color: white;
-        box-shadow: 0 5px 15px rgba(101, 99, 255, 0.4);
-    }
-    
-    .btn-outline-danger:hover {
-        background: #FF6B6B;
-        color: white;
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-    }
-    
-    /* 按钮内图标动画 */
-    .btn i {
-        transition: transform 0.3s ease;
-    }
-    
-    .btn:hover i {
-        transform: scale(1.1);
-    }
-    
-    .shipping-info {
-        font-size: 0.8rem;
-        color: #9E9E9E;
-        border-top: 1px dashed #3D3D3D;
-        padding-top: 3px;
-        margin-top: 3px;
-    }
-    
-    /* 筛选器样式 */
-    .form-select {
-        background-color: #1A1A1A;
-        color: #E0E0E0;
-        border: 1px solid #3D3D3D;
-    }
-    
-    .view-toggle {
-        background-color: #1A1A1A;
-        color: #E0E0E0;
-        border: 1px solid #3D3D3D;
-    }
-    
-    .view-toggle:hover {
-        background-color: #6563FF;
-        color: white;
-        border-color: #6563FF;
-    }
-    
-    /* 页脚样式 */
-    footer {
-        border-top: 1px dashed #3D3D3D;
-        margin-top: 40px;
-        padding-top: 20px;
-        text-align: center;
-        color: #9E9E9E;
-    }
-    
-    /* 全局背景和容器样式 */
-    body {
-        background-color: #1A1A1A;
-        color: #E0E0E0;
-    }
-    
-    .container {
-        background-color: #2D2D2D;
-        border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* 确保表格内容可见 */
-    .table {
-        color: #E0E0E0;
-    }
-
-    /* 移动端适配样式 */
-    @media (max-width: 767px) {
-        /* 顶部标题和操作区域 */
-        .d-flex.justify-content-between {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .d-flex.justify-content-between > div {
-            margin-top: 15px;
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .form-select {
-            width: 100% !important;
-            margin-right: 0 !important;
-        }
-        
-        .view-toggle, .btn-primary {
-            flex: 1;
-        }
-        
-        /* 统计卡片 */
-        .stat-card {
-            padding: 1rem;
-        }
-        
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-        }
-        
-        /* 画廊视图 - 修改为支持两列 */
-        #galleryView.row {
-            margin-left: -6px;
-            margin-right: -6px;
-        }
-        
-        #galleryView > .col {
-            padding-left: 6px;
-            padding-right: 6px;
-            margin-bottom: 12px;
-            /* 确保在移动端显示两列 */
-            width: 50%;
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-        
-        .card-img-top-container {
-            height: 120px;
-        }
-        
-        .card-body {
-            padding: 0.6rem;
-        }
-        
-        .card-title {
-            font-size: 0.85rem;
-            margin-bottom: 0.3rem;
-        }
-        
-        .badge {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
-        }
-        
-        .date-info, .price-info {
-            font-size: 0.75rem;
-        }
-        
-        .date-info small {
-            font-size: 0.7rem;
-        }
-        
-        .shipping-info small {
-            font-size: 0.7rem;
-        }
-        
-        .btn-sm {
-            padding: 0.2rem 0.5rem;
-            font-size: 0.75rem;
-        }
-        
-        /* 表格视图滚动 */
-        .table-view {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .table-view table {
-            min-width: 800px;
-        }
-        
-        .table-view th, .table-view td {
-            padding: 8px 12px;
-            font-size: 0.75rem;
-        }
-        
-        /* 表格视图中的按钮 */
-        .table-view .btn {
-            padding: 4px 8px;
-            font-size: 0.7rem;
-        }
-        
-        /* 页脚 */
-        footer {
-            margin-top: 30px;
-            padding-top: 15px;
-        }
-    }
-    
-    /* iPhone 15 Pro 特定优化 */
-    @media (max-width: 390px) {
-        .container {
-            padding: 12px;
-        }
-        
-        /* 保持两列布局，但调整图片高度 */
-        .card-img-top-container {
-            height: 110px;
-        }
-        
-        /* 进一步缩小字体 */
-        .card-title {
-            font-size: 0.8rem;
-        }
-        
-        .date-info, .price-info {
-            font-size: 0.7rem;
-        }
-    }
-
-    /* 容器最大宽度调整 */
-    @media (min-width: 1400px) {
-        .container {
-            max-width: 1600px;
-        }
-    }
-
-    /* PC端画廊视图列数调整 */
-    @media (min-width: 1400px) {
-        #galleryView.row > .col {
-            width: 20%;
-            flex: 0 0 20%;
-            max-width: 20%;
-        }
-    }
-
-    /* 调整侧边栏和主内容区域比例 */
-    @media (min-width: 992px) {
-        .col-lg-3 {
-            flex: 0 0 auto;
-            width: 20%;
-        }
-        
-        .col-lg-9 {
-            flex: 0 0 auto;
-            width: 80%;
-        }
-    }
-
-    /* 侧边栏样式 */
-    .sidebar {
-        background-color: #1A1A1A;
-        border-radius: 12px;
-        padding: 20px;
-        height: fit-content;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        position: sticky;
-        top: 20px;
-    }
-    
-    .sidebar-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #E0E0E0;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #3D3D3D;
-    }
-    
-    .sidebar .form-select {
-        margin-bottom: 15px;
-        width: 100%;
-    }
-    
-    .sidebar .btn {
-        width: 100%;
-        margin-bottom: 10px;
-        text-align: left;
-        padding: 10px 15px;
-    }
-    
-    .sidebar .btn i {
-        margin-right: 8px;
-    }
-    
-    /* 主内容区域 */
-    .main-content {
-        width: 100%;
-    }
-    
-    /* 移动端适配 */
-    @media (max-width: 991px) {
-        .sidebar {
-            display: none;
-        }
-        
-        .mobile-controls {
-            display: flex !important;
-        }
-    }
-    
-    @media (min-width: 992px) {
-        .mobile-controls {
-            display: none !important;
-        }
-    }
-    
-    /* 移动端控制区域 */
-    .mobile-controls {
-        margin-bottom: 20px;
-    }
-
-</style>
-
 <!-- 修改顶部操作区域，增加响应式布局支持 -->
 <div class="container pt-4">
     <!-- 移动端控制区域 -->
@@ -645,7 +15,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="mb-0">物品库存</h2>
             <div>
-                <select class="form-select me-2" onchange="filterByCategory(this.value);" style="width: 120px; display: inline-block;">
+                <select class="form-select me-2" id="mobileCategorySelect" style="width: 120px; display: inline-block;">
                     <option value="">所有类别</option>
                     {% for main_cat in main_categories %}
                     <option value="{{ main_cat }}" {% if current_category == main_cat %}selected{% endif %}>
@@ -678,7 +48,7 @@
                 
                 <div class="mb-4">
                     <label class="form-label">类别筛选</label>
-                    <select class="form-select" id="categorySelect" onchange="filterByCategory(this.value);">
+                    <select class="form-select" id="categorySelect">
                         <option value="">所有类别</option>
                         {% for main_cat in main_categories %}
                         <option value="{{ main_cat }}" {% if current_category == main_cat %}selected{% endif %}>
@@ -848,6 +218,88 @@
                 </div>
             </div>
 
+            <!-- 在表格视图后添加统计视图 -->
+            <div id="statsView" style="display: none;">
+                <!-- 统计视图内容 -->
+                <div class="stats-view-container">
+                    <!-- 统计视图顶部卡片 -->
+                    <div class="stats-header mb-4">
+                        <div class="container">
+                            <div class="row g-3">
+                                <div class="col-4">
+                                    <div class="stat-summary-card">
+                                        <div class="number">{{ items|length }}</div>
+                                        <div class="label">物品总数</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-summary-card">
+                                        <div class="number">{{ "%.2f"|format(total_purchase) }}</div>
+                                        <div class="label">物品总价</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-summary-card">
+                                        <div class="number">{{ categories|length }}</div>
+                                        <div class="label">分类总数</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 分类图标网格 -->
+                    <div class="category-grid mb-4">
+                        <!-- 这里添加分类图标 -->
+                        {% for main_cat in main_categories %}
+                        <div class="category-item">
+                            <div class="category-icon bg-{{ loop.index % 6 + 1 }}">
+                                <i class="bi bi-tag"></i>
+                            </div>
+                            <div class="category-name">{{ main_cat }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- 日历视图 -->
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <div class="calendar-title">2025-04</div>
+                            <div class="calendar-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color legend-purchase"></div>
+                                    <span>购买</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color legend-payment"></div>
+                                    <span>待付款</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color legend-expired"></div>
+                                    <span>过期</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 日历网格 -->
+                        <div class="calendar-grid">
+                            <!-- 这里添加日历内容 -->
+                            <!-- 周标题 -->
+                            <div class="calendar-weekday">周日</div>
+                            <div class="calendar-weekday">周一</div>
+                            <div class="calendar-weekday">周二</div>
+                            <div class="calendar-weekday">周三</div>
+                            <div class="calendar-weekday">周四</div>
+                            <div class="calendar-weekday">周五</div>
+                            <div class="calendar-weekday">周六</div>
+                            
+                            <!-- 日期单元格 -->
+                            <!-- 这里可以动态生成日历内容 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- 页脚 -->
             <footer>
                 <div style="text-align: center; margin-top: clamp(20px, 5vw, 40px); padding-top: clamp(10px, 3vw, 20px);">
@@ -860,90 +312,9 @@
     </div>
 </div>
 
-<!-- JavaScript -->
-<script>
-    // 页面加载时确保只显示画廊视图
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('galleryView').style.display = 'flex';
-        document.getElementById('tableView').style.display = 'none';
-        
-        // 根据屏幕尺寸显示相应控制区域
-        if (window.innerWidth < 992) {
-            document.querySelector('.mobile-controls').style.display = 'block';
-        }
-    });
+{% endblock %}
 
-    // PC端视图切换功能
-    document.getElementById('desktopToggleView').addEventListener('click', function() {
-        toggleView(this);
-    });
-    
-    // 移动端视图切换功能
-    document.getElementById('mobileToggleView').addEventListener('click', function() {
-        toggleView(this);
-    });
-    
-    // 视图切换通用函数
-    function toggleView(toggleBtn) {
-        const galleryView = document.getElementById('galleryView');
-        const tableView = document.getElementById('tableView');
-        
-        if (galleryView.style.display === 'none') {
-            // 切换回画廊视图
-            galleryView.style.display = 'flex';
-            tableView.style.display = 'none';
-            document.getElementById('desktopToggleView').innerHTML = '<i class="bi bi-grid"></i> 切换视图';
-            document.getElementById('mobileToggleView').innerHTML = '<i class="bi bi-grid"></i>';
-        } else {
-            // 切换到表格视图
-            galleryView.style.display = 'none';
-            tableView.style.display = 'block';
-            document.getElementById('desktopToggleView').innerHTML = '<i class="bi bi-table"></i> 切换视图';
-            document.getElementById('mobileToggleView').innerHTML = '<i class="bi bi-table"></i>';
-        }
-    }
-    
-    // 卡片点击事件
-    document.querySelectorAll('.item-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            // 获取当前卡片的物品ID
-            const itemId = this.getAttribute('data-id');
-            
-            if (itemId && !e.target.closest('.btn-outline-danger') && !e.target.closest('.btn-outline-primary')) {
-                // 添加点击动画类
-                this.classList.add('clicked');
-                setTimeout(() => {
-                    window.location.href = `/edit/${itemId}`;
-                }, 300);
-            }
-        });
-    });
-    
-    // 响应式布局处理
-    window.addEventListener('resize', function() {
-        if (window.innerWidth < 992) {
-            document.querySelector('.mobile-controls').style.display = 'block';
-        } else {
-            document.querySelector('.mobile-controls').style.display = 'none';
-        }
-    });
-
-    // 分类筛选功能
-    function filterByCategory(category) {
-        // 构建URL，区分是主分类还是子分类
-        let url = new URL(window.location.href);
-        if (category === '') {
-            url = new URL('{{ url_for("index") }}', window.location.origin);
-        } else {
-            url.searchParams.set('category', category);
-            // 添加一个参数来标识是否为主分类
-            if (!category.includes('-')) {
-                url.searchParams.set('main_category', 'true');
-            } else {
-                url.searchParams.delete('main_category');
-            }
-        }
-        window.location.href = url.toString();
-    }
-</script>
+{% block extra_js %}
+<!-- 引入外部JS文件 -->
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}

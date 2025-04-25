@@ -1,0 +1,562 @@
+/* 基础样式 */
+body {
+    background-color: #121212;
+    color: #E0E0E0;
+    font-family: 'Noto Sans SC', sans-serif;
+}
+
+.container {
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* 卡片样式 */
+.item-card {
+    background-color: #1A1A1A;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    height: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.item-card.clicked {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top-container {
+    height: 180px;
+    overflow: hidden;
+    background-color: #2A2A2A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #FFFFFF;
+}
+
+/* 徽章样式 */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 6px;
+}
+
+.category-badge {
+    background-color: #3D3D3D;
+    color: #E0E0E0;
+    padding: 0.35em 0.65em;
+    border-radius: 6px;
+    font-size: 0.75rem;
+}
+
+/* 价格信息 */
+.price-info {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.purchase-price {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+.sold-price {
+    color: #FF9800;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+/* 日期信息 */
+.date-info {
+    font-size: 0.8rem;
+    color: #9E9E9E;
+}
+
+.purchase-date, .sold-date {
+    display: inline-block;
+}
+
+/* 已售出标记 */
+.sold-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(244, 67, 54, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 1;
+}
+
+/* 运费信息 */
+.shipping-info {
+    font-size: 0.8rem;
+    color: #9E9E9E;
+    margin-top: 5px;
+}
+
+/* 统计卡片 */
+.stats-container {
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-stat {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+
+.sold-stat {
+    background: linear-gradient(135deg, #FF9800, #F57C00);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 表格视图 */
+.table-view {
+    background-color: #1A1A1A;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    margin-bottom: 0;
+    color: #E0E0E0;
+}
+
+.table th {
+    background-color: #2A2A2A;
+    border-color: #3D3D3D;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.table td {
+    border-color: #3D3D3D;
+    vertical-align: middle;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    background-color: #1A1A1A;
+    border-radius: 12px;
+    padding: 20px;
+    height: fit-content;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #E0E0E0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #3D3D3D;
+}
+
+.sidebar .form-select {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.sidebar .btn {
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
+    padding: 10px 15px;
+}
+
+.sidebar .btn i {
+    margin-right: 8px;
+}
+
+/* 主内容区域 */
+.main-content {
+    width: 100%;
+}
+
+/* 移动端适配 */
+@media (max-width: 991px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .mobile-controls {
+        display: flex !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .mobile-controls {
+        display: none !important;
+    }
+}
+
+/* 移动端控制区域 */
+.mobile-controls {
+    margin-bottom: 20px;
+}
+
+/* 移动端适配样式 */
+@media (max-width: 767px) {
+    /* 顶部标题和操作区域 */
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .d-flex.justify-content-between > div {
+        margin-top: 15px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .form-select {
+        width: 100% !important;
+        margin-right: 0 !important;
+    }
+    
+    .view-toggle, .btn-primary {
+        flex: 1;
+    }
+    
+    /* 统计卡片 */
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* 画廊视图 - 修改为支持两列 */
+    #galleryView.row {
+        margin-left: -6px;
+        margin-right: -6px;
+    }
+    
+    #galleryView > .col {
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-bottom: 12px;
+        /* 确保在移动端显示两列 */
+        width: 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    
+    .card-img-top-container {
+        height: 120px;
+    }
+    
+    .card-body {
+        padding: 0.6rem;
+    }
+    
+    .card-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .date-info, .price-info {
+        font-size: 0.75rem;
+    }
+    
+    .date-info small {
+        font-size: 0.7rem;
+    }
+    
+    .shipping-info small {
+        font-size: 0.7rem;
+    }
+    
+    .btn-sm {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    /* 表格视图滚动 */
+    .table-view {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table-view table {
+        min-width: 800px;
+    }
+    
+    .table-view th, .table-view td {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+    
+    /* 表格视图中的按钮 */
+    .table-view .btn {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+    }
+    
+    /* 页脚 */
+    footer {
+        margin-top: 30px;
+        padding-top: 15px;
+    }
+}
+
+/* iPhone 15 Pro 特定优化 */
+@media (max-width: 390px) {
+    .container {
+        padding: 12px;
+    }
+    
+    /* 保持两列布局，但调整图片高度 */
+    .card-img-top-container {
+        height: 110px;
+    }
+    
+    /* 进一步缩小字体 */
+    .card-title {
+        font-size: 0.8rem;
+    }
+    
+    .date-info, .price-info {
+        font-size: 0.7rem;
+    }
+}
+
+/* 容器最大宽度调整 */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1600px;
+    }
+}
+
+/* PC端画廊视图列数调整 */
+@media (min-width: 1400px) {
+    #galleryView.row > .col {
+        width: 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+/* 调整侧边栏和主内容区域比例 */
+@media (min-width: 992px) {
+    .col-lg-3 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+    
+    .col-lg-9 {
+        flex: 0 0 auto;
+        width: 80%;
+    }
+}
+
+/* 统计视图样式 */
+.stats-overview {
+    background-color: #1A1A1A;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card {
+    background-color: #2A2A2A;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card .number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stats-card .label {
+    font-size: 0.9rem;
+    color: #9E9E9E;
+}
+
+.stats-card.orange .number {
+    color: #FF9800;
+}
+
+.stats-card.green .number {
+    color: #4CAF50;
+}
+
+.stats-card.blue .number {
+    color: #2196F3;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.category-item {
+    background-color: #2A2A2A;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.category-item:hover {
+    background-color: #3D3D3D;
+    transform: translateY(-2px);
+}
+
+.category-item i {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.category-item .name {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.category-item .count {
+    font-size: 0.7rem;
+    color: #9E9E9E;
+}
+
+.calendar-view {
+    background-color: #2A2A2A;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    text-align: center;
+    padding: 8px 0;
+    font-size: 0.9rem;
+}
+
+.calendar-date {
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 6px;
+    position: relative;
+}
+
+.calendar-date.has-item {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.calendar-date.has-sold {
+    background-color: rgba(255, 152, 0, 0.2);
+}
+
+.calendar-date.has-both::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+}
+
+/* 移动端统计视图适配 */
+@media (max-width: 767px) {
+    .stats-card .number {
+        font-size: 1.5rem;
+    }
+    
+    .stats-card .label {
+        font-size: 0.8rem;
+    }
+    
+    .category-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+    
+    .category-item i {
+        font-size: 1.2rem;
+    }
+    
+    .category-item .name {
+        font-size: 0.7rem;
+    }
+    
+    .calendar-day, .calendar-date {
+        font-size: 0.8rem;
+        padding: 5px 0;
+    }
+}

@@ -433,5 +433,20 @@
     "sold_price": null,
     "remark": "",
     "shipping_fee": 0.0
+  },
+  {
+    "id": 30,
+    "name": "dxf卡普",
+    "category": "手办-DXF",
+    "purchase_price": 35.0,
+    "quantity": 1,
+    "image": null,
+    "purchase_date": "2025-04-20",
+    "sold_date": null,
+    "sold_price": null,
+    "purchase_channel": "闲鱼@我是韭菜请割我 —— 猫步交易群@王天佑",
+    "condition": "无损无盒",
+    "remark": "送约束底座",
+    "shipping_fee": 8.0
   }
 ]

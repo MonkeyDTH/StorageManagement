@@ -1,0 +1,490 @@
+{% extends "base.html" %}
+
+{% block title %}统计分析 - 家庭库存管理{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 统计页面特定样式 */
+    .stats-header {
+        background-color: #FFC107;
+        padding: 20px 0;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-summary-card {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+    }
+    
+    .stat-summary-card .number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #FF9800;
+        margin: 5px 0;
+    }
+    
+    .stat-summary-card .label {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .category-item {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 15px 10px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .category-icon {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+    }
+    
+    .category-icon i {
+        font-size: 1.5rem;
+        color: #fff;
+    }
+    
+    .category-name {
+        font-size: 0.85rem;
+        color: #333;
+    }
+    
+    /* 图标背景颜色 */
+    .bg-room { background-color: #FF9800; }
+    .bg-tag { background-color: #03A9F4; }
+    .bg-source { background-color: #FFC107; }
+    .bg-status { background-color: #9C27B0; }
+    .bg-brand { background-color: #F44336; }
+    .bg-season { background-color: #FFEB3B; }
+    .bg-color { background-color: #FF5722; }
+    .bg-material { background-color: #E91E63; }
+    .bg-author { background-color: #FF9800; }
+    .bg-translator { background-color: #F44336; }
+    .bg-publisher { background-color: #FFC107; }
+    .bg-payment { background-color: #03A9F4; }
+    
+    /* 日历视图 */
+    .calendar-container {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .calendar-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    
+    .calendar-legend {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.8rem;
+    }
+    
+    .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        margin-right: 5px;
+    }
+    
+    .legend-purchase { background-color: #FFC107; }
+    .legend-payment { background-color: #4CAF50; }
+    .legend-expired { background-color: #F44336; }
+    
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+    }
+    
+    .calendar-weekday {
+        text-align: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        padding: 5px 0;
+    }
+    
+    .calendar-day {
+        text-align: center;
+        padding: 10px 0;
+        border-radius: 8px;
+        position: relative;
+    }
+    
+    .calendar-day.has-event::after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: #FFC107;
+    }
+    
+    .calendar-day.current {
+        background-color: #FFC107;
+        color: #fff;
+    }
+    
+    /* 底部导航 */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #999;
+        text-decoration: none;
+    }
+    
+    .nav-item.active {
+        color: #FFC107;
+    }
+    
+    .nav-item i {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .nav-item span {
+        font-size: 0.8rem;
+    }
+    
+    /* 添加按钮 */
+    .add-button {
+        position: fixed;
+        bottom: 70px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #FFC107;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        text-decoration: none;
+    }
+    
+    .add-button i {
+        font-size: 2rem;
+    }
+    
+    /* 移动端适配 */
+    @media (max-width: 767px) {
+        .category-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .stat-summary-card .number {
+            font-size: 1.5rem;
+        }
+        
+        .stat-summary-card .label {
+            font-size: 0.8rem;
+        }
+        
+        .category-icon {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .category-name {
+            font-size: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container pt-4 pb-5 mb-5">
+    <!-- 统计头部 -->
+    <div class="stats-header">
+        <h2 class="text-center text-white mb-4">统计</h2>
+        
+        <div class="container">
+            <div class="row g-3">
+                <div class="col-4">
+                    <div class="stat-summary-card">
+                        <div class="number">{{ items|length }}</div>
+                        <div class="label">物品总数</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-summary-card">
+                        <div class="number">{{ "%.2f"|format(total_purchase) }}</div>
+                        <div class="label">物品总价</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-summary-card">
+                        <div class="number">{{ categories|length }}</div>
+                        <div class="label">分类总数</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分类统计条 -->
+            <div class="progress mt-3" style="height: 15px; border-radius: 10px;">
+                {% for main_cat in main_categories %}
+                {% set count = items|selectattr('category', 'startswith', main_cat)|list|length %}
+                {% set percentage = (count / items|length * 100)|int %}
+                <div class="progress-bar bg-{{ loop.index % 6 + 1 }}" role="progressbar" style="width: {{ percentage }}%" 
+                     aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" 
+                     title="{{ main_cat }}: {{ count }}件">
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- 主分类统计 -->
+            <div class="mt-3 ps-2">
+                {% for main_cat in main_categories %}
+                {% set count = items|selectattr('category', 'startswith', main_cat)|list|length %}
+                <div class="d-flex align-items-center mb-1">
+                    <div style="width: 15px; height: 15px; background-color: var(--bs-{{ loop.index % 6 + 1 }}); border-radius: 3px;"></div>
+                    <div class="ms-2" style="font-size: 0.85rem;">{{ main_cat }}</div>
+                    <div class="ms-auto" style="font-size: 0.85rem;">{{ count }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- 分类图标网格 -->
+    <div class="section-title mb-3">分类筛选</div>
+    <div class="category-grid">
+        <a href="{{ url_for('index', filter_type='room') }}" class="category-item">
+            <div class="category-icon bg-room">
+                <i class="bi bi-house"></i>
+            </div>
+            <div class="category-name">房间</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='tag') }}" class="category-item">
+            <div class="category-icon bg-tag">
+                <i class="bi bi-tag"></i>
+            </div>
+            <div class="category-name">标签</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='source') }}" class="category-item">
+            <div class="category-icon bg-source">
+                <i class="bi bi-cart"></i>
+            </div>
+            <div class="category-name">来源</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='status') }}" class="category-item">
+            <div class="category-icon bg-status">
+                <i class="bi bi-check-square"></i>
+            </div>
+            <div class="category-name">状态</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='brand') }}" class="category-item">
+            <div class="category-icon bg-brand">
+                <i class="bi bi-award"></i>
+            </div>
+            <div class="category-name">品牌</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='season') }}" class="category-item">
+            <div class="category-icon bg-season">
+                <i class="bi bi-sun"></i>
+            </div>
+            <div class="category-name">季节</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='color') }}" class="category-item">
+            <div class="category-icon bg-color">
+                <i class="bi bi-palette"></i>
+            </div>
+            <div class="category-name">颜色</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='material') }}" class="category-item">
+            <div class="category-icon bg-material">
+                <i class="bi bi-box"></i>
+            </div>
+            <div class="category-name">材质</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='author') }}" class="category-item">
+            <div class="category-icon bg-author">
+                <i class="bi bi-person"></i>
+            </div>
+            <div class="category-name">作者</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='translator') }}" class="category-item">
+            <div class="category-icon bg-translator">
+                <i class="bi bi-translate"></i>
+            </div>
+            <div class="category-name">译者</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='publisher') }}" class="category-item">
+            <div class="category-icon bg-publisher">
+                <i class="bi bi-building"></i>
+            </div>
+            <div class="category-name">出版社</div>
+        </a>
+        <a href="{{ url_for('index', filter_type='payment') }}" class="category-item">
+            <div class="category-icon bg-payment">
+                <i class="bi bi-credit-card"></i>
+            </div>
+            <div class="category-name">付款</div>
+        </a>
+    </div>
+    
+    <!-- 日历视图 -->
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="calendar-title">2025-04</div>
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <div class="legend-color legend-purchase"></div>
+                    <span>购买</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-payment"></div>
+                    <span>待付款</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-expired"></div>
+                    <span>过期</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calendar-grid">
+            <div class="calendar-weekday">周日</div>
+            <div class="calendar-weekday">周一</div>
+            <div class="calendar-weekday">周二</div>
+            <div class="calendar-weekday">周三</div>
+            <div class="calendar-weekday">周四</div>
+            <div class="calendar-weekday">周五</div>
+            <div class="calendar-weekday">周六</div>
+            
+            <!-- 空白日期占位 -->
+            <div class="calendar-day"></div>
+            <div class="calendar-day">1</div>
+            <div class="calendar-day">2</div>
+            <div class="calendar-day">3</div>
+            <div class="calendar-day">4</div>
+            <div class="calendar-day">5</div>
+            <div class="calendar-day">6</div>
+            <div class="calendar-day">7</div>
+            <div class="calendar-day">8</div>
+            <div class="calendar-day">9</div>
+            <div class="calendar-day">10</div>
+            <div class="calendar-day">11</div>
+            <div class="calendar-day">12</div>
+            <div class="calendar-day">13</div>
+            <div class="calendar-day">14</div>
+            <div class="calendar-day has-event">15</div>
+            <div class="calendar-day">16</div>
+            <div class="calendar-day">17</div>
+            <div class="calendar-day">18</div>
+            <div class="calendar-day">19</div>
+            <div class="calendar-day">20</div>
+            <div class="calendar-day">21</div>
+            <div class="calendar-day">22</div>
+            <div class="calendar-day">23</div>
+            <div class="calendar-day">24</div>
+            <div class="calendar-day current">25</div>
+            <div class="calendar-day">26</div>
+            <div class="calendar-day">27</div>
+            <div class="calendar-day">28</div>
+            <div class="calendar-day">29</div>
+            <div class="calendar-day">30</div>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <a href="{{ url_for('index') }}" class="nav-item">
+            <i class="bi bi-box"></i>
+            <span>主页</span>
+        </a>
+        <a href="{{ url_for('stats') }}" class="nav-item active">
+            <i class="bi bi-bar-chart"></i>
+            <span>统计</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="bi bi-search"></i>
+            <span>发现</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="bi bi-person"></i>
+            <span>我的</span>
+        </a>
+    </div>
+    
+    <!-- 添加按钮 -->
+    <a href="{{ url_for('add_item') }}" class="add-button">
+        <i class="bi bi-plus"></i>
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 获取当前日期
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+    
+    // 更新日历标题
+    document.querySelector('.calendar-title').textContent = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
+    
+    // 动态生成日历
+    function generateCalendar(year, month) {
+        // 这里可以添加动态生成日历的代码
+        // 根据实际数据标记有事件的日期
+    }
+    
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+        // 可以添加其他初始化代码
+    });
+</script>
+{% endblock %}
