@@ -186,6 +186,28 @@ body {
     top: 20px;
 }
 
+.sidebar .btn {
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
+    padding: 10px 15px;
+    background-color: #2A2A2A;
+    color: #E0E0E0;
+    border: 1px solid #3D3D3D;
+    transition: all 0.2s;
+}
+
+.sidebar .btn:hover {
+    background-color: #3D3D3D;
+    color: #FFFFFF;
+    border-color: #4CAF50;
+}
+
+.sidebar .btn i {
+    margin-right: 8px;
+    color: #4CAF50;
+}
+
 .sidebar-title {
     font-size: 1.1rem;
     font-weight: 600;

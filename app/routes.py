@@ -193,40 +193,56 @@ def edit_item(item_id):
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        item.name = request.form['name']
-        item.category = request.form['category']
-        item.purchase_price = float(request.form['price'])
-        item.shipping_fee = float(request.form.get('shipping_fee', 0))  # 新增运费处理
-        item.quantity = int(request.form['quantity'])
-        item.purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
-        item.purchase_channel = request.form.get('purchase_channel')
-        item.condition = request.form.get('condition')
-        item.remark = request.form.get('remark')
-        
-        # 处理卖出信息
-        sold_price = request.form.get('sold_price')
-        item.sold_price = float(sold_price) if sold_price else None
-        sold_date = request.form.get('sold_date')
-        item.sold_date = datetime.strptime(sold_date, '%Y-%m-%d') if sold_date else None
-        
-        # 处理图片更新
-        if 'image' in request.files:
-            file = request.files['image']
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-                
-                compressed_img = compress_image(file)
-                if compressed_img:
-                    with open(upload_path, 'wb') as f:
-                        f.write(compressed_img.read())
-                    item.image = filename
-        
-        app.storage.save_items()
-        return redirect(url_for('index'))
+        try:
+            item.name = request.form['name']
+            item.category = request.form['category']
+            item.purchase_price = float(request.form['price'])
+            item.shipping_fee = float(request.form.get('shipping_fee', 0))
+            item.quantity = int(request.form.get('quantity', 1))
+            purchase_date = request.form.get('purchase_date')
+            item.purchase_date = datetime.strptime(purchase_date, '%Y-%m-%d') if purchase_date else None
+            item.purchase_channel = request.form.get('purchase_channel')
+            item.condition = request.form.get('condition')
+            item.remark = request.form.get('remark')
+            
+            # 处理卖出信息
+            sold_price = request.form.get('sold_price')
+            item.sold_price = float(sold_price) if sold_price else None
+            sold_date = request.form.get('sold_date')
+            item.sold_date = datetime.strptime(sold_date, '%Y-%m-%d') if sold_date else None
+            
+            # 处理图片更新
+            if 'image' in request.files:
+                file = request.files['image']
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                    
+                    compressed_img = compress_image(file)
+                    if compressed_img:
+                        # 获取旋转角度
+                        rotation_angle = int(request.form.get('rotation_angle', 0))
+                        if rotation_angle != 0:
+                            # 实际旋转图片
+                            img = Image.open(compressed_img)
+                            img = img.rotate(-rotation_angle, expand=True)
+                            compressed_img = io.BytesIO()
+                            img.save(compressed_img, format='JPEG', quality=85)
+                            compressed_img.seek(0)
+                        
+                        with open(upload_path, 'wb') as f:
+                            f.write(compressed_img.read())
+                        item.image = filename
+            
+            app.storage.save_items()
+            return redirect(url_for('index'))
+        except Exception as e:
+            app.logger.error(f"编辑物品出错: {str(e)}")
+            flash('编辑物品时发生错误', 'error')
+            return redirect(url_for('edit_item', item_id=item.id))
     
-    return render_template('edit_item.html', item=item)
+    return render_template('edit_item.html', title='编辑物品', item=item)
 
 
 @app.route('/stats')
