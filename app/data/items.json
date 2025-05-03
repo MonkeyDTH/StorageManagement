@@ -29,7 +29,7 @@
     "sold_price": null,
     "remark": "",
     "shipping_fee": 0.0,
-    "arrival_date": "2025-04-06"
+    "arrival_date": null
   },
   {
     "id": 3,
@@ -45,7 +45,7 @@
     "sold_price": null,
     "remark": "",
     "shipping_fee": 0.0,
-    "arrival_date": "2025-03-31"
+    "arrival_date": null
   },
   {
     "id": 4,
@@ -343,13 +343,13 @@
     "quantity": 1,
     "image": "2024-11-23_21-31-29_IMG_5167.JPG",
     "purchase_date": "2024-11-23",
-    "purchase_channel": null,
-    "condition": null,
+    "purchase_channel": "线下@金猫哥",
+    "condition": "全新",
     "sold_date": null,
     "sold_price": null,
-    "remark": null,
-    "shipping_fee": 0,
-    "arrival_date": null
+    "remark": "",
+    "shipping_fee": 0.0,
+    "arrival_date": "2024-11-23"
   },
   {
     "id": 23,
@@ -477,7 +477,7 @@
     "sold_price": null,
     "remark": "送约束底座",
     "shipping_fee": 8.0,
-    "arrival_date": "2025-04-20"
+    "arrival_date": null
   },
   {
     "id": 31,
@@ -493,7 +493,7 @@
     "sold_price": null,
     "remark": "微信直接交易",
     "shipping_fee": 0.0,
-    "arrival_date": "2025-05-01"
+    "arrival_date": null
   },
   {
     "id": 32,
@@ -509,7 +509,7 @@
     "sold_price": null,
     "remark": "",
     "shipping_fee": 0.0,
-    "arrival_date": "2025-05-01"
+    "arrival_date": null
   },
   {
     "id": 33,

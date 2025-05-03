@@ -48,7 +48,7 @@ class Item:
             'sold_price': self.sold_price,
             'remark': self.remark,
             'shipping_fee': self.shipping_fee,  # 新增运费字段
-            'arrival_date': self.arrival_date.strftime('%Y-%m-%d') if self.arrival_date else None  # 新增到货日期字段
+            'arrival_date': self.arrival_date.strftime('%Y-%m-%d') if self.arrival_date and hasattr(self.arrival_date, 'strftime') else None,  # 新增到货日期字段
         }
 
 class StorageManager:
