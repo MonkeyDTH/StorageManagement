@@ -225,16 +225,6 @@ def edit_item(item_id):
                     
                     compressed_img = compress_image(file)
                     if compressed_img:
-                        # 获取旋转角度
-                        rotation_angle = int(request.form.get('rotation_angle', 0))
-                        if rotation_angle != 0:
-                            # 实际旋转图片
-                            img = Image.open(compressed_img)
-                            img = img.rotate(-rotation_angle, expand=True)
-                            compressed_img = io.BytesIO()
-                            img.save(compressed_img, format='JPEG', quality=85)
-                            compressed_img.seek(0)
-                        
                         with open(upload_path, 'wb') as f:
                             f.write(compressed_img.read())
                         item.image = filename

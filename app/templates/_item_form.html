@@ -35,12 +35,12 @@
             <div class="col-md-6">
                 <label class="form-label">购买日期</label>
                 <input type="date" class="form-control" name="purchase_date" 
-                       value="{% if item and item.purchase_date %}{{ item.purchase_date.strftime('%Y-%m-%d') }}{% endif %}">
+                       value="{% if item and item.purchase_date and not item.purchase_date is string %}{{ item.purchase_date.strftime('%Y-%m-%d') }}{% elif item and item.purchase_date %}{{ item.purchase_date }}{% endif %}">
             </div>
             <div class="col-md-6">
                 <label class="form-label">到货日期</label>
                 <input type="date" class="form-control" name="arrival_date" 
-                       value="{% if item and item.arrival_date %}{{ item.arrival_date.strftime('%Y-%m-%d') }}{% endif %}">
+                       value="{% if item and item.arrival_date and not item.arrival_date is string %}{{ item.arrival_date.strftime('%Y-%m-%d') }}{% elif item and item.arrival_date %}{{ item.arrival_date }}{% endif %}">
             </div>
         </div>
 
@@ -79,10 +79,6 @@
                          class="img-fluid rounded mb-3 preview-image" 
                          style="max-height: 400px; cursor: zoom-in;"
                          data-original-src="{{ url_for('static', filename='uploads/' + item.image) }}">
-                    <div class="d-flex justify-content-center gap-2 mb-3">
-                        <button class="btn btn-outline-primary rotate-btn" data-degrees="90">↻ 顺时针旋转</button>
-                        <button class="btn btn-outline-primary rotate-btn" data-degrees="-90">↺ 逆时针旋转</button>
-                    </div>
                 </div>
             {% endif %}
             <img id="imagePreview" src="#" alt="图片预览" class="img-fluid rounded mt-2" style="display: none; max-height: 400px;">
@@ -119,23 +115,15 @@
         });
     });
 
-    // 保持原有的图片预览功能（更新版）
+    // 图片预览功能
     document.getElementById('imageInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = document.getElementById('imagePreview');
-                const currentImg = document.querySelector('.preview-image');
-                
                 preview.src = e.target.result;
                 preview.style.display = 'block';
-                
-                // 如果有旋转角度，应用到新预览图片
-                if(currentImg) {
-                    const currentRotation = currentImg.style.transform;
-                    preview.style.transform = currentRotation;
-                }
             }
             reader.readAsDataURL(file);
         }

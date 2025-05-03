@@ -38,14 +38,14 @@
     "purchase_price": 90.0,
     "quantity": 1,
     "image": "2025-03-31_12-07-29_IMG_7831.JPG",
-    "purchase_date": "2025-03-31",
+    "purchase_date": "2025-03-29",
     "purchase_channel": "闲鱼@曹图图呀",
     "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0,
-    "arrival_date": null
+    "shipping_fee": 0.0,
+    "arrival_date": "2025-03-31"
   },
   {
     "id": 4,
@@ -470,14 +470,14 @@
     "purchase_price": 35.0,
     "quantity": 1,
     "image": "2025-04-20_15-27-30_IMG_8398.JPG",
-    "purchase_date": "2025-04-20",
+    "purchase_date": "2025-04-13",
     "purchase_channel": "闲鱼@我是韭菜请割我 —— 猫步交易群@王天佑",
     "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
     "remark": "送约束底座",
     "shipping_fee": 8.0,
-    "arrival_date": null
+    "arrival_date": "2025-04-20"
   },
   {
     "id": 31,
@@ -486,14 +486,14 @@
     "purchase_price": 40.0,
     "quantity": 1,
     "image": "THC05012.jpeg",
-    "purchase_date": "2025-05-01",
+    "purchase_date": "2025-04-29",
     "purchase_channel": "猫步群-兔子",
     "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
     "remark": "微信直接交易",
     "shipping_fee": 0.0,
-    "arrival_date": null
+    "arrival_date": "2025-05-01"
   },
   {
     "id": 32,
@@ -502,14 +502,14 @@
     "purchase_price": 18.0,
     "quantity": 1,
     "image": "2025-05-01_13-12-30_THC05032.JPG",
-    "purchase_date": "2025-05-01",
+    "purchase_date": "2025-04-23",
     "purchase_channel": "闲鱼@Xyoooo0 —— 猫步群交易群@Xyo",
     "condition": "无损无盒",
     "sold_date": null,
     "sold_price": null,
     "remark": "",
     "shipping_fee": 0.0,
-    "arrival_date": null
+    "arrival_date": "2025-05-01"
   },
   {
     "id": 33,
@@ -517,7 +517,7 @@
     "category": "手办-DXF",
     "purchase_price": 75.0,
     "quantity": 1,
-    "image": null,
+    "image": "THC05143.jpeg",
     "purchase_date": "2025-05-03",
     "purchase_channel": "闲鱼@cEnjlayU",
     "condition": "无损有盒",
@@ -533,7 +533,7 @@
     "category": "手办-DXF",
     "purchase_price": 44.24,
     "quantity": 1,
-    "image": null,
+    "image": "THC05154.jpeg",
     "purchase_date": "2025-05-03",
     "purchase_channel": "闲鱼@Crocodile",
     "condition": "无损有盒",
