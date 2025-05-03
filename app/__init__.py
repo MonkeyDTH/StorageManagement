@@ -15,7 +15,8 @@ DATA_FILE = Path(__file__).parent / 'data' / 'items.json'
 class Item:
     def __init__(self, name, category, purchase_price, quantity=1, image=None, 
                  purchase_date=None, sold_date=None, sold_price=None, id=None,
-                 purchase_channel=None, condition=None, remark=None, shipping_fee=0):  # 新增shipping_fee参数
+                 purchase_channel=None, condition=None, remark=None, shipping_fee=0, 
+                 arrival_date=None):  # 新增arrival_date参数
         self.id = id or len(app.storage.items) + 1
         self.name = name
         self.category = category
@@ -29,6 +30,7 @@ class Item:
         self.sold_price = sold_price
         self.remark = remark
         self.shipping_fee = shipping_fee  # 新增运费属性
+        self.arrival_date = arrival_date  # 新增到货日期属性
 
     @property
     def dict(self):
@@ -45,7 +47,8 @@ class Item:
             'sold_date': self.sold_date.strftime('%Y-%m-%d') if self.sold_date else None,
             'sold_price': self.sold_price,
             'remark': self.remark,
-            'shipping_fee': self.shipping_fee  # 新增运费字段
+            'shipping_fee': self.shipping_fee,  # 新增运费字段
+            'arrival_date': self.arrival_date.strftime('%Y-%m-%d') if self.arrival_date else None  # 新增到货日期字段
         }
 
 class StorageManager:

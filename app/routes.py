@@ -123,6 +123,8 @@ def add_item():
             category = request.form.get('category', '').strip()
             price = request.form.get('price', '0').strip()
             quantity = request.form.get('quantity', '1').strip()
+            arrival_date = request.form.get('arrival_date')
+            new_item.arrival_date = datetime.strptime(arrival_date, '%Y-%m-%d') if arrival_date else None
             
             if not name or not category:
                 flash('物品名称和类别不能为空', 'error')
@@ -204,6 +206,8 @@ def edit_item(item_id):
             item.purchase_channel = request.form.get('purchase_channel')
             item.condition = request.form.get('condition')
             item.remark = request.form.get('remark')
+            arrival_date = request.form.get('arrival_date')
+            item.arrival_date = datetime.strptime(arrival_date, '%Y-%m-%d') if arrival_date else None
             
             # 处理卖出信息
             sold_price = request.form.get('sold_price')

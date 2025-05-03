@@ -12,7 +12,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "缺眼镜，手断过固定",
-    "shipping_fee": 16.0
+    "shipping_fee": 16.0,
+    "arrival_date": null
   },
   {
     "id": 2,
@@ -21,13 +22,14 @@
     "purchase_price": 23.6,
     "quantity": 1,
     "image": "2025-04-06_12-37-56_IMG_8039.JPG",
-    "purchase_date": "2025-04-05",
+    "purchase_date": "2025-04-01",
     "purchase_channel": "闲鱼@Love卯",
     "condition": "全新",
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0
+    "shipping_fee": 0.0,
+    "arrival_date": "2025-04-06"
   },
   {
     "id": 3,
@@ -42,7 +44,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 4,
@@ -57,7 +60,8 @@
     "sold_date": "2025-01-13",
     "sold_price": 140.0,
     "remark": "",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 5,
@@ -72,7 +76,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "和DXF马尔科打包65包邮，带约束底座",
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 6,
@@ -87,7 +92,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "和DXF红发打包65包邮，带约束底座",
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 7,
@@ -102,7 +108,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "拆摆，微瑕，无盒，阿穷家翻模",
-    "shipping_fee": 13.0
+    "shipping_fee": 13.0,
+    "arrival_date": null
   },
   {
     "id": 8,
@@ -117,7 +124,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "少一根烟",
-    "shipping_fee": 17.0
+    "shipping_fee": 17.0,
+    "arrival_date": null
   },
   {
     "id": 9,
@@ -132,7 +140,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "胸口有小瑕疵",
-    "shipping_fee": 27.0
+    "shipping_fee": 27.0,
+    "arrival_date": null
   },
   {
     "id": 10,
@@ -147,7 +156,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "高配+低配地台",
-    "shipping_fee": 54.85
+    "shipping_fee": 54.85,
+    "arrival_date": null
   },
   {
     "id": 11,
@@ -162,7 +172,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "运费23，用券后-23，实付0元，卖家错寄特快，补偿5元",
-    "shipping_fee": -5.0
+    "shipping_fee": -5.0,
+    "arrival_date": null
   },
   {
     "id": 12,
@@ -177,7 +188,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "无底座，后购入文物底座 32",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 13,
@@ -192,7 +204,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "后购入文物底座 25",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 14,
@@ -207,7 +220,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "后购入文物底座35",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 15,
@@ -222,7 +236,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 16,
@@ -237,7 +252,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 17,
@@ -252,7 +268,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 18,
@@ -267,7 +284,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 19,
@@ -282,7 +300,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 20,
@@ -297,7 +316,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 21,
@@ -312,7 +332,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 22,
@@ -327,7 +348,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 23,
@@ -342,7 +364,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 24,
@@ -357,7 +380,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 25,
@@ -372,7 +396,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 26,
@@ -387,7 +412,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 27,
@@ -402,7 +428,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 28,
@@ -417,7 +444,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": null,
-    "shipping_fee": 0
+    "shipping_fee": 0,
+    "arrival_date": null
   },
   {
     "id": 29,
@@ -432,7 +460,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 30,
@@ -447,7 +476,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "送约束底座",
-    "shipping_fee": 8.0
+    "shipping_fee": 8.0,
+    "arrival_date": null
   },
   {
     "id": 31,
@@ -462,7 +492,8 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "微信直接交易",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
   },
   {
     "id": 32,
@@ -477,6 +508,39 @@
     "sold_date": null,
     "sold_price": null,
     "remark": "",
-    "shipping_fee": 0.0
+    "shipping_fee": 0.0,
+    "arrival_date": null
+  },
+  {
+    "id": 33,
+    "name": "DXF女帝",
+    "category": "手办-DXF",
+    "purchase_price": 75.0,
+    "quantity": 1,
+    "image": null,
+    "purchase_date": "2025-05-03",
+    "purchase_channel": "闲鱼@cEnjlayU",
+    "condition": "无损有盒",
+    "sold_date": null,
+    "sold_price": null,
+    "remark": "",
+    "shipping_fee": 0.0,
+    "arrival_date": null
+  },
+  {
+    "id": 34,
+    "name": "DXF年轻白胡子",
+    "category": "手办-DXF",
+    "purchase_price": 44.24,
+    "quantity": 1,
+    "image": null,
+    "purchase_date": "2025-05-03",
+    "purchase_channel": "闲鱼@Crocodile",
+    "condition": "无损有盒",
+    "sold_date": null,
+    "sold_price": null,
+    "remark": "",
+    "shipping_fee": 0.0,
+    "arrival_date": null
   }
 ]
