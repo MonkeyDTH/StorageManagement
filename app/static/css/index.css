@@ -117,7 +117,7 @@
 
 /* 表格视图样式 */
 .table-view {
-    background-color: #fff;
+    background-color: #2d3748;
     border-radius: 12px;
     padding: 1rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -129,7 +129,13 @@
 
 .table-view th {
     font-weight: 600;
-    color: #495057;
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.table-view td {
+    color: #e2e8f0;
+    background-color: #2d3748;
 }
 
 .category-badge {

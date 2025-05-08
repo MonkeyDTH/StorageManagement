@@ -1,7 +1,7 @@
 <div class="edit-form-container">
     <h1 class="mb-4" style="color: var(--text); font-weight: 600;">{{ title }}</h1>
     <form method="post" enctype="multipart/form-data">
-        <input type="hidden" id="item_type" name="item_type" value="figure">
+        <input type="hidden" id="item_type" name="item_type" value="{{ item.type if item else 'figure' }}">
         <!-- 第一行：物品名称和类别 -->
         <div class="row mb-3">
             <div class="col-md-6">
@@ -95,10 +95,10 @@
         const itemType = document.getElementById('item_type').value;
         const figureFields = document.querySelectorAll('.figure-field');
         
-        if (itemType === 'figure') {
-            figureFields.forEach(field => field.style.display = 'block');
-        } else {
+        if (itemType === 'clothing') {
             figureFields.forEach(field => field.style.display = 'none');
+        } else {
+            figureFields.forEach(field => field.style.display = 'block');
         }
     }
     
