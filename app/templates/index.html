@@ -12,10 +12,9 @@
 <div class="container pt-4">
     <!-- 移动端控制区域 -->
     <div class="mobile-controls d-none">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">物品库存</h2>
-            <div>
-                <select class="form-select me-2" id="mobileCategorySelect" style="width: 120px; display: inline-block;">
+        <div class="mobile-controls-container p-3 rounded-3 shadow-sm">
+            <div class="d-flex align-items-center gap-2">
+                <select class="form-select form-select-sm flex-grow-1" id="mobileCategorySelect">
                     <option value="">所有类别</option>
                     {% for main_cat in main_categories %}
                     <option value="{{ main_cat }}" {% if current_category == main_cat %}selected{% endif %}>
@@ -30,11 +29,11 @@
                         {% endfor %}
                     {% endfor %}
                 </select>
-                <button class="btn view-toggle" id="mobileToggleView">
-                    <i class="bi bi-table"></i>
+                <button class="btn btn-sm btn-outline-primary" id="mobileToggleView" title="切换视图">
+                    <i class="bi bi-grid"></i>
                 </button>
-                <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
-                    <i class="bi bi-plus"></i>
+                <a href="{{ url_for('add_item') }}" class="btn btn-sm btn-primary" title="添加物品">
+                    <i class="bi bi-plus-lg"></i>
                 </a>
             </div>
         </div>
@@ -46,22 +45,28 @@
             <div class="sidebar">
                 <h3 class="sidebar-title">物品库存</h3>
                 
-                <div class="mb-4">
-                    <label class="form-label">类别筛选</label>
-                    <select class="form-select" id="categorySelect">
-                        <option value="">所有类别</option>
+                <div class="mb-3">
+                    <label class="form-label">主类别</label>
+                    <select class="form-select" id="mainCategorySelect">
+                        <option value="">所有主类别</option>
                         {% for main_cat in main_categories %}
-                        <option value="{{ main_cat }}" {% if current_category == main_cat %}selected{% endif %}>
+                        <option value="{{ main_cat }}" {% if current_main_category == main_cat %}selected{% endif %}>
                             {{ main_cat }}
                         </option>
-                            {% for cat in categories %}
-                                {% if cat.main == main_cat and cat.sub %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">子类别</label>
+                    <select class="form-select" id="subCategorySelect" {% if not current_main_category %}disabled{% endif %}>
+                        <option value="">所有子类别</option>
+                        {% for cat in categories %}
+                                {% if cat.sub %}
                                 <option value="{{ cat.full }}" {% if current_category == cat.full %}selected{% endif %}>
-                                    &nbsp;&nbsp;&nbsp;{{ main_cat }} » {{ cat.sub }}
+                                    {{ cat.sub }}
                                 </option>
                                 {% endif %}
                             {% endfor %}
-                        {% endfor %}
                     </select>
                 </div>
                 
@@ -86,7 +91,7 @@
             <!-- 统计信息 -->
             <div class="stats-container mb-4">
                 <div class="row g-3">
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-6">
                         <div class="stat-card purchase-stat p-4 rounded-3 shadow-sm">
                             <div class="d-flex align-items-center">
                                 <div class="stat-icon me-3">
@@ -94,12 +99,12 @@
                                 </div>
                                 <div>
                                     <h5 class="text-white-50 mb-1">总买入价格</h5>
-                                    <p class="purchase-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_purchase) }}</p>
+                                    <p class="purchase-price mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">¥{{ "%.2f"|format(total_purchase) }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-6">
                         <div class="stat-card sold-stat p-4 rounded-3 shadow-sm">
                             <div class="d-flex align-items-center">
                                 <div class="stat-icon me-3">
@@ -107,7 +112,7 @@
                                 </div>
                                 <div>
                                     <h5 class="text-white-50 mb-1">总卖出价格</h5>
-                                    <p class="sold-price mb-0 fs-3 fw-bold text-white">¥{{ "%.2f"|format(total_sold) }}</p>
+                                    <p class="sold-price mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">¥{{ "%.2f"|format(total_sold) }}</p>
                                 </div>
                             </div>
                         </div>
@@ -298,8 +303,8 @@
             <!-- 页脚 -->
             <footer>
                 <div style="text-align: center; margin-top: clamp(20px, 5vw, 40px); padding-top: clamp(10px, 3vw, 20px);">
-                    <p style="margin: 5px 0; font-size: clamp(0.8em, 2.5vw, 0.9em);">&copy; 2025 家庭库存管理 v1.2.1</p>
-                    <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">作者: TH | 更新日期: 2025.05.02</p>
+                    <p style="margin: 5px 0; font-size: clamp(0.8em, 2.5vw, 0.9em);">&copy; 家庭库存管理 v1.3.0</p>
+                    <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">作者: TH | 更新日期: 2025.05.08</p>
                     <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">本产品仅供个人使用</p>
                 </div>
             </footer>

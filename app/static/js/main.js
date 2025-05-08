@@ -114,12 +114,20 @@ function handleCardClick(card, e) {
 // 响应式布局处理
 function handleResponsiveDisplay() {
     const mobileControls = document.querySelector('.mobile-controls');
+    const filteredResults = document.querySelector('.filtered-results');
+    
     if (!mobileControls) return;
     
     if (window.innerWidth < 992) {
         mobileControls.style.display = 'block';
+        if (filteredResults) {
+            filteredResults.style.marginTop = '20px';
+        }
     } else {
         mobileControls.style.display = 'none';
+        if (filteredResults) {
+            filteredResults.style.marginTop = '0';
+        }
     }
 }
 

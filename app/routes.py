@@ -15,7 +15,7 @@ def allowed_file(filename):
 def calculate_totals(items):
     """计算物品总购买价格和总售价"""
     total_purchase = sum((float(item.purchase_price) + float(item.shipping_fee or 0)) * int(item.quantity) for item in items)
-    total_sold = sum(float(item.sold_price) * int(item.quantity) for item in items if isinstance(item, FigureItem) and item.sold_price not in (None, ''))
+    total_sold = sum(float(item.sold_price) * int(item.quantity) for item in items if hasattr(item, 'sold_price') and item.sold_price not in (None, ''))
     return total_purchase, total_sold
 
 @app.route('/')

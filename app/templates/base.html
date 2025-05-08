@@ -2,7 +2,7 @@
  * @Author: Leili
  * @Date: 2025-05-03 21:02:45
  * @LastEditors: Leili
- * @LastEditTime: 2025-05-08 11:16:39
+ * @LastEditTime: 2025-05-08 16:28:16
  * @FilePath: /StorageManagement/app/templates/base.html
  * @Description: 
 -->
@@ -30,14 +30,5 @@
     <!-- 自定义JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block extra_js %}{% endblock %}
-    
-    <!-- 在body结束标签前添加 -->
-    {% if request.endpoint != 'add_item' and request.endpoint != 'edit_item' %}
-    
-    <!-- 添加按钮 -->
-    <a href="{{ url_for('add_item') }}" class="add-button d-md-none">
-        <i class="bi bi-plus"></i>
-    </a>
-    {% endif %}
 </body>
 </html>

@@ -40,7 +40,27 @@ function initEventListeners() {
     });
     
     // 类别筛选功能
-    document.getElementById('categorySelect').addEventListener('change', function() {
+    document.getElementById('mainCategorySelect').addEventListener('change', function() {
+        const mainCategory = this.value;
+        const subSelect = document.getElementById('subCategorySelect');
+        
+        if (mainCategory) {
+            subSelect.disabled = false;
+            // 更新子类别选项
+            updateSubCategories(mainCategory);
+            // 重置子类别选择
+            subSelect.value = '';
+            // 筛选主类别
+            filterByCategory(mainCategory);
+        } else {
+            subSelect.disabled = true;
+            subSelect.value = '';
+            // 清除筛选
+            filterByCategory('');
+        }
+    });
+    
+    document.getElementById('subCategorySelect').addEventListener('change', function() {
         filterByCategory(this.value);
     });
     
@@ -126,24 +146,38 @@ function toggleNextView() {
     }
 }
 
-// 分类筛选功能
-function filterByCategory(category) {
-    // 构建URL，区分是主分类还是子分类
-    const baseUrl = '/';
+// 更新子类别选项
+function updateSubCategories(mainCategory) {
+    const subSelect = document.getElementById('subCategorySelect');
     
-    if (category === '') {
-        window.location.href = baseUrl;
-        return;
+    // 清空现有选项
+    while (subSelect.options.length > 1) {
+        subSelect.remove(1);
     }
     
+    // 添加新的子类别选项
+    const categories = JSON.parse(document.getElementById('categoriesData').textContent);
+    categories.forEach(cat => {
+        if (cat.main === mainCategory && cat.sub) {
+            const option = document.createElement('option');
+            option.value = cat.full;
+            option.textContent = cat.sub;
+            subSelect.appendChild(option);
+        }
+    });
+}
+
+// 分类筛选功能
+function filterByCategory(category) {
+    const baseUrl = '/';
     const url = new URL(baseUrl, window.location.origin);
-    url.searchParams.set('category', category);
     
-    // 添加一个参数来标识是否为主分类
-    if (!category.includes('-')) {
-        url.searchParams.set('main_category', 'true');
-    } else {
-        url.searchParams.delete('main_category');
+    // 清除现有筛选参数
+    url.searchParams.delete('category');
+    url.searchParams.delete('main_category');
+    
+    if (category) {
+        url.searchParams.set('category', category);
     }
     
     window.location.href = url.toString();

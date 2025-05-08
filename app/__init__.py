@@ -20,10 +20,11 @@ DATA_DIR.mkdir(exist_ok=True)
 
 # 基类定义
 class Item:
-    def __init__(self, name, category, purchase_price, image=None, purchase_date=None, id=None):
+    def __init__(self, name, category, purchase_price, image=None, purchase_date=None, id=None, main_category=None):
         self.id = id
         self.name = name
-        self.category = category
+        self.main_category = main_category  # 主类别由CSV文件名决定
+        self.category = category  # 子类别保留原有category字段
         self.purchase_price = purchase_price
         self.image = image
         self.purchase_date = purchase_date or datetime.now()
@@ -34,6 +35,7 @@ class Item:
         return {
             'id': self.id,
             'name': self.name,
+            'main_category': self.main_category,
             'category': self.category,
             'purchase_price': self.purchase_price,
             'image': self.image,
@@ -51,8 +53,8 @@ class FigureItem(Item):
     def __init__(self, name, category, purchase_price, quantity=1, image=None, 
                  purchase_date=None, sold_date=None, sold_price=None, id=None,
                  purchase_channel=None, condition=None, remark=None, shipping_fee=0, 
-                 arrival_date=None):
-        super().__init__(name, category, purchase_price, image, purchase_date, id)
+                 arrival_date=None, main_category=None):
+        super().__init__(name, category, purchase_price, image, purchase_date, id, main_category)
         self.quantity = quantity
         self.sold_date = sold_date
         self.sold_price = sold_price
@@ -84,8 +86,8 @@ class FigureItem(Item):
 # 衣服子类
 class ClothingItem(Item):
     def __init__(self, name, category, purchase_price, image=None, 
-                 purchase_date=None, id=None, quantity=1, shipping_fee=0):
-        super().__init__(name, category, purchase_price, image, purchase_date, id)
+                 purchase_date=None, id=None, quantity=1, shipping_fee=0, main_category=None):
+        super().__init__(name, category, purchase_price, image, purchase_date, id, main_category)
         self.quantity = quantity
         self.shipping_fee = shipping_fee
         
@@ -145,6 +147,8 @@ class StorageManager:
                     if row.get('sold_price'):
                         row['sold_price'] = float(row['sold_price']) if row['sold_price'].strip() else None
                     
+                    # 从文件名提取主类别
+                    row['main_category'] = '手办'
                     self.items.append(FigureItem(**row))
         except Exception as e:
             print(f"加载手办数据出错: {e}")
@@ -172,6 +176,8 @@ class StorageManager:
                     row['quantity'] = int(row['quantity']) if row.get('quantity') else 1
                     row['shipping_fee'] = float(row['shipping_fee']) if row.get('shipping_fee') else 0
                     
+                    # 从文件名提取主类别
+                    row['main_category'] = '衣服'
                     self.items.append(ClothingItem(**row))
         except Exception as e:
             print(f"加载衣服数据出错: {e}")
