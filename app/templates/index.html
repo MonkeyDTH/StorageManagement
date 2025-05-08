@@ -188,7 +188,7 @@
                         </thead>
                         <tbody>
                             {% for item in items %}
-                            <tr>
+                            <tr onclick="window.location.href='/edit/{{ item.id }}'" style="cursor: pointer;">
                                 <td>{{ item.name }}</td>
                                 <td>
                                     <span class="category-badge">
@@ -206,11 +206,7 @@
                                 <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
                                 <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
                                 <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
-                                <td>
-                                    <a href="/edit/{{ item.id }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil"></i> 编辑
-                                    </a>
-                                </td>
+                                <td></td>
                             </tr>
                             {% endfor %}
                         </tbody>
