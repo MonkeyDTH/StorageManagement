@@ -43,6 +43,7 @@ function initEventListeners() {
     document.getElementById('mainCategorySelect').addEventListener('change', function() {
         const mainCategory = this.value;
         const subSelect = document.getElementById('subCategorySelect');
+        const mobileSelect = document.getElementById('mobileCategorySelect');
         
         if (mainCategory) {
             subSelect.disabled = false;
@@ -52,9 +53,13 @@ function initEventListeners() {
             subSelect.value = '';
             // 筛选主类别
             filterByCategory(mainCategory);
+            
+            // 更新移动端选择器
+            mobileSelect.value = mainCategory;
         } else {
             subSelect.disabled = true;
             subSelect.value = '';
+            mobileSelect.value = '';
             // 清除筛选
             filterByCategory('');
         }
@@ -91,19 +96,14 @@ function showView(viewName) {
     document.getElementById('galleryView').style.display = 'none';
     document.getElementById('tableView').style.display = 'none';
     
-    // 如果存在统计视图，也隐藏它
-    const statsView = document.getElementById('statsView');
-    if (statsView) {
-        statsView.style.display = 'none';
-    }
+
     
     // 显示指定的视图
     if (viewName === 'gallery') {
         document.getElementById('galleryView').style.display = 'flex';
     } else if (viewName === 'table') {
         document.getElementById('tableView').style.display = 'block';
-    } else if (viewName === 'stats' && statsView) {
-        statsView.style.display = 'block';
+
     }
     
     // 更新当前视图状态
@@ -124,9 +124,7 @@ function updateViewButtons() {
     } else if (currentView === 'table') {
         desktopToggleBtn.innerHTML = '<i class="bi bi-table"></i> 切换视图';
         mobileToggleBtn.innerHTML = '<i class="bi bi-table"></i>';
-    } else if (currentView === 'stats') {
-        desktopToggleBtn.innerHTML = '<i class="bi bi-bar-chart"></i> 切换视图';
-        mobileToggleBtn.innerHTML = '<i class="bi bi-bar-chart"></i>';
+
     }
 }
 
@@ -135,12 +133,7 @@ function toggleNextView() {
     if (currentView === 'gallery') {
         showView('table');
     } else if (currentView === 'table') {
-        // 检查是否存在统计视图
-        if (document.getElementById('statsView')) {
-            showView('stats');
-        } else {
-            showView('gallery');
-        }
+        showView('gallery');
     } else {
         showView('gallery');
     }
@@ -149,6 +142,7 @@ function toggleNextView() {
 // 更新子类别选项
 function updateSubCategories(mainCategory) {
     const subSelect = document.getElementById('subCategorySelect');
+    const mobileSubSelect = document.getElementById('mobileCategorySelect');
     
     // 清空现有选项
     while (subSelect.options.length > 1) {
@@ -157,28 +151,63 @@ function updateSubCategories(mainCategory) {
     
     // 添加新的子类别选项
     const categories = JSON.parse(document.getElementById('categoriesData').textContent);
+    
+    // 添加"所有子类别"选项
+    const allSubOption = document.createElement('option');
+    allSubOption.value = mainCategory;
+    allSubOption.textContent = '所有子类别';
+    subSelect.appendChild(allSubOption);
+    
     categories.forEach(cat => {
         if (cat.main === mainCategory && cat.sub) {
             const option = document.createElement('option');
             option.value = cat.full;
             option.textContent = cat.sub;
             subSelect.appendChild(option);
+            
+            // 同时更新移动端选项
+            const mobileOption = document.createElement('option');
+            mobileOption.value = cat.full;
+            mobileOption.textContent = mainCategory + ' » ' + cat.sub;
+            mobileSubSelect.appendChild(mobileOption);
         }
     });
 }
 
 // 分类筛选功能
-function filterByCategory(category) {
+function filterByCategory(main_category) {
     const baseUrl = '/';
     const url = new URL(baseUrl, window.location.origin);
     
     // 清除现有筛选参数
-    url.searchParams.delete('category');
     url.searchParams.delete('main_category');
     
-    if (category) {
-        url.searchParams.set('category', category);
+    if (main_category) {
+        url.searchParams.set('main_category', main_category);
     }
     
-    window.location.href = url.toString();
+    // 使用AJAX请求获取筛选结果
+    fetch(url.toString())
+        .then(response => response.text())
+        .then(html => {
+            // 解析响应HTML并更新页面内容
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // 更新画廊视图
+            const newGallery = doc.getElementById('galleryView');
+            if (newGallery) {
+                document.getElementById('galleryView').innerHTML = newGallery.innerHTML;
+            }
+            
+            // 更新表格视图
+            const newTable = doc.getElementById('tableView');
+            if (newTable) {
+                document.getElementById('tableView').innerHTML = newTable.innerHTML;
+            }
+            
+            // 重新绑定事件监听器
+            initEventListeners();
+        })
+        .catch(error => console.error('Error:', error));
 }

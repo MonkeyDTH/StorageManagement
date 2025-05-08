@@ -409,27 +409,6 @@
     }
 }
 
-/* iPhone 15 Pro 特定优化 */
-@media (max-width: 390px) {
-    .container {
-        padding: 12px;
-    }
-    
-    /* 保持两列布局，但调整图片高度 */
-    .card-img-top-container {
-        height: 110px;
-    }
-    
-    /* 进一步缩小字体 */
-    .card-title {
-        font-size: 0.8rem;
-    }
-    
-    .date-info, .price-info {
-        font-size: 0.7rem;
-    }
-}
-
 /* 容器最大宽度调整 */
 @media (min-width: 1400px) {
     .container {

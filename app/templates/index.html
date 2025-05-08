@@ -15,18 +15,11 @@
         <div class="mobile-controls-container p-3 rounded-3 shadow-sm">
             <div class="d-flex align-items-center gap-2">
                 <select class="form-select form-select-sm flex-grow-1" id="mobileCategorySelect">
-                    <option value="">所有类别</option>
+                    <option value="">所有主分类</option>
                     {% for main_cat in main_categories %}
                     <option value="{{ main_cat }}" {% if current_category == main_cat %}selected{% endif %}>
                         {{ main_cat }}
                     </option>
-                        {% for cat in categories %}
-                            {% if cat.main == main_cat and cat.sub %}
-                            <option value="{{ cat.full }}" {% if current_category == cat.full %}selected{% endif %}>
-                                {{ main_cat }} » {{ cat.sub }}
-                            </option>
-                            {% endif %}
-                        {% endfor %}
                     {% endfor %}
                 </select>
                 <button class="btn btn-sm btn-outline-primary" id="mobileToggleView" title="切换视图">
@@ -56,19 +49,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="mb-4">
-                    <label class="form-label">子类别</label>
-                    <select class="form-select" id="subCategorySelect" {% if not current_main_category %}disabled{% endif %}>
-                        <option value="">所有子类别</option>
-                        {% for cat in categories %}
-                                {% if cat.sub %}
-                                <option value="{{ cat.full }}" {% if current_category == cat.full %}selected{% endif %}>
-                                    {{ cat.sub }}
-                                </option>
-                                {% endif %}
-                            {% endfor %}
-                    </select>
-                </div>
+                
                 
                 <div class="mb-4">
                     <label class="form-label">视图选项</label>

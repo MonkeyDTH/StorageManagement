@@ -20,51 +20,32 @@ def calculate_totals(items):
 
 @app.route('/')
 def index():
-    category = request.args.get('category')
-    is_main_category = request.args.get('main_category') == 'true'
+    main_category = request.args.get('main_category')
     
-    if category:
-        if is_main_category:
-            items = [item for item in app.storage.items if item.category.startswith(category)]
-        else:
-            items = [item for item in app.storage.items if item.category == category]
+    if main_category:
+        items = [item for item in app.storage.items if item.main_category == main_category]
     else:
         items = app.storage.items
     
-    # Process categories for hierarchical display
-    all_categories = set(item.category for item in app.storage.items)
+    # Process categories
+    main_categories = sorted(set(item.main_category for item in app.storage.items))
     processed_categories = []
-    main_categories = set()
-    
-    for cat in all_categories:
-        if '-' in cat:
-            main_cat = cat.split('-')[0]
-            main_categories.add(main_cat)
-            processed_categories.append({
-                'full': cat,
-                'main': main_cat,
-                'sub': cat.split('-')[1]
-            })
-        else:
-            processed_categories.append({
-                'full': cat,
-                'main': cat,
-                'sub': None
-            })
-            main_categories.add(cat)
+    for main_cat in main_categories:
+        # 获取该主类别下的所有物品的category属性值
+        sub_categories = sorted(set(item.category for item in app.storage.items if item.main_category == main_cat))
+        processed_categories.append({
+            'main': main_cat,
+            'sub': sub_categories
+        })
     
     # Calculate totals
     total_purchase, total_sold = calculate_totals(items)
-    
-    # Sort categories
-    processed_categories.sort(key=lambda x: (x['main'], x['sub'] or ''))
-    main_categories = sorted(list(main_categories))
     
     return render_template('index.html', 
                          items=items,
                          categories=processed_categories,
                          main_categories=main_categories,
-                         current_category=category,
+                         current_main_category=main_category,
                          total_purchase=total_purchase,
                          total_sold=total_sold)
 
@@ -250,18 +231,18 @@ def stats():
         if '-' in cat:
             main_cat = cat.split('-')[0]
             main_categories.add(main_cat)
-            processed_categories.append({
-                'full': cat,
-                'main': main_cat,
-                'sub': cat.split('-')[1]
-            })
         else:
-            processed_categories.append({
-                'full': cat,
-                'main': cat,
-                'sub': None
-            })
             main_categories.add(cat)
+    
+    # 重新处理分类
+    processed_categories = []
+    for main_cat in sorted(main_categories):
+        # 获取该主类别下的所有物品的category属性值
+        sub_categories = sorted(set(item.category for item in items if item.main_category == main_cat))
+        processed_categories.append({
+            'main': main_cat,
+            'sub': sub_categories
+        })
     
     # 计算总价值
     total_purchase, total_sold = calculate_totals(items)

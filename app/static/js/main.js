@@ -130,22 +130,3 @@ function handleResponsiveDisplay() {
         }
     }
 }
-
-// 分类筛选函数
-function filterByCategory(category) {
-    // 构建URL，区分是主分类还是子分类
-    let url = new URL(window.location.href);
-    if (category === '') {
-        // 重置为首页
-        url = new URL(window.location.origin + '/');
-    } else {
-        url.searchParams.set('category', category);
-        // 添加一个参数来标识是否为主分类
-        if (!category.includes('-')) {
-            url.searchParams.set('main_category', 'true');
-        } else {
-            url.searchParams.delete('main_category');
-        }
-    }
-    window.location.href = url.toString();
-}

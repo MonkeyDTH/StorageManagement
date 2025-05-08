@@ -10,28 +10,6 @@ body {
     padding-bottom: 40px;
 }
 
-/* 卡片样式 */
-.item-card {
-    background-color: #1A1A1A;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    height: 100%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
-
-.item-card.clicked {
-    transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
 .card-img-top-container {
     height: 180px;
     overflow: hidden;
@@ -464,13 +442,6 @@ body {
     color: #2196F3;
 }
 
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 10px;
-    margin-top: 15px;
-}
-
 .category-item {
     background-color: #2A2A2A;
     border-radius: 8px;
@@ -565,9 +536,6 @@ body {
         font-size: 0.8rem;
     }
     
-    .category-grid {
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    }
     
     .category-item i {
         font-size: 1.2rem;
