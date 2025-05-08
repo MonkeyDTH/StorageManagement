@@ -4,49 +4,19 @@ import os
 from datetime import datetime
 from PIL import Image
 import io
-from . import app
+from . import app, Item, FigureItem, ClothingItem
 
 items = app.storage.items
-
-class Item:
-    def __init__(self, name, category, purchase_price, quantity=1, image=None, 
-                 purchase_date=None, sold_date=None, sold_price=None, id=None,
-                 purchase_channel=None, condition=None, remark=None, shipping_fee=0):  # 添加shipping_fee参数
-        self.id = id or len(items) + 1
-        self.name = name
-        self.category = category
-        self.purchase_price = purchase_price
-        self.quantity = quantity
-        self.image = image
-        self.purchase_date = purchase_date or datetime.now()
-        self.sold_date = sold_date
-        self.sold_price = sold_price
-        self.purchase_channel = purchase_channel
-        self.condition = condition
-        self.remark = remark
-        self.shipping_fee = shipping_fee  # 添加运费属性
-
-    @property
-    def dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'category': self.category,
-            'purchase_price': self.purchase_price,
-            'quantity': self.quantity,
-            'image': self.image,
-            'purchase_date': self.purchase_date.strftime('%Y-%m-%d') if self.purchase_date else None,
-            'sold_date': self.sold_date.strftime('%Y-%m-%d') if self.sold_date else None,
-            'sold_price': self.sold_price,
-            'purchase_channel': self.purchase_channel,
-            'condition': self.condition,
-            'remark': self.remark,
-            'shipping_fee': self.shipping_fee
-        }
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+def calculate_totals(items):
+    """计算物品总购买价格和总售价"""
+    total_purchase = sum((float(item.purchase_price) + float(item.shipping_fee or 0)) * int(item.quantity) for item in items)
+    total_sold = sum(float(item.sold_price) * int(item.quantity) for item in items if isinstance(item, FigureItem) and item.sold_price not in (None, ''))
+    return total_purchase, total_sold
 
 @app.route('/')
 def index():
@@ -84,8 +54,7 @@ def index():
             main_categories.add(cat)
     
     # Calculate totals
-    total_purchase = sum((item.purchase_price + (item.shipping_fee or 0)) * item.quantity for item in items)
-    total_sold = sum(item.sold_price * item.quantity for item in items if item.sold_price is not None)
+    total_purchase, total_sold = calculate_totals(items)
     
     # Sort categories
     processed_categories.sort(key=lambda x: (x['main'], x['sub'] or ''))
@@ -122,9 +91,7 @@ def add_item():
             name = request.form.get('name', '').strip()
             category = request.form.get('category', '').strip()
             price = request.form.get('price', '0').strip()
-            quantity = request.form.get('quantity', '1').strip()
-            arrival_date = request.form.get('arrival_date')
-            new_item.arrival_date = datetime.strptime(arrival_date, '%Y-%m-%d') if arrival_date else None
+            item_type = request.form.get('item_type', 'figure').strip()  # 新增物品类型字段
             
             if not name or not category:
                 flash('物品名称和类别不能为空', 'error')
@@ -133,53 +100,68 @@ def add_item():
             # 转换数值类型
             try:
                 price = float(price)
-                quantity = int(quantity)
-                # 处理运费
-                shipping_fee = float(request.form.get('shipping_fee', '0').strip() or '0')
+                # 处理图片上传
+                image = None
+                if 'image' in request.files:
+                    file = request.files['image']
+                    if file and allowed_file(file.filename):
+                        filename = secure_filename(file.filename)
+                        upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+                        
+                        # 压缩图片
+                        compressed_img = compress_image(file)
+                        if compressed_img:
+                            with open(upload_path, 'wb') as f:
+                                f.write(compressed_img.read())
+                            image = filename
+                
+                # 获取基本属性
+                purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
+                
+                # 根据物品类型创建不同的对象
+                if item_type == 'clothing':
+                    # 创建衣服对象
+                    new_item = ClothingItem(
+                        name=name,
+                        category=category,
+                        purchase_price=price,
+                        image=image,
+                        purchase_date=purchase_date,
+                        id=len(items) + 1
+                    )
+                else:  # 默认为手办类型
+                    # 获取手办特有属性
+                    quantity = int(request.form.get('quantity', '1').strip())
+                    shipping_fee = float(request.form.get('shipping_fee', '0').strip() or '0')
+                    purchase_channel = request.form.get('purchase_channel')
+                    condition = request.form.get('condition')
+                    remark = request.form.get('remark')
+                    arrival_date = request.form.get('arrival_date')
+                    arrival_date = datetime.strptime(arrival_date, '%Y-%m-%d') if arrival_date else None
+                    
+                    # 创建手办对象
+                    new_item = FigureItem(
+                        name=name,
+                        category=category,
+                        purchase_price=price,
+                        quantity=quantity,
+                        image=image,
+                        purchase_date=purchase_date,
+                        purchase_channel=purchase_channel,
+                        condition=condition,
+                        remark=remark,
+                        shipping_fee=shipping_fee,
+                        arrival_date=arrival_date,
+                        id=len(items) + 1
+                    )
+                
+                items.append(new_item)
+                app.storage.save_items()
+                return redirect(url_for('index'))
             except ValueError:
                 flash('价格、数量或运费必须是有效数字', 'error')
                 return redirect(url_for('add_item'))
-                
-            purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
-            purchase_channel = request.form.get('purchase_channel')
-            condition = request.form.get('condition')
-            remark = request.form.get('remark')
-            
-            # 处理图片上传
-            image = None
-            if 'image' in request.files:
-                file = request.files['image']
-                if file and allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                    os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-                    
-                    # 压缩图片
-                    compressed_img = compress_image(file)
-                    if compressed_img:
-                        with open(upload_path, 'wb') as f:
-                            f.write(compressed_img.read())
-                        image = filename
-        
-            # 创建新物品对象，确保包含所有属性
-            new_item = Item(
-                name=name,
-                category=category,
-                purchase_price=price,
-                quantity=quantity,
-                image=image,
-                purchase_date=purchase_date,
-                purchase_channel=purchase_channel,
-                condition=condition,
-                remark=remark
-            )
-            
-            # 添加运费属性
-            new_item.shipping_fee = shipping_fee
-            
-            items.append(new_item)
-            app.storage.save_items()
-            return redirect(url_for('index'))
         
         except Exception as e:
             app.logger.error(f"添加物品出错: {str(e)}")
@@ -196,24 +178,39 @@ def edit_item(item_id):
     
     if request.method == 'POST':
         try:
+            # 更新基本属性
+            item_type = item.__class__.__name__
             item.name = request.form['name']
             item.category = request.form['category']
             item.purchase_price = float(request.form['price'])
-            item.shipping_fee = float(request.form.get('shipping_fee', 0))
-            item.quantity = int(request.form.get('quantity', 1))
-            purchase_date = request.form.get('purchase_date')
-            item.purchase_date = datetime.strptime(purchase_date, '%Y-%m-%d') if purchase_date else None
-            item.purchase_channel = request.form.get('purchase_channel')
-            item.condition = request.form.get('condition')
-            item.remark = request.form.get('remark')
-            arrival_date = request.form.get('arrival_date')
-            item.arrival_date = datetime.strptime(arrival_date, '%Y-%m-%d') if arrival_date else None
+            item.purchase_date = datetime.strptime(request.form['purchase_date'], '%Y-%m-%d') if request.form['purchase_date'] else None
             
-            # 处理卖出信息
-            sold_price = request.form.get('sold_price')
-            item.sold_price = float(sold_price) if sold_price else None
-            sold_date = request.form.get('sold_date')
-            item.sold_date = datetime.strptime(sold_date, '%Y-%m-%d') if sold_date else None
+            # 根据物品类型更新特定属性
+            if item_type == 'FigureItem':
+                item.quantity = int(request.form['quantity'])
+                item.purchase_channel = request.form.get('purchase_channel')
+                item.condition = request.form.get('condition')
+                item.remark = request.form.get('remark')
+                
+                # 处理运费
+                shipping_fee = request.form.get('shipping_fee', '0').strip() or '0'
+                item.shipping_fee = float(shipping_fee)
+                
+                # 处理到货日期
+                arrival_date = request.form.get('arrival_date')
+                item.arrival_date = datetime.strptime(arrival_date, '%Y-%m-%d') if arrival_date else None
+            
+            # 处理卖出信息（仅对FigureItem类型处理）
+            if item_type == 'FigureItem':
+                sold_date = request.form.get('sold_date')
+                sold_price = request.form.get('sold_price')
+                
+                if sold_date:
+                    item.sold_date = datetime.strptime(sold_date, '%Y-%m-%d')
+                    item.sold_price = float(sold_price) if sold_price else None
+                else:
+                    item.sold_date = None
+                    item.sold_price = None
             
             # 处理图片更新
             if 'image' in request.files:
@@ -267,8 +264,7 @@ def stats():
             main_categories.add(cat)
     
     # 计算总价值
-    total_purchase = sum((item.purchase_price + (item.shipping_fee or 0)) * item.quantity for item in items)
-    total_sold = sum(item.sold_price * item.quantity for item in items if item.sold_price is not None)
+    total_purchase, total_sold = calculate_totals(items)
     
     # 排序分类
     processed_categories.sort(key=lambda x: (x['main'], x['sub'] or ''))

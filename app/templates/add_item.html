@@ -1,9 +1,25 @@
+<!--
+ * @Author: Leili
+ * @Date: 2025-05-02 23:36:20
+ * @LastEditors: Leili
+ * @LastEditTime: 2025-05-08 12:38:26
+ * @FilePath: /StorageManagement/app/templates/add_item.html
+ * @Description: 
+-->
 {% extends "base.html" %}
 
 {% block content %}
 <div class="container">
     {% set title = '添加新物品' %}
     {% set item = none %}
+    <form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="item_type">物品类型</label>
+        <select class="form-control" id="item_type" name="item_type" onchange="toggleItemFields()">
+            <option value="figure">手办</option>
+            <option value="clothing">衣服</option>
+        </select>
+    </div>
     {% include '_item_form.html' %}
 </div>
 {% endblock %}

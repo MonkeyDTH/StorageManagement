@@ -19,16 +19,16 @@
                 <label class="form-label">购买价格</label>
                 <input type="number" step="0.01" class="form-control" name="price" value="{{ item.purchase_price if item else '' }}" required id="priceInput">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 figure-field">
                 <label class="form-label">运费</label>
                 <input type="number" step="0.01" class="form-control" name="shipping_fee" value="{{ item.shipping_fee if item else '' }}" id="shippingFeeInput">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 figure-field">
                 <label class="form-label">数量</label>
                 <input type="number" class="form-control" name="quantity" value="{{ item.quantity if item else 1 }}" min="1" required>
             </div>
         </div>
-        <small class="text-muted mb-3 d-block" id="totalCostHint">总买入价格: ¥0.00 (含运费 ¥0.00)</small>
+        <small class="text-muted mb-3 d-block figure-field" id="totalCostHint">总买入价格: ¥0.00 (含运费 ¥0.00)</small>
 
         <!-- 第三行：购买日期和到货日期 -->
         <div class="row mb-3">
@@ -37,7 +37,7 @@
                 <input type="date" class="form-control" name="purchase_date" 
                        value="{% if item and item.purchase_date and not item.purchase_date is string %}{{ item.purchase_date.strftime('%Y-%m-%d') }}{% elif item and item.purchase_date %}{{ item.purchase_date }}{% endif %}">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 figure-field">
                 <label class="form-label">到货日期</label>
                 <input type="date" class="form-control" name="arrival_date" 
                        value="{% if item and item.arrival_date and not item.arrival_date is string %}{{ item.arrival_date.strftime('%Y-%m-%d') }}{% elif item and item.arrival_date %}{{ item.arrival_date }}{% endif %}">
@@ -45,7 +45,7 @@
         </div>
 
         <!-- 第四行：买入渠道和成色 -->
-        <div class="row mb-3">
+        <div class="row mb-3 figure-field">
             <div class="col-md-6">
                 <label class="form-label">买入渠道</label>
                 <input type="text" class="form-control" name="purchase_channel" value="{{ item.purchase_channel if item else '' }}">
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 figure-field">
             <label class="form-label">备注</label>
             <textarea class="form-control" name="remark" rows="3">{{ item.remark if item else '' }}</textarea>
         </div>
@@ -92,6 +92,32 @@
 </div>
 
 <script>
+    // 根据物品类型切换显示字段
+    function toggleItemFields() {
+        const itemType = document.getElementById('item_type')?.value || 'figure';
+        const figureFields = document.querySelectorAll('.figure-field');
+        
+        if (itemType === 'clothing') {
+            // 隐藏手办特有字段
+            figureFields.forEach(field => {
+                field.style.display = 'none';
+            });
+        } else {
+            // 显示手办特有字段
+            figureFields.forEach(field => {
+                field.style.display = 'block';
+            });
+        }
+    }
+    
+    // 页面加载时执行一次
+    document.addEventListener('DOMContentLoaded', function() {
+        // 如果存在物品类型选择器，则初始化字段显示
+        if (document.getElementById('item_type')) {
+            toggleItemFields();
+        }
+    });
+    
     let currentRotation = 0;
     
     document.addEventListener('DOMContentLoaded', function() {

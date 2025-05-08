@@ -1,10 +1,10 @@
 // 使用字符串变量跟踪当前视图状态：'gallery', 'table', 'stats'
-let currentView = 'gallery';
+let currentView = 'table';
 
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化视图
-    showView('gallery');
+    showView('table');
     
     // 根据屏幕尺寸显示相应控制区域
     if (window.innerWidth < 992) {

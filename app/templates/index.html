@@ -31,7 +31,7 @@
                     {% endfor %}
                 </select>
                 <button class="btn view-toggle" id="mobileToggleView">
-                    <i class="bi bi-grid"></i>
+                    <i class="bi bi-table"></i>
                 </button>
                 <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus"></i>
@@ -68,7 +68,7 @@
                 <div class="mb-4">
                     <label class="form-label">视图选项</label>
                     <button class="btn view-toggle" id="desktopToggleView">
-                        <i class="bi bi-grid"></i> 切换视图
+                        <i class="bi bi-table"></i> 切换视图
                     </button>
                 </div>
                 
@@ -116,7 +116,7 @@
             </div>
 
             <!-- 画廊视图 -->
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="galleryView">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="galleryView" style="display: none;">
                 {% for item in items %}
                 <div class="col">
                     <div class="item-card" data-id="{{ item.id }}">
@@ -171,7 +171,7 @@
             </div>
 
             <!-- 表格视图 -->
-            <div class="table-view" id="tableView" style="display: none;">
+            <div class="table-view" id="tableView">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
