@@ -30,28 +30,30 @@ window.addEventListener('resize', function() {
 // 初始化所有事件监听器
 function initEventListeners() {
     // PC端视图切换功能
-    document.getElementById('desktopToggleView').addEventListener('click', function() {
-        toggleNextView();
-    });
+    const desktopToggleBtn = document.getElementById('desktopToggleView');
+    if (desktopToggleBtn) {
+        desktopToggleBtn.addEventListener('click', function() {
+            toggleNextView();
+        });
+    }
     
     // 移动端视图切换功能
-    document.getElementById('mobileToggleView').addEventListener('click', function() {
-        toggleNextView();
-    });
+    const mobileToggleBtn = document.getElementById('mobileToggleView');
+    if (mobileToggleBtn) {
+        mobileToggleBtn.addEventListener('click', function() {
+            toggleNextView();
+        });
+    }
     
     // 类别筛选功能
-    document.getElementById('mainCategorySelect').addEventListener('change', function() {
-        const mainCategory = this.value;
-        window.location.href = `/?main_category=${encodeURIComponent(mainCategory)}`;
-    });
+    const mainCategorySelect = document.getElementById('mainCategorySelect');
     
-    document.getElementById('subCategorySelect').addEventListener('change', function() {
-        filterByCategory(this.value);
-    });
-    
-    document.getElementById('mobileCategorySelect').addEventListener('change', function() {
-        filterByCategory(this.value);
-    });
+    if (mainCategorySelect) {
+        mainCategorySelect.addEventListener('change', function() {
+            const mainCategory = this.value;
+            filterByCategory(mainCategory);
+        });
+    }
     
     // 卡片点击事件
     document.querySelectorAll('.item-card').forEach(card => {
@@ -102,13 +104,14 @@ function updateViewButtons() {
     const desktopToggleBtn = document.getElementById('desktopToggleView');
     const mobileToggleBtn = document.getElementById('mobileToggleView');
     
+    if (!desktopToggleBtn || !mobileToggleBtn) return;
+    
     if (currentView === 'gallery') {
         desktopToggleBtn.innerHTML = '<i class="bi bi-grid"></i> 切换视图';
         mobileToggleBtn.innerHTML = '<i class="bi bi-grid"></i>';
     } else if (currentView === 'table') {
         desktopToggleBtn.innerHTML = '<i class="bi bi-table"></i> 切换视图';
         mobileToggleBtn.innerHTML = '<i class="bi bi-table"></i>';
-
     }
 }
 
@@ -121,43 +124,9 @@ function toggleNextView() {
     }
 }
 
-// 更新子类别选项
-function updateSubCategories(mainCategory) {
-    const subSelect = document.getElementById('subCategorySelect');
-    const mobileSubSelect = document.getElementById('mobileCategorySelect');
-    
-    // 清空现有选项
-    while (subSelect.options.length > 1) {
-        subSelect.remove(1);
-    }
-    
-    // 添加新的子类别选项
-    const categories = JSON.parse(document.getElementById('categoriesData').textContent);
-    
-    // 添加"所有子类别"选项
-    const allSubOption = document.createElement('option');
-    allSubOption.value = mainCategory;
-    allSubOption.textContent = '所有子类别';
-    subSelect.appendChild(allSubOption);
-    
-    categories.forEach(cat => {
-        if (cat.main === mainCategory && cat.sub) {
-            const option = document.createElement('option');
-            option.value = cat.full;
-            option.textContent = cat.sub;
-            subSelect.appendChild(option);
-            
-            // 同时更新移动端选项
-            const mobileOption = document.createElement('option');
-            mobileOption.value = cat.full;
-            mobileOption.textContent = mainCategory + ' » ' + cat.sub;
-            mobileSubSelect.appendChild(mobileOption);
-        }
-    });
-}
-
 // 分类筛选功能
 function filterByCategory(main_category) {
+    console.log('筛选参数:', main_category);
     const baseUrl = '/';
     const url = new URL(baseUrl, window.location.origin);
     
@@ -168,34 +137,14 @@ function filterByCategory(main_category) {
         url.searchParams.set('main_category', main_category);
     }
     
-    // 使用AJAX请求获取筛选结果
-    fetch(url.toString())
-        .then(response => response.text())
-        .then(html => {
-            // 解析响应HTML并仅更新主内容区域
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newMainContent = doc.getElementById('mainContent');
-            document.getElementById('mainContent').innerHTML = newMainContent.innerHTML;
-            
-            // 更新画廊视图
-            const newGallery = doc.getElementById('galleryView');
-            if (newGallery) {
-                document.getElementById('galleryView').innerHTML = newGallery.innerHTML;
-            }
-            
-            // 更新表格视图
-            const newTable = doc.getElementById('tableView');
-            if (newTable) {
-                document.getElementById('tableView').innerHTML = newTable.innerHTML;
-            }
-            
-            // 重新绑定事件监听器
-            initEventListeners();
-            
-            
-        })
-        .catch(error => console.error('Error:', error));
+    console.log('生成的URL:', url.toString());
+    
+    // 保存当前视图状态
+    const currentView = document.getElementById('galleryView').style.display === 'none' ? 'table' : 'gallery';
+    localStorage.setItem('viewPreference', currentView);
+    
+    // 直接跳转到带参数的URL
+    window.location.href = url.toString();
 }
 
 // 懒加载图片函数
