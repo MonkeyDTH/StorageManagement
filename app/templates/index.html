@@ -111,9 +111,9 @@
                         {% endif %}
                         <div class="card-img-top-container">
                             {% if item.image %}
-                            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top" alt="{{ item.name }}">
+                            <img data-src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top lazy-image" alt="{{ item.name }}">
                             {% else %}
-                            <img src="{{ url_for('static', filename='placeholder.png') }}" class="card-img-top" alt="无图片">
+                            <img data-src="{{ url_for('static', filename='placeholder.png') }}" class="card-img-top lazy-image" alt="无图片">
                             {% endif %}
                         </div>
                         <div class="card-body">

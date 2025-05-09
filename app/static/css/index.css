@@ -146,34 +146,6 @@
     font-size: 0.75rem;
 }
 
-/* 统计视图样式 */
-.stats-header {
-    background-color: #FFC107;
-    padding: 20px 0;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-
-.stat-summary-card {
-    background-color: #fff;
-    border-radius: 15px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.stat-summary-card .number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #FF9800;
-    margin: 5px 0;
-}
-
-.stat-summary-card .label {
-    font-size: 0.9rem;
-    color: #666;
-}
-
 .category-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -423,4 +395,18 @@
         flex: 0 0 20%;
         max-width: 20%;
     }
+}
+
+/* 懒加载图片样式 */
+.lazy-image:not([src]) {
+    opacity: 0;
+    min-height: 200px;
+    background-color: #f0f0f0;
+    background-image: url("{{ url_for('static', filename='loading.gif') }}");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 48px;
+}
+.lazy-image {
+    transition: opacity 0.3s;
 }

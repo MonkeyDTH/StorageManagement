@@ -1,4 +1,4 @@
-// 使用字符串变量跟踪当前视图状态：'gallery', 'table', 'stats'
+// 使用字符串变量跟踪当前视图状态：'gallery', 'table'
 let currentView = 'table';
 
 // 页面加载时初始化
@@ -80,6 +80,12 @@ function initEventListeners() {
             const itemId = this.getAttribute('data-id');
             
             if (itemId && !e.target.closest('.btn-outline-danger') && !e.target.closest('.btn-outline-primary')) {
+                // 加载该卡片中的图片（如果有）
+                const lazyImage = this.querySelector('.lazy-image');
+                if (lazyImage && lazyImage.dataset.src && (!lazyImage.src || lazyImage.src === '')) {
+                    lazyImage.src = lazyImage.dataset.src;
+                }
+                
                 // 添加点击动画类
                 this.classList.add('clicked');
                 setTimeout(() => {
@@ -96,14 +102,13 @@ function showView(viewName) {
     document.getElementById('galleryView').style.display = 'none';
     document.getElementById('tableView').style.display = 'none';
     
-
-    
     // 显示指定的视图
     if (viewName === 'gallery') {
         document.getElementById('galleryView').style.display = 'flex';
+        // 懒加载图片 - 只在切换到画廊视图时加载图片
+        loadLazyImages();
     } else if (viewName === 'table') {
         document.getElementById('tableView').style.display = 'block';
-
     }
     
     // 更新当前视图状态
@@ -208,6 +213,26 @@ function filterByCategory(main_category) {
             
             // 重新绑定事件监听器
             initEventListeners();
+            
+            // 如果当前是画廊视图，加载图片
+            if (currentView === 'gallery') {
+                loadLazyImages();
+            }
         })
         .catch(error => console.error('Error:', error));
+}
+
+// 懒加载图片函数
+function loadLazyImages() {
+    // 获取所有带有lazy-image类的图片
+    const lazyImages = document.querySelectorAll('.lazy-image');
+    
+    // 遍历所有懒加载图片
+    lazyImages.forEach(img => {
+        // 如果图片有data-src属性但没有src属性（或src属性为空）
+        if (img.dataset.src && (!img.src || img.src === '')) {
+            // 将data-src的值赋给src
+            img.src = img.dataset.src;
+        }
+    });
 }
