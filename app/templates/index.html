@@ -16,7 +16,7 @@
         <!-- 统计信息 -->
         <div class="stats-container mb-4">
             <div class="row g-3">
-                <div class="col-md-6 col-6">
+                <div class="col-md-4 col-6">
                     <div class="stat-card purchase-stat p-4 rounded-3 shadow-sm">
                         <div class="d-flex align-items-center">
                             <div class="stat-icon me-3">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-6">
+                <div class="col-md-4 col-6">
                     <div class="stat-card sold-stat p-4 rounded-3 shadow-sm">
                         <div class="d-flex align-items-center">
                             <div class="stat-icon me-3">
@@ -38,6 +38,19 @@
                             <div>
                                 <h5 class="text-white-50 mb-1">总卖出价格</h5>
                                 <p class="sold-price mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">¥{{ "%.2f"|format(total_sold) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-6">
+                    <div class="stat-card count-stat p-4 rounded-3 shadow-sm">
+                        <div class="d-flex align-items-center">
+                            <div class="stat-icon me-3">
+                                <i class="bi bi-box-seam fs-2 text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white-50 mb-1">物品总数</h5>
+                                <p class="count mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">{{ items|length }}</p>
                             </div>
                         </div>
                     </div>
