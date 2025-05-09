@@ -28,22 +28,13 @@ def index():
         items = app.storage.items
     
     # Process categories
-    main_categories = sorted(set(item.main_category for item in app.storage.items))
-    processed_categories = []
-    for main_cat in main_categories:
-        # 获取该主类别下的所有物品的category属性值
-        sub_categories = sorted(set(item.category for item in app.storage.items if item.main_category == main_cat))
-        processed_categories.append({
-            'main': main_cat,
-            'sub': sub_categories
-        })
+    main_categories = sorted(set(item.main_category for item in app.storage.items if item.main_category is not None))
     
     # Calculate totals
     total_purchase, total_sold = calculate_totals(items)
     
     return render_template('index.html', 
                          items=items,
-                         categories=processed_categories,
                          main_categories=main_categories,
                          current_main_category=main_category,
                          total_purchase=total_purchase,

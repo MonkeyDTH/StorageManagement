@@ -396,17 +396,3 @@
         max-width: 20%;
     }
 }
-
-/* 懒加载图片样式 */
-.lazy-image:not([src]) {
-    opacity: 0;
-    min-height: 200px;
-    background-color: #f0f0f0;
-    background-image: url("{{ url_for('static', filename='loading.gif') }}");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 48px;
-}
-.lazy-image {
-    transition: opacity 0.3s;
-}

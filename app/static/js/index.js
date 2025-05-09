@@ -42,27 +42,7 @@ function initEventListeners() {
     // 类别筛选功能
     document.getElementById('mainCategorySelect').addEventListener('change', function() {
         const mainCategory = this.value;
-        const subSelect = document.getElementById('subCategorySelect');
-        const mobileSelect = document.getElementById('mobileCategorySelect');
-        
-        if (mainCategory) {
-            subSelect.disabled = false;
-            // 更新子类别选项
-            updateSubCategories(mainCategory);
-            // 重置子类别选择
-            subSelect.value = '';
-            // 筛选主类别
-            filterByCategory(mainCategory);
-            
-            // 更新移动端选择器
-            mobileSelect.value = mainCategory;
-        } else {
-            subSelect.disabled = true;
-            subSelect.value = '';
-            mobileSelect.value = '';
-            // 清除筛选
-            filterByCategory('');
-        }
+        window.location.href = `/?main_category=${encodeURIComponent(mainCategory)}`;
     });
     
     document.getElementById('subCategorySelect').addEventListener('change', function() {
@@ -105,8 +85,7 @@ function showView(viewName) {
     // 显示指定的视图
     if (viewName === 'gallery') {
         document.getElementById('galleryView').style.display = 'flex';
-        // 懒加载图片 - 只在切换到画廊视图时加载图片
-        loadLazyImages();
+        
     } else if (viewName === 'table') {
         document.getElementById('tableView').style.display = 'block';
     }
@@ -137,8 +116,6 @@ function updateViewButtons() {
 function toggleNextView() {
     if (currentView === 'gallery') {
         showView('table');
-    } else if (currentView === 'table') {
-        showView('gallery');
     } else {
         showView('gallery');
     }
@@ -195,9 +172,11 @@ function filterByCategory(main_category) {
     fetch(url.toString())
         .then(response => response.text())
         .then(html => {
-            // 解析响应HTML并更新页面内容
+            // 解析响应HTML并仅更新主内容区域
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
+            const newMainContent = doc.getElementById('mainContent');
+            document.getElementById('mainContent').innerHTML = newMainContent.innerHTML;
             
             // 更新画廊视图
             const newGallery = doc.getElementById('galleryView');
@@ -214,25 +193,9 @@ function filterByCategory(main_category) {
             // 重新绑定事件监听器
             initEventListeners();
             
-            // 如果当前是画廊视图，加载图片
-            if (currentView === 'gallery') {
-                loadLazyImages();
-            }
+            
         })
         .catch(error => console.error('Error:', error));
 }
 
 // 懒加载图片函数
-function loadLazyImages() {
-    // 获取所有带有lazy-image类的图片
-    const lazyImages = document.querySelectorAll('.lazy-image');
-    
-    // 遍历所有懒加载图片
-    lazyImages.forEach(img => {
-        // 如果图片有data-src属性但没有src属性（或src属性为空）
-        if (img.dataset.src && (!img.src || img.src === '')) {
-            // 将data-src的值赋给src
-            img.src = img.dataset.src;
-        }
-    });
-}

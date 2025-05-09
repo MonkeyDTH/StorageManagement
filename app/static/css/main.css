@@ -58,17 +58,6 @@ body {
     font-size: 0.9rem;
 }
 
-.purchase-price {
-    color: #4CAF50;
-    font-weight: 600;
-}
-
-.sold-price {
-    color: #FF9800;
-    font-weight: 600;
-    margin-left: 10px;
-}
-
 /* 日期信息 */
 .date-info {
     font-size: 0.8rem;
@@ -77,20 +66,6 @@ body {
 
 .purchase-date, .sold-date {
     display: inline-block;
-}
-
-/* 已售出标记 */
-.sold-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(244, 67, 54, 0.9);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    z-index: 1;
 }
 
 /* 运费信息 */
@@ -154,61 +129,29 @@ body {
 }
 
 /* 侧边栏样式 */
-.sidebar {
-    background-color: #1A1A1A;
-    border-radius: 12px;
-    padding: 20px;
-    height: fit-content;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 20px;
-}
-
-.sidebar .btn {
-    width: 100%;
-    margin-bottom: 10px;
-    text-align: left;
-    padding: 10px 15px;
+.top-navbar {
+    padding: 15px 0;
     background-color: #2A2A2A;
-    color: #E0E0E0;
-    border: 1px solid #3D3D3D;
-    transition: all 0.2s;
-}
-
-.sidebar .btn:hover {
-    background-color: #3D3D3D;
-    color: #FFFFFF;
-    border-color: #4CAF50;
-}
-
-.sidebar .btn i {
-    margin-right: 8px;
-    color: #4CAF50;
-}
-
-.sidebar-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #E0E0E0;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
     border-bottom: 1px solid #3D3D3D;
 }
 
-.sidebar .form-select {
-    margin-bottom: 15px;
-    width: 100%;
+.top-navbar .container {
+    padding: 0 15px;
 }
 
-.sidebar .btn {
-    width: 100%;
-    margin-bottom: 10px;
-    text-align: left;
-    padding: 10px 15px;
+.navbar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #E0E0E0;
+    margin: 0;
 }
 
-.sidebar .btn i {
-    margin-right: 8px;
+.top-navbar .form-select-sm {
+    max-width: 200px;
+}
+
+.top-navbar .btn-sm {
+    padding: 5px 10px;
 }
 
 /* 主内容区域 */
@@ -216,26 +159,20 @@ body {
     width: 100%;
 }
 
-/* 移动端适配 */
+/* 响应式适配 */
 @media (max-width: 991px) {
     .sidebar {
         display: none;
     }
     
-    .mobile-controls {
-        display: flex !important;
+    .top-navbar .d-flex {
+        flex-direction: column;
+        gap: 10px;
     }
-}
-
-@media (min-width: 992px) {
-    .mobile-controls {
-        display: none !important;
+    
+    .top-navbar .flex-grow-1 {
+        width: 100%;
     }
-}
-
-/* 移动端控制区域 */
-.mobile-controls {
-    margin-bottom: 20px;
 }
 
 /* 移动端适配样式 */

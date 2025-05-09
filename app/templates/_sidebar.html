@@ -1,0 +1,28 @@
+<!-- 顶部导航栏 -->
+<div class="top-navbar mb-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="navbar-title mb-0">物品库存</h3>
+        
+        <div class="d-flex gap-3 align-items-center">
+            <div class="flex-grow-1">
+                <select class="form-select form-select-sm" id="mainCategorySelect">
+                    <option value="">所有主类别</option>
+                    {% for main_cat in main_categories %}
+                    <option value="{{ main_cat }}" {% if current_main_category == main_cat %}selected{% endif %}>
+                        {{ main_cat }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button class="btn btn-sm btn-outline-secondary" id="desktopToggleView">
+                <i class="bi bi-table"></i> 切换视图
+            </button>
+            
+            <a href="{{ url_for('add_item') }}" class="btn btn-sm btn-primary">
+                <i class="bi bi-plus"></i> 添加物品
+            </a>
+        </div>
+    </div>
+</div>

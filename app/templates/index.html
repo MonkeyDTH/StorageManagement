@@ -9,287 +9,136 @@
 
 {% block content %}
 <!-- 修改顶部操作区域，增加响应式布局支持 -->
+{% include "_sidebar.html" %}
 <div class="container pt-4">
-    <!-- 移动端控制区域 -->
-    <div class="mobile-controls d-none">
-        <div class="mobile-controls-container p-3 rounded-3 shadow-sm">
-            <div class="d-flex align-items-center gap-2">
-                <select class="form-select form-select-sm flex-grow-1" id="mobileCategorySelect">
-                    <option value="">所有主分类</option>
-                    {% for main_cat in main_categories %}
-                    <option value="{{ main_cat }}" {% if current_category == main_cat %}selected{% endif %}>
-                        {{ main_cat }}
-                    </option>
-                    {% endfor %}
-                </select>
-                <button class="btn btn-sm btn-outline-primary" id="mobileToggleView" title="切换视图">
-                    <i class="bi bi-grid"></i>
-                </button>
-                <a href="{{ url_for('add_item') }}" class="btn btn-sm btn-primary" title="添加物品">
-                    <i class="bi bi-plus-lg"></i>
-                </a>
+    <!-- 主内容区域 -->
+    <div class="container" id="mainContent">
+        <!-- 统计信息 -->
+        <div class="stats-container mb-4">
+            <div class="row g-3">
+                <div class="col-md-6 col-6">
+                    <div class="stat-card purchase-stat p-4 rounded-3 shadow-sm">
+                        <div class="d-flex align-items-center">
+                            <div class="stat-icon me-3">
+                                <i class="bi bi-cart4 fs-2 text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white-50 mb-1">总买入价格</h5>
+                                <p class="purchase-price mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">¥{{ "%.2f"|format(total_purchase) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-6">
+                    <div class="stat-card sold-stat p-4 rounded-3 shadow-sm">
+                        <div class="d-flex align-items-center">
+                            <div class="stat-icon me-3">
+                                <i class="bi bi-cash-coin fs-2 text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white-50 mb-1">总卖出价格</h5>
+                                <p class="sold-price mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">¥{{ "%.2f"|format(total_sold) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <!-- PC端侧边栏 -->
-        <div class="col-lg-3 mb-4">
-            <div class="sidebar">
-                <h3 class="sidebar-title">物品库存</h3>
-                
-                <div class="mb-3">
-                    <label class="form-label">主类别</label>
-                    <select class="form-select" id="mainCategorySelect">
-                        <option value="">所有主类别</option>
-                        {% for main_cat in main_categories %}
-                        <option value="{{ main_cat }}" {% if current_main_category == main_cat %}selected{% endif %}>
-                            {{ main_cat }}
-                        </option>
+        <!-- 画廊视图 -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="galleryView" style="display: none;">
+            {% for item in items %}
+            <div class="col">
+                <div class="item-card" data-id="{{ item.id }}">
+                    {% if item.sold_date %}
+                    <div class="sold-badge">已售出</div>
+                    {% endif %}
+                    <div class="card-img-top-container">
+                        {% if item.image %}
+                        <img src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top" alt="{{ item.name }}">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/placeholder.svg') }}" class="card-img-top" alt="无图片">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <span class="badge bg-secondary">
+                                {{ item.category }}
+                            </span>
+                        </div>
+                        <div class="date-info mb-2">
+                            <small class="purchase-date">
+                                <i class="bi bi-calendar-check"></i> {{ item.purchase_date.strftime('%Y-%m-%d') }}
+                            </small>
+                            {% if item.sold_date %}
+                            <small class="sold-date ms-2">
+                                <i class="bi bi-calendar-x"></i> {{ item.sold_date.strftime('%Y-%m-%d') }}
+                            </small>
+                            {% endif %}
+                        </div>
+                        <div class="price-info">
+                            <span class="purchase-price">¥{{ item.purchase_price }}</span>
+                            {% if item.sold_price %}
+                            <span class="sold-price">¥{{ item.sold_price }}</span>
+                            {% endif %}
+                        </div>
+                        {% if item.shipping_fee and item.shipping_fee != 0 %}
+                        <div class="shipping-info">
+                            <small><i class="bi bi-truck"></i> 运费: ¥{{ item.shipping_fee }}</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- 表格视图 -->
+        <div class="table-view" id="tableView">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>类别</th>
+                            <th>购买日期</th>
+                            <th>购买价格</th>
+                            <th>运费</th>
+                            <th>卖出日期</th>
+                            <th>卖出价格</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr onclick="window.location.href='/edit/{{ item.id }}'" style="cursor: pointer;">
+                            <td>{{ item.name }}</td>
+                            <td>
+                                <span class="category-badge">
+                                    {{ item.category }}
+                                </span>
+                            </td>
+                            <td>{{ item.purchase_date.strftime('%Y-%m-%d') }}</td>
+                            <td>¥{{ item.purchase_price }}</td>
+                            <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
+                            <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
+                            <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
+                            <td></td>
+                        </tr>
                         {% endfor %}
-                    </select>
-                </div>
-                
-                
-                <div class="mb-4">
-                    <label class="form-label">视图选项</label>
-                    <button class="btn view-toggle" id="desktopToggleView">
-                        <i class="bi bi-table"></i> 切换视图
-                    </button>
-                </div>
-                
-                <div>
-                    <label class="form-label">操作</label>
-                    <a href="{{ url_for('add_item') }}" class="btn btn-primary">
-                        <i class="bi bi-plus"></i> 添加物品
-                    </a>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
         
-        <!-- 主内容区域 -->
-        <div class="col-lg-9">
-            <!-- 统计信息 -->
-            <div class="stats-container mb-4">
-                <div class="row g-3">
-                    <div class="col-md-6 col-6">
-                        <div class="stat-card purchase-stat p-4 rounded-3 shadow-sm">
-                            <div class="d-flex align-items-center">
-                                <div class="stat-icon me-3">
-                                    <i class="bi bi-cart4 fs-2 text-white"></i>
-                                </div>
-                                <div>
-                                    <h5 class="text-white-50 mb-1">总买入价格</h5>
-                                    <p class="purchase-price mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">¥{{ "%.2f"|format(total_purchase) }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-6">
-                        <div class="stat-card sold-stat p-4 rounded-3 shadow-sm">
-                            <div class="d-flex align-items-center">
-                                <div class="stat-icon me-3">
-                                    <i class="bi bi-cash-coin fs-2 text-white"></i>
-                                </div>
-                                <div>
-                                    <h5 class="text-white-50 mb-1">总卖出价格</h5>
-                                    <p class="sold-price mb-0 fw-bold text-white" style="font-size: clamp(1rem, 3vw, 1.5rem);">¥{{ "%.2f"|format(total_sold) }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- 页脚 -->
+        <footer>
+            <div style="text-align: center; margin-top: clamp(20px, 5vw, 40px); padding-top: clamp(10px, 3vw, 20px);">
+                <p style="margin: 5px 0; font-size: clamp(0.8em, 2.5vw, 0.9em);">&copy; 家庭库存管理 v1.3.0</p>
+                <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">作者: TH | 更新日期: 2025.05.08</p>
+                <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">本产品仅供个人使用</p>
             </div>
-
-            <!-- 画廊视图 -->
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4" id="galleryView" style="display: none;">
-                {% for item in items %}
-                <div class="col">
-                    <div class="item-card" data-id="{{ item.id }}">
-                        {% if item.sold_date %}
-                        <div class="sold-badge">已售出</div>
-                        {% endif %}
-                        <div class="card-img-top-container">
-                            {% if item.image %}
-                            <img data-src="{{ url_for('static', filename='uploads/' + item.image) }}" class="card-img-top lazy-image" alt="{{ item.name }}">
-                            {% else %}
-                            <img data-src="{{ url_for('static', filename='placeholder.png') }}" class="card-img-top lazy-image" alt="无图片">
-                            {% endif %}
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title">{{ item.name }}</h5>
-                                <span class="badge bg-secondary">
-                                    {% if '-' in item.category %}
-                                        {% set main_cat = item.category.split('-')[0] %}
-                                        {% set sub_cat = item.category.split('-')[1] %}
-                                        {{ main_cat }} » {{ sub_cat }}
-                                    {% else %}
-                                        {{ item.category }}
-                                    {% endif %}
-                                </span>
-                            </div>
-                            <div class="date-info mb-2">
-                                <small class="purchase-date">
-                                    <i class="bi bi-calendar-check"></i> {{ item.purchase_date.strftime('%Y-%m-%d') }}
-                                </small>
-                                {% if item.sold_date %}
-                                <small class="sold-date ms-2">
-                                    <i class="bi bi-calendar-x"></i> {{ item.sold_date.strftime('%Y-%m-%d') }}
-                                </small>
-                                {% endif %}
-                            </div>
-                            <div class="price-info">
-                                <span class="purchase-price">¥{{ item.purchase_price }}</span>
-                                {% if item.sold_price %}
-                                <span class="sold-price">¥{{ item.sold_price }}</span>
-                                {% endif %}
-                            </div>
-                            {% if item.shipping_fee and item.shipping_fee != 0 %}
-                            <div class="shipping-info">
-                                <small><i class="bi bi-truck"></i> 运费: ¥{{ item.shipping_fee }}</small>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- 表格视图 -->
-            <div class="table-view" id="tableView">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>名称</th>
-                                <th>类别</th>
-                                <th>购买日期</th>
-                                <th>购买价格</th>
-                                <th>运费</th>
-                                <th>卖出日期</th>
-                                <th>卖出价格</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in items %}
-                            <tr onclick="window.location.href='/edit/{{ item.id }}'" style="cursor: pointer;">
-                                <td>{{ item.name }}</td>
-                                <td>
-                                    <span class="category-badge">
-                                        {% if '-' in item.category %}
-                                            {% set main_cat = item.category.split('-')[0] %}
-                                            {% set sub_cat = item.category.split('-')[1] %}
-                                            {{ main_cat }} » {{ sub_cat }}
-                                        {% else %}
-                                            {{ item.category }}
-                                        {% endif %}
-                                    </span>
-                                </td>
-                                <td>{{ item.purchase_date.strftime('%Y-%m-%d') }}</td>
-                                <td>¥{{ item.purchase_price }}</td>
-                                <td>{% if item.shipping_fee and item.shipping_fee != 0 %}¥{{ item.shipping_fee }}{% endif %}</td>
-                                <td>{% if item.sold_date %}{{ item.sold_date.strftime('%Y-%m-%d') }}{% endif %}</td>
-                                <td>{% if item.sold_price %}¥{{ item.sold_price }}{% endif %}</td>
-                                <td></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 在表格视图后添加统计视图 -->
-            <div id="statsView" style="display: none;">
-                <!-- 统计视图内容 -->
-                <div class="stats-view-container">
-                    <!-- 统计视图顶部卡片 -->
-                    <div class="stats-header mb-4">
-                        <div class="container">
-                            <div class="row g-3">
-                                <div class="col-4">
-                                    <div class="stat-summary-card">
-                                        <div class="number">{{ items|length }}</div>
-                                        <div class="label">物品总数</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="stat-summary-card">
-                                        <div class="number">{{ "%.2f"|format(total_purchase) }}</div>
-                                        <div class="label">物品总价</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="stat-summary-card">
-                                        <div class="number">{{ categories|length }}</div>
-                                        <div class="label">分类总数</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 分类图标网格 -->
-                    <div class="category-grid mb-4">
-                        <!-- 这里添加分类图标 -->
-                        {% for main_cat in main_categories %}
-                        <div class="category-item">
-                            <div class="category-icon bg-{{ loop.index % 6 + 1 }}">
-                                <i class="bi bi-tag"></i>
-                            </div>
-                            <div class="category-name">{{ main_cat }}</div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    
-                    <!-- 日历视图 -->
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <div class="calendar-title">2025-04</div>
-                            <div class="calendar-legend">
-                                <div class="legend-item">
-                                    <div class="legend-color legend-purchase"></div>
-                                    <span>购买</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color legend-payment"></div>
-                                    <span>待付款</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color legend-expired"></div>
-                                    <span>过期</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- 日历网格 -->
-                        <div class="calendar-grid">
-                            <!-- 这里添加日历内容 -->
-                            <!-- 周标题 -->
-                            <div class="calendar-weekday">周日</div>
-                            <div class="calendar-weekday">周一</div>
-                            <div class="calendar-weekday">周二</div>
-                            <div class="calendar-weekday">周三</div>
-                            <div class="calendar-weekday">周四</div>
-                            <div class="calendar-weekday">周五</div>
-                            <div class="calendar-weekday">周六</div>
-                            
-                            <!-- 日期单元格 -->
-                            <!-- 这里可以动态生成日历内容 -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 页脚 -->
-            <footer>
-                <div style="text-align: center; margin-top: clamp(20px, 5vw, 40px); padding-top: clamp(10px, 3vw, 20px);">
-                    <p style="margin: 5px 0; font-size: clamp(0.8em, 2.5vw, 0.9em);">&copy; 家庭库存管理 v1.3.0</p>
-                    <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">作者: TH | 更新日期: 2025.05.08</p>
-                    <p style="margin: 5px 0; font-size: clamp(0.7em, 2vw, 0.8em); opacity: 0.7;">本产品仅供个人使用</p>
-                </div>
-            </footer>
-        </div>
+        </footer>
     </div>
 </div>
 
