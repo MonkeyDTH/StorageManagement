@@ -11,10 +11,11 @@
 </head>
 <body class="bg-morandi-cream">
     <div class="container mt-5">
-        <!-- 返回按钮 -->
-        <a href="/" class="btn btn-secondary mb-3">返回主页</a>
-        
-        <h1 class="dynamic-title mb-4">衣服列表</h1>
+        <!-- 标题 & 返回按钮 -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="dynamic-title mb-0">衣服列表</h1>
+            <a href="/" class="btn btn-secondary">返回主页</a>
+        </div>
         <!-- 衣服数据表格 -->
         <table class="table table-striped table-hover bg-white rounded">
             <thead class="bg-morandi-green">
@@ -27,7 +28,7 @@
             </thead>
             <tbody>
                 {% for item in clothing %}
-                <tr>
+                <tr onclick="window.location='/clothing/{{ item.id }}'" style="cursor: pointer;">
                     <td>{{ item.name }}</td>
                     <td>{{ item.category }}</td>
                     <td>¥{{ item.purchase_price }}</td>

@@ -1,3 +1,11 @@
+'''
+Author: Leili
+Date: 2025-05-18 20:41:27
+LastEditors: Leili
+LastEditTime: 2025-05-21 12:53:49
+FilePath: /StorageManagement/app.py
+Description: 
+'''
 """
 家庭物品管理应用后端服务
 功能：读取CSV数据，提供物品展示接口
@@ -49,6 +57,32 @@ def show_clothing():
     衣服列表路由：展示所有衣服数据
     """
     return render_template('clothing.html', clothing=load_clothing_data())
+
+@app.route('/figures/<int:item_id>')
+def figures_detail(item_id):
+    """
+    手办详情路由：展示单个手办的详细信息
+    :param item_id: 手办ID
+    :return: 详情页模板
+    """
+    figures_data = load_figures_data()
+    item = next((item for item in figures_data if item['id'] == item_id), None)
+    if item is None:
+        abort(404)
+    return render_template('figures_detail.html', item=item)
+
+@app.route('/clothing/<int:item_id>')
+def clothing_detail(item_id):
+    """
+    衣服详情路由：展示单个衣服的详细信息
+    :param item_id: 衣服ID
+    :return: 详情页模板
+    """
+    clothing_data = load_clothing_data()
+    item = next((item for item in clothing_data if item['id'] == item_id), None)
+    if item is None:
+        abort(404)
+    return render_template('clothing_detail.html', item=item)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=7334)  # 开发模式启动（生产环境需调整）
