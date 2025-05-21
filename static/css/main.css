@@ -22,7 +22,7 @@
 /* -------- 动画效果 -------- */
 /* 动态字体缩放（主标题） */
 .dynamic-title {
-    font-size: clamp(2rem, 6vw, 4rem);  /* 最小2rem，最大4rem，随屏幕宽度动态调整 */
+    font-size: clamp(2rem, 6vw, 4rem);  /* 最小2rem(32px)，最大4rem(64px)，理想值6vw(视口宽度的6%)，随屏幕宽度动态调整 */
     line-height: 1.2;
 }
 
