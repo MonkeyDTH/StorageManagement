@@ -1,2 +1,4 @@
 data/
 .trae/
+static/images/
+utils/__pycache__/

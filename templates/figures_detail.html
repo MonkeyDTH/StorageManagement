@@ -23,7 +23,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="/static/images/{{ item.image }}" class="img-fluid rounded mb-3" alt="{{ item.name }}">
+                        <img src="/static/images/{{ item.image|replace('.jpg', '.webp')|replace('.png', '.webp') }}" class="img-fluid rounded mb-3" alt="{{ item.name }}">
                     </div>
                     <div class="col-md-6">
                         <ul class="list-group list-group-flush">
