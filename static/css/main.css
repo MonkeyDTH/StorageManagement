@@ -1,0 +1,58 @@
+/* ---------- 全局样式 ---------- */
+/* -------- 配色方案 -------- */
+/* 低饱和度莫兰迪色定义 */
+:root {
+    --morandi-purple: #F0E6EF;   /* 浅紫 */
+    --morandi-gray: #E8E9EB;     /* 浅灰 */
+    --morandi-cream: #D8E2DC;    /* 米白 */
+    --morandi-green: #C8D5B9;    /* 浅绿 */
+}
+
+/* 莫兰迪色应用类 */
+.bg-morandi-purple { background-color: var(--morandi-purple); }
+.text-morandi-purple { color: var(--morandi-purple); }
+.bg-morandi-gray { background-color: var(--morandi-gray);}
+.text-morandi-gray { color: var(--morandi-gray); }
+.bg-morandi-cream { background-color: var(--morandi-cream); }
+.text-morandi-cream { color: var(--morandi-cream); }
+.bg-morandi-green { background-color: var(--morandi-green); }
+.text-morandi-green { color: var(--morandi-green); }
+
+
+/* -------- 动画效果 -------- */
+/* 动态字体缩放（主标题） */
+.dynamic-title {
+    font-size: clamp(2rem, 6vw, 4rem);  /* 最小2rem，最大4rem，随屏幕宽度动态调整 */
+    line-height: 1.2;
+}
+
+/* 卡片悬停动画 */
+.hover-card {
+    transition: all 0.3s ease;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 按钮悬停效果 */
+.hover-btn {
+    transition: opacity 0.3s ease;
+}
+.hover-btn:hover {
+    opacity: 0.9;
+}
+
+
+/* ---------- 表格样式 ---------- */
+/* 表格表头样式 */
+table th {
+    font-weight: bold;  /* 加粗 */
+    white-space: nowrap;  /* 不换行 */
+    text-align: center;  /* 居中对齐 */
+}
+
+/* 防止日期换行 */
+.date {
+    white-space: nowrap;
+}
