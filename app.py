@@ -2,7 +2,7 @@
 Author: Leili
 Date: 2025-05-18 20:41:27
 LastEditors: Leili
-LastEditTime: 2025-05-21 12:53:49
+LastEditTime: 2025-05-22 09:56:52
 FilePath: /StorageManagement/app.py
 Description: 
 '''
@@ -74,6 +74,8 @@ def show_clothing():
     """
     return render_template('clothing.html', clothing=load_clothing_data())
 
+
+""" ========== 详情页面 ============ """
 def get_item_detail(item_type, item_id):
     """
     通用详情路由处理函数
@@ -106,5 +108,7 @@ def clothing_detail(item_id):
     """衣服详情路由"""
     return get_item_detail('clothing', item_id)
 
+
+""" ========== 主程序入口 ============ """
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=7334)  # 开发模式启动（生产环境需调整）
