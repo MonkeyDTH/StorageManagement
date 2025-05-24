@@ -1,0 +1,13 @@
+<!-- 定义共享宏 -->
+{% macro display_attrib_filed(label, value) -%}
+<li class="list-group-item">
+    <strong>{{ label }}：</strong> {{ value }}
+</li>
+{%- endmacro %}
+
+{% macro form_field(id, label, type='text', value='') -%}
+<div class="mb-3">
+    <label for="{{ id }}" class="form-label">{{ label }}</label>
+    <input type="{{ type }}" class="form-control" id="{{ id }}" value="{{ value }}">
+</div>
+{%- endmacro %}
