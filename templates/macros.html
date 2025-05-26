@@ -5,9 +5,17 @@
 </li>
 {%- endmacro %}
 
-{% macro form_field(id, label, type='text', value='') -%}
+{% macro form_field(id, label, type='text', value='', step='', required=False) -%}
 <div class="mb-3">
-    <label for="{{ id }}" class="form-label">{{ label }}</label>
-    <input type="{{ type }}" class="form-control" id="{{ id }}" value="{{ value }}">
+    <label for="{{ id }}" class="form-label">
+        {{ label }}
+        {% if required %}<span class="text-danger">*</span>{% endif %}
+    </label>
+    <input type="{{ type }}" 
+           class="form-control" 
+           id="{{ id }}" 
+           value="{{ value }}"
+           {% if step %}step="{{ step }}"{% endif %}
+           {% if required %}required{% endif %}>
 </div>
 {%- endmacro %}

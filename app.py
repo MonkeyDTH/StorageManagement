@@ -2,7 +2,7 @@
 Author: Leili
 Date: 2025-05-18 20:41:27
 LastEditors: Leili
-LastEditTime: 2025-05-23 19:07:00
+LastEditTime: 2025-05-26 14:15:00
 FilePath: /StorageManagement/app.py
 Description: 
 '''
@@ -71,41 +71,13 @@ def home():
 
 @app.route('/figures')
 def show_figures():
-    """
-    手办列表路由：展示所有手办数据
-    """
-    return render_template('figures.html', figures=load_figures_data())
+    """手办列表路由：展示所有手办数据"""
+    return render_template('figures/list.html', figures=load_figures_data())
 
 @app.route('/clothing')
 def show_clothing():
-    """
-    衣服列表路由：展示所有衣服数据
-    """
-    return render_template('clothing.html', clothing=load_clothing_data())
-
-
-""" ========== 详情页面 ============ """
-def get_item_detail(item_type, item_id):
-    """
-    通用详情路由处理函数
-    :param item_type: 物品类型 ('figures' 或 'clothing')
-    :param item_id: 物品ID
-    :return: 详情页模板
-    """
-    data_loader = {
-        'figures': load_figures_data,
-        'clothing': load_clothing_data
-    }
-    template_map = {
-        'figures': 'figures_detail.html',
-        'clothing': 'clothing_detail.html'
-    }
-    
-    item_data = data_loader[item_type]()
-    item = next((item for item in item_data if item['id'] == item_id), None)
-    if item is None:
-        abort(404)
-    return render_template(template_map[item_type], item=item)
+    """衣服列表路由：展示所有衣服数据"""
+    return render_template('clothing/list.html', clothing=load_clothing_data())
 
 @app.route('/figures/<int:item_id>')
 def figures_detail(item_id):
@@ -117,6 +89,35 @@ def clothing_detail(item_id):
     """衣服详情路由"""
     return get_item_detail('clothing', item_id)
 
+@app.route('/figures/new')
+def figures_new():
+    """新建手办页面路由"""
+    return render_template('figures/new.html')
+
+@app.route('/clothing/new')
+def clothing_new():
+    """新建衣服页面路由"""
+    return render_template('clothing/new.html')
+
+def get_item_detail(item_type, item_id):
+    """通用详情路由处理函数"""
+    data_loader = {
+        'figures': load_figures_data,
+        'clothing': load_clothing_data
+    }
+    template_map = {
+        'figures': 'figures/detail.html',
+        'clothing': 'clothing/detail.html'
+    }
+    
+    item_data = data_loader[item_type]()
+    item = next((item for item in item_data if item['id'] == item_id), None)
+    if item is None:
+        abort(404)
+    return render_template(template_map[item_type], item=item)
+
+
+""" ========= 更新属性接口 ========= """
 @app.route('/update_properties', methods=['POST'])
 def update_properties():
     """
@@ -189,6 +190,99 @@ def update_properties():
         return jsonify({
             'success': False,
             'message': f'更新失败: {str(e)}'
+        }), 400
+
+@app.route('/create_item', methods=['POST'])
+def create_item():
+    """
+    创建新条目接口
+    
+    功能:
+        处理前端提交的新建条目请求
+        
+    参数:
+        JSON格式的条目数据
+        
+    返回:
+        dict: 操作结果
+        
+    异常:
+        ValueError: 当物品类型无效时抛出
+        Exception: 当保存失败时抛出
+    """
+    try:
+        data = request.get_json()
+        item_type = data.get('item_type')
+        
+        # 验证物品类型
+        if item_type not in ['figures', 'clothing']:
+            raise ValueError('无效的物品类型')
+            
+        # 加载现有数据
+        data_path = os.path.join(os.path.dirname(__file__), 'data', f'{item_type}.csv')
+        
+        try:
+            df = pd.read_csv(data_path)
+        except FileNotFoundError:
+            # 如果文件不存在，创建新的DataFrame
+            df = pd.DataFrame()
+            
+        # 生成新ID
+        if df.empty:
+            new_id = 1
+        else:
+            new_id = int(df['id'].max()) + 1  # 转换为Python int类型
+            
+        # 准备新条目数据
+        new_item = {'id': new_id}
+        
+        # 定义字段映射（确保所有必要字段都有默认值）
+        field_defaults = {
+            'name': '',
+            'main_category': '手办',  # 手办的主类别
+            'category': '',
+            'purchase_price': 0,
+            'shipping_fee': 0,
+            'purchase_date': '',
+            'arrival_date': '',
+            'purchase_channel': '',
+            'condition': '',
+            'remark': '',
+            'sold_price': None,
+            'sold_date': '',
+            'image': ''  # 图片字段，暂时为空
+        }
+        
+        # 填充数据
+        for field, default_value in field_defaults.items():
+            new_item[field] = data.get(field, default_value)
+            
+        # 数据类型转换
+        if new_item['purchase_price']:
+            new_item['purchase_price'] = float(new_item['purchase_price'])
+        if new_item['shipping_fee']:
+            new_item['shipping_fee'] = float(new_item['shipping_fee'])
+        if new_item['sold_price']:
+            new_item['sold_price'] = float(new_item['sold_price'])
+            
+        # 添加到DataFrame
+        new_df = pd.DataFrame([new_item])
+        df = pd.concat([df, new_df], ignore_index=True)
+        
+        # 保存到CSV
+        df.to_csv(data_path, index=False, encoding='utf-8')
+        
+        return jsonify({
+            'success': True,
+            'message': '条目创建成功',
+            'item_id': int(new_id)  # 确保转换为Python int类型
+        })
+        
+    except Exception as e:
+        print(f"创建条目失败: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'创建失败: {str(e)}'
         }), 400
 
 
