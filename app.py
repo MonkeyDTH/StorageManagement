@@ -22,14 +22,23 @@ def load_figures_data():
     加载手办数据
     
     返回:
-        list: 手办数据字典列表
+        list: 手办数据字典列表，按购买日期倒序排列，无购买日期的按名称排列
     
     异常:
         FileNotFoundError: 当数据文件不存在时抛出
         pd.errors.EmptyDataError: 当数据文件为空时抛出
     """
     try:
-        return pd.read_csv('data/figures.csv').to_dict('records')
+        df = pd.read_csv('data/figures.csv')
+        # 将空的购买日期替换为 NaT，并只保留日期部分
+        df['purchase_date'] = pd.to_datetime(df['purchase_date'], errors='coerce').dt.date
+        # 先按购买日期倒序排列，对于没有购买日期的按名称排列
+        df = df.sort_values(
+            by=['purchase_date', 'name'],
+            ascending=[False, True],
+            na_position='last'
+        )
+        return df.to_dict('records')
     except (FileNotFoundError, pd.errors.EmptyDataError) as e:
         print(f"加载数据文件失败: {e}")
         return []
@@ -37,9 +46,28 @@ def load_figures_data():
 def load_clothing_data():
     """
     加载衣服数据
-    :return: 衣服数据列表（字典形式）
+    
+    返回:
+        list: 衣服数据列表（字典形式），按购买日期倒序排列，无购买日期的按名称排列
+    
+    异常:
+        FileNotFoundError: 当数据文件不存在时抛出
+        pd.errors.EmptyDataError: 当数据文件为空时抛出
     """
-    return pd.read_csv('data/clothing.csv').to_dict('records')
+    try:
+        df = pd.read_csv('data/clothing.csv')
+        # 将空的购买日期替换为 NaT，并只保留日期部分
+        df['purchase_date'] = pd.to_datetime(df['purchase_date'], errors='coerce').dt.date
+        # 先按购买日期倒序排列，对于没有购买日期的按名称排列
+        df = df.sort_values(
+            by=['purchase_date', 'name'],
+            ascending=[False, True],
+            na_position='last'
+        )
+        return df.to_dict('records')
+    except (FileNotFoundError, pd.errors.EmptyDataError) as e:
+        print(f"加载数据文件失败: {e}")
+        return []
 
 def check_and_convert_images():
     """检查并转换static/images目录下的图片为WebP格式"""
