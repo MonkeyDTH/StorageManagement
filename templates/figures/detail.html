@@ -48,8 +48,12 @@
                                 {{ display_attrib_filed('购买渠道', item.purchase_channel) }}
                                 {{ display_attrib_filed('成色', item.condition) }}
                                 {{ display_attrib_filed('备注', item.remark if item.remark and item.remark == item.remark else '') }}
-                                {{ display_attrib_filed('卖出价格', '¥' ~ item.sold_price if item.sold_price and item.sold_price == item.sold_price else '未卖出') }}
-                                {{ display_attrib_filed('卖出日期', item.sold_date if item.sold_date and item.sold_date == item.sold_date else '未卖出') }}
+                                {% if item.sold_price and item.sold_price == item.sold_price %}
+                                {{ display_attrib_filed('卖出价格', '¥' ~ item.sold_price ) }}
+                                {{ display_attrib_filed('卖出日期', item.sold_date) }}
+                                {% else %}
+                                {{ display_attrib_filed('状态', '<span class="text-muted">持有中</span>'|safe) }}
+                                {% endif %}
                             </ul>
                         </div>
                         
