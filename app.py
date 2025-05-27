@@ -71,13 +71,13 @@ def load_clothing_data():
 
 def check_and_convert_images():
     """检查并转换static/images目录下的图片为WebP格式"""
-    image_dir = os.path.join(app.static_folder, 'images')
-    for filename in os.listdir(image_dir):
-        if filename.lower().endswith(('.jpg', '.jpeg', '.png')):
-            original_path = os.path.join(image_dir, filename)
-            webp_path = get_webp_path(original_path)
-            if not os.path.exists(webp_path):
-                compress_and_convert_to_webp(original_path, webp_path)
+    base_dir = os.path.join(app.static_folder, 'images')
+    types = os.listdir(base_dir)
+    for type_name in types:
+        type_dir = os.path.join(base_dir, type_name)
+        for filename in os.listdir(type_dir):
+            if filename.lower().endswith(('.jpg', '.jpeg', '.png')):
+                original_path = os.path.join(type_dir, filename)
 
 @app.route('/')
 def home():
