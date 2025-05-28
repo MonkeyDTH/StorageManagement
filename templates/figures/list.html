@@ -43,10 +43,10 @@
                 <tbody>
                     {% for item in figures %}
                     <tr onclick="window.location='/figures/{{ item.id }}'" style="cursor: pointer;">
-                        <td>{{ item.name }}</td>
+                        <td class="no-wrap">{{ item.name }}</td>
                         <td>{{ item.category }}</td>
                         <td>¥{{ item.purchase_price }}{% if item.shipping_fee and item.shipping_fee != 0 %}(+{{ item.shipping_fee }}){% endif %}</td>
-                        <td class="date">{{ item.purchase_date }}</td>
+                        <td class="no-wrap">{{ item.purchase_date }}</td>
                         <td>
                             {% if item.sold_price and item.sold_price == item.sold_price %}
                             <span class="sold-badge">
@@ -57,7 +57,11 @@
                                 </div>
                             </span>
                             {% else %}
-                            <span class="text-muted">持有中</span>
+                            {% if item.arrival_date and item.arrival_date == item.arrival_date %}
+                            持有中
+                            {% else %}
+                            <span class="text-red">未到货</span>
+                            {% endif %}
                             {% endif %}
                         </td>
                     </tr>

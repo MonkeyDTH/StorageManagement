@@ -52,7 +52,13 @@ table th {
     text-align: left;  /* 左对齐 */
 }
 
-/* 防止日期换行 */
-.date {
+/* 不换行文字 */
+.no-wrap {
     white-space: nowrap;
+}
+
+/* 表格行内的文本颜色 */
+.text-red {
+    white-space: nowrap;
+    color: #dd2222;
 }

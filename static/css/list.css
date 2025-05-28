@@ -61,7 +61,3 @@
     background-color: var(--morandi-purple) !important;
 }
 
-/* 确保持有中状态也不换行 */
-.text-muted {
-    white-space: nowrap;
-}

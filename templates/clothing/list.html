@@ -41,10 +41,10 @@
             <tbody>
                 {% for item in clothing %}
                 <tr onclick="window.location='/clothing/{{ item.id }}'" style="cursor: pointer;">
-                    <td>{{ item.name }}</td>
+                    <td class="no-wrap">{{ item.name }}</td>
                     <td>{{ item.category }}</td>
                     <td>¥{{ item.purchase_price }}</td>
-                    <td class="date">{{ item.purchase_date }}</td>
+                    <td class="no-wrap">{{ item.purchase_date }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
