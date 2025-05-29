@@ -9,8 +9,10 @@ class PropertyEditor {
         this.$view = document.getElementById('propertyView');
         this.$toggleBtn = document.getElementById('editToggle');
         this.$cancelBtn = document.getElementById('cancelEdit');
+        this.$imageUpload = document.getElementById('image_upload');
+        this.$previewImage = document.getElementById('previewImage');
         // 添加表单输入框集合
-        this.$inputs = this.$form.querySelectorAll('input, select, textarea');
+        this.$inputs = this.$form.querySelectorAll('input:not([type="file"]), select, textarea');
         this.bindEvents();
     }
 
@@ -21,6 +23,26 @@ class PropertyEditor {
         this.$toggleBtn.addEventListener('click', () => this.toggleEdit());
         this.$cancelBtn.addEventListener('click', () => this.cancelEdit());
         this.$form.addEventListener('submit', (e) => this.handleSubmit(e));
+        
+        // 添加图片预览功能
+        if (this.$imageUpload) {
+            this.$imageUpload.addEventListener('change', (e) => this.handleImagePreview(e));
+        }
+    }
+
+    /**
+     * 处理图片预览
+     * @param {Event} e 图片选择事件
+     */
+    handleImagePreview(e) {
+        const file = e.target.files[0];
+        if (file && file.type.match('image.*')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.$previewImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     }
 
     /**
@@ -32,13 +54,14 @@ class PropertyEditor {
         if (this.editMode) {
             // 进入编辑模式
             this.originalValues = [...this.$inputs].map(input => input.value);
-            this.$view.style.display = 'none';  // 修改为 this.$view
-            this.$form.style.display = 'block';  // 修改为 this.$form
+            this.originalImage = this.$previewImage.src;
+            this.$view.style.display = 'none';
+            this.$form.style.display = 'block';
             this.$toggleBtn.innerHTML = '<i class="bi bi-x-circle"></i> 取消';
         } else {
             // 退出编辑模式
-            this.$view.style.display = 'block';  // 修改为 this.$view
-            this.$form.style.display = 'none';  // 修改为 this.$form
+            this.$view.style.display = 'block';
+            this.$form.style.display = 'none';
             this.$toggleBtn.innerHTML = '<i class="bi bi-pencil-square"></i> 编辑';
         }
     }
@@ -52,6 +75,14 @@ class PropertyEditor {
             input.value = this.originalValues[index];
         });
         
+        // 恢复原始图片
+        this.$previewImage.src = this.originalImage;
+        
+        // 清空文件输入
+        if (this.$imageUpload) {
+            this.$imageUpload.value = '';
+        }
+        
         // 退出编辑模式
         this.editMode = false;
         this.$view.style.display = 'block';
@@ -61,17 +92,22 @@ class PropertyEditor {
 
     /**
      * 收集表单数据
-     * @returns {Object} 表单数据对象
+     * @returns {FormData} 表单数据对象
      */
     collectFormData() {
-        const formData = {
-            item_id: this.$form.dataset.itemId,
-            item_type: this.$form.dataset.itemType
-        };
+        const formData = new FormData();
+        formData.append('item_id', this.$form.dataset.itemId);
+        formData.append('item_type', this.$form.dataset.itemType);
 
+        // 添加普通字段
         this.$inputs.forEach(input => {
-            formData[input.id] = input.value;
+            formData.append(input.id, input.value);
         });
+
+        // 添加图片文件（如果有）
+        if (this.$imageUpload && this.$imageUpload.files[0]) {
+            formData.append('image', this.$imageUpload.files[0]);
+        }
 
         return formData;
     }
@@ -87,8 +123,7 @@ class PropertyEditor {
         try {
             const response = await fetch('/update_properties', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: formData // 不设置Content-Type，让浏览器自动处理
             });
             
             // 检查响应内容类型

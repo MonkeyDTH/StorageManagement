@@ -13,6 +13,7 @@ Description:
 from flask import Flask, render_template, abort, request, jsonify
 import pandas as pd
 import os
+from werkzeug.utils import secure_filename  # 添加这一行
 from utils.image_processor import compress_and_convert_to_webp, get_webp_path
 
 app = Flask(__name__)
@@ -151,13 +152,13 @@ def update_properties():
     """
     更新属性接口
     @description: 处理前端提交的属性更新请求
-    @param: JSON格式的属性数据
+    @param: 表单数据，包含属性数据和可能的图片文件
     @return: 操作结果
     """
     try:
-        data = request.get_json()
-        item_type = data.get('item_type')
-        item_id = data.get('item_id')
+        # 获取表单数据
+        item_type = request.form.get('item_type')
+        item_id = request.form.get('item_id')
         
         # 根据不同类型加载不同数据
         if item_type == 'figures':
@@ -166,55 +167,47 @@ def update_properties():
             df = pd.read_csv('data/clothing.csv')
         else:
             raise ValueError('无效的物品类型')
-            
-        # 更新数据并保存
-        print(f"正在更新物品 {item_id} 的数据...")
-        print(data)
-        # 获取指定ID的行数据
-        # 确保item_id和DataFrame中的id列类型一致
-        item_id = str(data.get('item_id'))  # 统一转为字符串
         
-        # 转换DataFrame中的id列为字符串类型
+        # 确保item_id和DataFrame中的id列类型一致
+        item_id = str(item_id)  # 统一转为字符串
         df['id'] = df['id'].astype(str)
         
-        # 查询匹配项
-        item_row = df[df['id'] == item_id]
+        # 处理图片上传
+        image_filename = None
+        if 'image' in request.files and request.files['image'].filename:
+            image_file = request.files['image']
+            # 生成安全的文件名
+            filename = secure_filename(image_file.filename)
+            # 确保目录存在
+            image_dir = os.path.join(app.static_folder, 'images', item_type)
+            os.makedirs(image_dir, exist_ok=True)
+            # 保存原始图片
+            image_path = os.path.join(image_dir, filename)
+            image_file.save(image_path)
+            # 转换为WebP格式
+            compress_and_convert_to_webp(image_path, item_type)
+            # 更新数据库中的图片字段
+            image_filename = filename
         
-        # 安全转换为字典
-        if not item_row.empty:
-            item_dict = item_row.to_dict('records')[0]
-        else:
-            print(f"错误: 未找到ID为{item_id}的记录")
-            print(f"可用ID列表: {df['id'].unique().tolist()}")
-            item_dict = None
-        
-        # 修改查询方式确保类型匹配
-        item_row = df[df['id'].astype(str) == item_id]
-        
-        # 如果需要转换为字典格式（单行）
-        item_dict = item_row.to_dict('records')[0] if not item_row.empty else None
-
-        # 或者直接使用iloc获取第一行（如果确定只有一行）
-        item_data = item_row.iloc[0] if not item_row.empty else None
-        for key, value in data.items():
+        # 更新其他属性
+        for key in request.form:
             if key in df.columns and key not in ['item_type', 'item_id']:
-                df.loc[df['id'] == item_id, key] = value
+                df.loc[df['id'] == item_id, key] = request.form.get(key)
         
+        # 如果有新图片，更新图片字段
+        if image_filename:
+            df.loc[df['id'] == item_id, 'image'] = image_filename
+        
+        # 保存更新后的数据
         data_path = os.path.join(os.path.dirname(__file__), 'data', f'{item_type}.csv')
-        try:
-            df.to_csv(data_path, index=False, encoding='utf-8')
-        except Exception as e:
-            print(f"保存失败: {str(e)}")
-            return jsonify({
-                'success': False,
-                'message': f'保存失败: {str(e)}'
-            })
+        df.to_csv(data_path, index=False, encoding='utf-8')
         
         return jsonify({
             'success': True,
             'message': '属性更新成功'
         })
     except Exception as e:
+        print(f"更新失败: {str(e)}")
         return jsonify({
             'success': False,
             'message': f'更新失败: {str(e)}'

@@ -19,3 +19,18 @@
            {% if required %}required{% endif %}>
 </div>
 {%- endmacro %}
+
+{% macro file_upload_field(id, label, accept='image/*', required=False) -%}
+<div class="mb-3">
+    <label for="{{ id }}" class="form-label">
+        {{ label }}
+        {% if required %}<span class="text-danger">*</span>{% endif %}
+    </label>
+    <input type="file" 
+           class="form-control" 
+           id="{{ id }}" 
+           accept="{{ accept }}"
+           {% if required %}required{% endif %}>
+    <div class="form-text">支持JPG、PNG格式图片</div>
+</div>
+{%- endmacro %}

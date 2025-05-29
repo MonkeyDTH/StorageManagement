@@ -15,27 +15,26 @@
 </head>
 
 <!-- 引入共享宏 -->
-{% from "macros.html" import display_attrib_filed, form_field %}
+{% from "macros.html" import display_attrib_filed, form_field, file_upload_field %}
 
 <body class="bg-morandi-cream">
     <div class="container py-5">        
         <div class="card shadow-sm">
             <div class="card-header bg-morandi-green">
                 <h2 class="dynamic-title mb-0">{{ item.name }}</h2>
-                <a href="/clothing" class="btn btn-secondary me-0">返回列表</a>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <a href="/clothing" class="btn btn-secondary">返回列表</a>
+                    <button id="editToggle" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil-square"></i> 编辑
+                    </button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="/static/images/clothing/{{ item.image|replace('.jpg', '.webp')|replace('.png', '.webp') }}" class="img-fluid rounded mb-3" alt="{{ item.name }}">
+                        <img src="/static/images/clothing/{{ item.image|replace('.jpg', '.webp')|replace('.png', '.webp') }}" class="img-fluid rounded mb-3" alt="{{ item.name }}" id="previewImage">
                     </div>
                     <div class="col-md-6">
-                        <!-- 添加编辑按钮 -->
-                        <div class="d-flex justify-content-end mb-3">
-                            <button id="editToggle" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-pencil-square"></i> 编辑
-                            </button>
-                        </div>
                         
                         <!-- 属性展示视图 -->
                         <div id="propertyView">
@@ -49,6 +48,7 @@
                         
                         <!-- 编辑表单 -->
                         <form id="propertyForm" style="display: none;" data-item-id="{{ item.id }}" data-item-type="clothing">
+                            {{ file_upload_field('image_upload', '更换图片') }}
                             {{ form_field('name', '名字', value=item.name) }}
                             {{ form_field('category', '子类别', value=item.category) }}
                             {{ form_field('purchase_price', '购买价格', 'number', item.purchase_price) }}
