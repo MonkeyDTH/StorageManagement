@@ -222,7 +222,7 @@ def create_item():
         处理前端提交的新建条目请求
         
     参数:
-        JSON格式的条目数据
+        表单数据，包含条目数据和可能的图片文件
         
     返回:
         dict: 操作结果
@@ -232,8 +232,8 @@ def create_item():
         Exception: 当保存失败时抛出
     """
     try:
-        data = request.get_json()
-        item_type = data.get('item_type')
+        # 获取表单数据
+        item_type = request.form.get('item_type')
         
         # 验证物品类型
         if item_type not in ['figures', 'clothing']:
@@ -260,7 +260,7 @@ def create_item():
         # 定义字段映射（确保所有必要字段都有默认值）
         field_defaults = {
             'name': '',
-            'main_category': '手办',  # 手办的主类别
+            'main_category': '手办' if item_type == 'figures' else '衣服',  # 根据类型设置主类别
             'category': '',
             'purchase_price': 0,
             'shipping_fee': 0,
@@ -276,15 +276,36 @@ def create_item():
         
         # 填充数据
         for field, default_value in field_defaults.items():
-            new_item[field] = data.get(field, default_value)
+            if field in request.form and request.form.get(field).strip():
+                new_item[field] = request.form.get(field)
+            else:
+                new_item[field] = default_value
             
         # 数据类型转换
         if new_item['purchase_price']:
             new_item['purchase_price'] = float(new_item['purchase_price'])
         if new_item['shipping_fee']:
             new_item['shipping_fee'] = float(new_item['shipping_fee'])
-        if new_item['sold_price']:
+        if new_item['sold_price'] and new_item['sold_price'] != 'None':
             new_item['sold_price'] = float(new_item['sold_price'])
+        
+        # 处理图片上传
+        image_filename = ''
+        if 'image' in request.files and request.files['image'].filename:
+            image_file = request.files['image']
+            # 生成安全的文件名
+            filename = secure_filename(image_file.filename)
+            # 确保目录存在
+            image_dir = os.path.join(app.static_folder, 'images', item_type)
+            os.makedirs(image_dir, exist_ok=True)
+            # 保存原始图片
+            image_path = os.path.join(image_dir, filename)
+            image_file.save(image_path)
+            # 转换为WebP格式
+            from utils.image_processor import compress_and_convert_to_webp
+            compress_and_convert_to_webp(image_path, item_type)
+            # 更新数据库中的图片字段
+            new_item['image'] = filename
             
         # 添加到DataFrame
         new_df = pd.DataFrame([new_item])
