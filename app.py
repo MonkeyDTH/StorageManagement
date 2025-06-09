@@ -101,12 +101,18 @@ def home():
 @app.route('/figures')
 def show_figures():
     """手办列表路由：展示所有手办数据"""
-    return render_template('figures/list.html', figures=load_figures_data())
+    figures_data = load_figures_data()
+    # 提取所有不重复的子类别
+    categories = sorted(list(set(item['category'] for item in figures_data if item['category'])))
+    return render_template('figures/list.html', figures=figures_data, categories=categories)
 
 @app.route('/clothing')
 def show_clothing():
     """衣服列表路由：展示所有衣服数据"""
-    return render_template('clothing/list.html', clothing=load_clothing_data())
+    clothing_data = load_clothing_data()
+    # 提取所有不重复的子类别
+    categories = sorted(list(set(item['category'] for item in clothing_data if item['category'])))
+    return render_template('clothing/list.html', clothing=clothing_data, categories=categories)
 
 @app.route('/figures/<int:item_id>')
 def figures_detail(item_id):

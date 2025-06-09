@@ -61,3 +61,43 @@
     background-color: var(--morandi-purple) !important;
 }
 
+/* 筛选卡片样式 */
+.filter-card {
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.filter-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 筛选状态样式 */
+.filter-status {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: #6c757d;
+    padding: 4px 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* 无数据提示样式 */
+#noDataMessage {
+    color: #6c757d;
+    background-color: rgba(248, 249, 250, 0.7);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* 筛选控件动画 */
+#categoryFilter:focus {
+    border-color: var(--morandi-green);
+    box-shadow: 0 0 0 0.25rem rgba(200, 213, 185, 0.25);
+}
+
+/* 重置按钮悬停效果 */
+#resetFilter:hover, #showAllItems:hover {
+    transform: scale(1.05);
+}
+
