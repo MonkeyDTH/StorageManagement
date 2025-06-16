@@ -4,7 +4,7 @@ import os
 def get_webp_path(original_path, item_type):
     """生成WebP格式的文件路径
     :param original_path: 原始图片路径
-    :param item_type: 物品类型（clothing/figures）
+    :param item_type: 物品类型
     :return: WebP格式的文件路径
     """
     filename = os.path.basename(original_path)
@@ -14,7 +14,7 @@ def get_webp_path(original_path, item_type):
 def compress_and_convert_to_webp(original_path, item_type, quality=80, max_size=(1600, 1600)):
     """使用Pillow实现图片压缩和WebP转换
     :param original_path: 原始图片路径
-    :param item_type: 物品类型（clothing/figures）
+    :param item_type: 物品类型
     :param quality: 压缩质量(1-100)
     :param max_size: 最大尺寸(宽,高)
     """

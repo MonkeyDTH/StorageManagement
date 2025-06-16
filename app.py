@@ -2,7 +2,7 @@
 Author: Leili
 Date: 2025-05-18 20:41:27
 LastEditors: Leili
-LastEditTime: 2025-06-16 15:29:19
+LastEditTime: 2025-06-16 16:22:39
 FilePath: /StorageManagement/app.py
 Description: 
 '''
@@ -13,10 +13,16 @@ Description:
 from flask import Flask, render_template, abort, request, jsonify
 import pandas as pd
 import os
-from werkzeug.utils import secure_filename  # 添加这一行
+from werkzeug.utils import secure_filename
 from utils.image_processor import compress_and_convert_to_webp, get_webp_path
+from utils.item_manager import ItemCategory
 
 app = Flask(__name__)
+
+# 创建物品类别实例
+figures_category = ItemCategory('figures', app)
+clothing_category = ItemCategory('clothing', app)
+goods_category = ItemCategory('goods', app)
 
 def load_figures_data():
     """
@@ -29,20 +35,7 @@ def load_figures_data():
         FileNotFoundError: 当数据文件不存在时抛出
         pd.errors.EmptyDataError: 当数据文件为空时抛出
     """
-    try:
-        df = pd.read_csv('data/figures.csv')
-        # 将空的购买日期替换为 NaT，并只保留日期部分
-        df['purchase_date'] = pd.to_datetime(df['purchase_date'], errors='coerce').dt.date
-        # 先按购买日期倒序排列，对于没有购买日期的按名称排列
-        df = df.sort_values(
-            by=['purchase_date', 'name'],
-            ascending=[False, True],
-            na_position='last'
-        )
-        return df.to_dict('records')
-    except (FileNotFoundError, pd.errors.EmptyDataError) as e:
-        print(f"加载数据文件失败: {e}")
-        return []
+    return figures_category.load_data()
 
 def load_clothing_data():
     """
@@ -55,20 +48,7 @@ def load_clothing_data():
         FileNotFoundError: 当数据文件不存在时抛出
         pd.errors.EmptyDataError: 当数据文件为空时抛出
     """
-    try:
-        df = pd.read_csv('data/clothing.csv')
-        # 将空的购买日期替换为 NaT，并只保留日期部分
-        df['purchase_date'] = pd.to_datetime(df['purchase_date'], errors='coerce').dt.date
-        # 先按购买日期倒序排列，对于没有购买日期的按名称排列
-        df = df.sort_values(
-            by=['purchase_date', 'name'],
-            ascending=[False, True],
-            na_position='last'
-        )
-        return df.to_dict('records')
-    except (FileNotFoundError, pd.errors.EmptyDataError) as e:
-        print(f"加载数据文件失败: {e}")
-        return []
+    return clothing_category.load_data()
 
 def load_goods_data():
     """
@@ -81,30 +61,27 @@ def load_goods_data():
         FileNotFoundError: 当数据文件不存在时抛出
         pd.errors.EmptyDataError: 当数据文件为空时抛出
     """
-    try:
-        df = pd.read_csv('data/goods.csv')
-        # 将空的购买日期替换为 NaT，并只保留日期部分
-        df['purchase_date'] = pd.to_datetime(df['purchase_date'], errors='coerce').dt.date
-        # 先按购买日期倒序排列，对于没有购买日期的按名称排列
-        df = df.sort_values(
-            by=['purchase_date', 'name'],
-            ascending=[False, True],
-            na_position='last'
-        )
-        return df.to_dict('records')
-    except (FileNotFoundError, pd.errors.EmptyDataError) as e:
-        print(f"加载数据文件失败: {e}")
-        return []
+    return goods_category.load_data()
 
 def check_and_convert_images():
-    """检查并转换static/images目录下的图片为WebP格式"""
-    base_dir = os.path.join(app.static_folder, 'images')
-    types = os.listdir(base_dir)
-    for type_name in types:
-        type_dir = os.path.join(base_dir, type_name)
-        for filename in os.listdir(type_dir):
-            if filename.lower().endswith(('.jpg', '.jpeg', '.png')):
-                original_path = os.path.join(type_dir, filename)
+    """检查并转换图片为WebP格式"""
+    for item_type in ['figures', 'clothing', 'goods']:
+        image_dir = os.path.join(app.static_folder, 'images', item_type)
+        if not os.path.exists(image_dir):
+            os.makedirs(image_dir, exist_ok=True)
+            continue
+            
+        for filename in os.listdir(image_dir):
+            if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                image_path = os.path.join(image_dir, filename)
+                # 检查是否已经有对应的WebP文件
+                webp_path = get_webp_path(image_path, item_type)
+                if not os.path.exists(webp_path):
+                    try:
+                        compress_and_convert_to_webp(image_path, item_type)
+                        print(f"转换图片: {filename} -> {os.path.basename(webp_path)}")
+                    except Exception as e:
+                        print(f"转换图片失败 {filename}: {str(e)}")
 
 @app.route('/')
 def home():
@@ -129,25 +106,22 @@ def home():
 @app.route('/figures')
 def show_figures():
     """手办列表路由：展示所有手办数据"""
-    figures_data = load_figures_data()
-    # 提取所有不重复的子类别
-    categories = sorted(list(set(item['category'] for item in figures_data if item['category'])))
+    figures_data = figures_category.load_data()
+    categories = figures_category.get_categories()
     return render_template('figures/list.html', figures=figures_data, categories=categories)
 
 @app.route('/clothing')
 def show_clothing():
     """衣服列表路由：展示所有衣服数据"""
-    clothing_data = load_clothing_data()
-    # 提取所有不重复的子类别
-    categories = sorted(list(set(item['category'] for item in clothing_data if item['category'])))
+    clothing_data = clothing_category.load_data()
+    categories = clothing_category.get_categories()
     return render_template('clothing/list.html', clothing=clothing_data, categories=categories)
 
 @app.route('/goods')
 def show_goods():
     """好物列表路由：展示所有好物数据"""
-    goods_data = load_goods_data()
-    # 提取所有不重复的子类别
-    categories = sorted(list(set(item['category'] for item in goods_data if item['category'])))
+    goods_data = goods_category.load_data()
+    categories = goods_category.get_categories()
     return render_template('goods/list.html', goods=goods_data, categories=categories)
 
 @app.route('/figures/<int:item_id>')
@@ -182,10 +156,10 @@ def good_new():
 
 def get_item_detail(item_type, item_id):
     """通用详情路由处理函数"""
-    data_loader = {
-        'figures': load_figures_data,
-        'clothing': load_clothing_data,
-        'goods': load_goods_data
+    category_map = {
+        'figures': figures_category,
+        'clothing': clothing_category,
+        'goods': goods_category
     }
     template_map = {
         'figures': 'figures/detail.html',
@@ -193,8 +167,8 @@ def get_item_detail(item_type, item_id):
         'goods': 'goods/detail.html'
     }
     
-    item_data = data_loader[item_type]()
-    item = next((item for item in item_data if item['id'] == item_id), None)
+    category = category_map[item_type]
+    item = category.get_item_by_id(item_id)
     if item is None:
         abort(404)
     return render_template(template_map[item_type], item=item)
@@ -214,54 +188,34 @@ def update_properties():
         item_type = request.form.get('item_type')
         item_id = request.form.get('item_id')
         
-        # 根据不同类型加载不同数据
-        if item_type == 'figures':
-            df = pd.read_csv('data/figures.csv')
-        elif item_type == 'clothing':
-            df = pd.read_csv('data/clothing.csv')
-        elif item_type == 'goods':
-            df = pd.read_csv('data/goods.csv')
-        else:
+        # 根据不同类型选择不同的类别管理器
+        category_map = {
+            'figures': figures_category,
+            'clothing': clothing_category,
+            'goods': goods_category
+        }
+        
+        if item_type not in category_map:
             raise ValueError('无效的物品类型')
+            
+        category = category_map[item_type]
         
-        # 确保item_id和DataFrame中的id列类型一致
-        item_id = str(item_id)  # 统一转为字符串
-        df['id'] = df['id'].astype(str)
+        # 获取图片文件
+        image_file = request.files.get('image') if 'image' in request.files else None
         
-        # 处理图片上传
-        image_filename = None
-        if 'image' in request.files and request.files['image'].filename:
-            image_file = request.files['image']
-            # 生成安全的文件名
-            filename = secure_filename(image_file.filename)
-            # 确保目录存在
-            image_dir = os.path.join(app.static_folder, 'images', item_type)
-            os.makedirs(image_dir, exist_ok=True)
-            # 保存原始图片
-            image_path = os.path.join(image_dir, filename)
-            image_file.save(image_path)
-            # 转换为WebP格式
-            compress_and_convert_to_webp(image_path, item_type)
-            # 更新数据库中的图片字段
-            image_filename = filename
+        # 更新物品属性
+        success, message = category.update_item(item_id, request.form, image_file)
         
-        # 更新其他属性
-        for key in request.form:
-            if key in df.columns and key not in ['item_type', 'item_id']:
-                df.loc[df['id'] == item_id, key] = request.form.get(key)
-        
-        # 如果有新图片，更新图片字段
-        if image_filename:
-            df.loc[df['id'] == item_id, 'image'] = image_filename
-        
-        # 保存更新后的数据
-        data_path = os.path.join(os.path.dirname(__file__), 'data', f'{item_type}.csv')
-        df.to_csv(data_path, index=False, encoding='utf-8')
-        
-        return jsonify({
-            'success': True,
-            'message': '属性更新成功'
-        })
+        if success:
+            return jsonify({
+                'success': True,
+                'message': message
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': message
+            }), 400
     except Exception as e:
         print(f"更新失败: {str(e)}")
         return jsonify({
@@ -272,119 +226,46 @@ def update_properties():
 @app.route('/create_item', methods=['POST'])
 def create_item():
     """
-    创建新条目接口
-    
-    功能:
-        处理前端提交的新建条目请求
-        
-    参数:
-        表单数据，包含条目数据和可能的图片文件
-        
-    返回:
-        dict: 操作结果
-        
-    异常:
-        ValueError: 当物品类型无效时抛出
-        Exception: 当保存失败时抛出
+    创建新物品接口
+    @description: 处理前端提交的新物品创建请求
+    @param: 表单数据，包含物品数据和可能的图片文件
+    @return: 操作结果
     """
     try:
         # 获取表单数据
         item_type = request.form.get('item_type')
         
-        # 验证物品类型
-        if item_type not in ['figures', 'clothing', 'goods']:
-            raise ValueError('无效的物品类型')
-            
-        # 加载现有数据
-        data_path = os.path.join(os.path.dirname(__file__), 'data', f'{item_type}.csv')
-        
-        try:
-            df = pd.read_csv(data_path)
-        except FileNotFoundError:
-            # 如果文件不存在，创建新的DataFrame
-            df = pd.DataFrame()
-            
-        # 生成新ID
-        if df.empty:
-            new_id = 1
-        else:
-            new_id = int(df['id'].max()) + 1  # 转换为Python int类型
-            
-        # 准备新条目数据
-        new_item = {'id': new_id}
-        
-        # 定义字段映射（确保所有必要字段都有默认值）
-        main_category = ''
-        if item_type == 'figures':
-            main_category = '手办'
-        elif item_type == 'clothing':
-            main_category = '衣服'
-        else:
-            main_category = '好物'
-        field_defaults = {
-            'name': '',
-            'main_category': main_category,  # 根据类型设置主类别
-            'category': '',
-            'purchase_price': 0,
-            'shipping_fee': 0,
-            'purchase_date': '',
-            'arrival_date': '',
-            'purchase_channel': '',
-            'condition': '',
-            'remark': '',
-            'sold_price': None,
-            'sold_date': '',
-            'image': ''  # 图片字段，暂时为空
+        # 根据不同类型选择不同的类别管理器
+        category_map = {
+            'figures': figures_category,
+            'clothing': clothing_category,
+            'goods': goods_category
         }
         
-        # 填充数据
-        for field, default_value in field_defaults.items():
-            if field in request.form and request.form.get(field).strip():
-                new_item[field] = request.form.get(field)
-            else:
-                new_item[field] = default_value
+        if item_type not in category_map:
+            raise ValueError('无效的物品类型')
             
-        # 数据类型转换
-        if new_item['purchase_price']:
-            new_item['purchase_price'] = float(new_item['purchase_price'])
-        if new_item['shipping_fee']:
-            new_item['shipping_fee'] = float(new_item['shipping_fee'])
-        if new_item['sold_price'] and new_item['sold_price'] != 'None':
-            new_item['sold_price'] = float(new_item['sold_price'])
+        category = category_map[item_type]
         
-        # 处理图片上传
-        image_filename = ''
-        if 'image' in request.files and request.files['image'].filename:
-            image_file = request.files['image']
-            # 生成安全的文件名
-            filename = secure_filename(image_file.filename)
-            # 确保目录存在
-            image_dir = os.path.join(app.static_folder, 'images', item_type)
-            os.makedirs(image_dir, exist_ok=True)
-            # 保存原始图片
-            image_path = os.path.join(image_dir, filename)
-            image_file.save(image_path)
-            # 转换为WebP格式
-            from utils.image_processor import compress_and_convert_to_webp
-            compress_and_convert_to_webp(image_path, item_type)
-            # 更新数据库中的图片字段
-            new_item['image'] = filename
-            
-        # 添加到DataFrame
-        new_df = pd.DataFrame([new_item])
-        df = pd.concat([df, new_df], ignore_index=True)
+        # 获取图片文件
+        image_file = request.files.get('image') if 'image' in request.files else None
         
-        # 保存到CSV
-        df.to_csv(data_path, index=False, encoding='utf-8')
+        # 创建新物品
+        success, message, new_id = category.create_item(request.form, image_file)
         
-        return jsonify({
-            'success': True,
-            'message': '条目创建成功',
-            'item_id': int(new_id)  # 确保转换为Python int类型
-        })
-        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': message,
+                'item_id': new_id
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': message
+            }), 400
     except Exception as e:
-        print(f"创建条目失败: {str(e)}")
+        print(f"创建失败: {str(e)}")
         return jsonify({
             'success': False,
             'message': f'创建失败: {str(e)}'
