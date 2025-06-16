@@ -2,7 +2,7 @@
 Author: Leili
 Date: 2025-05-18 20:41:27
 LastEditors: Leili
-LastEditTime: 2025-05-26 14:15:00
+LastEditTime: 2025-06-16 15:29:19
 FilePath: /StorageManagement/app.py
 Description: 
 '''
@@ -70,6 +70,32 @@ def load_clothing_data():
         print(f"加载数据文件失败: {e}")
         return []
 
+def load_goods_data():
+    """
+    加载好物数据
+    
+    返回:
+        list: 好物数据列表（字典形式），按购买日期倒序排列，无购买日期的按名称排列
+    
+    异常:
+        FileNotFoundError: 当数据文件不存在时抛出
+        pd.errors.EmptyDataError: 当数据文件为空时抛出
+    """
+    try:
+        df = pd.read_csv('data/goods.csv')
+        # 将空的购买日期替换为 NaT，并只保留日期部分
+        df['purchase_date'] = pd.to_datetime(df['purchase_date'], errors='coerce').dt.date
+        # 先按购买日期倒序排列，对于没有购买日期的按名称排列
+        df = df.sort_values(
+            by=['purchase_date', 'name'],
+            ascending=[False, True],
+            na_position='last'
+        )
+        return df.to_dict('records')
+    except (FileNotFoundError, pd.errors.EmptyDataError) as e:
+        print(f"加载数据文件失败: {e}")
+        return []
+
 def check_and_convert_images():
     """检查并转换static/images目录下的图片为WebP格式"""
     base_dir = os.path.join(app.static_folder, 'images')
@@ -91,11 +117,13 @@ def home():
     # 加载数据并渲染模板
     figures = load_figures_data()
     clothing = load_clothing_data()
+    goods = load_goods_data()
     return render_template(
         'index.html',
-        total=len(figures) + len(clothing),
+        total=len(figures) + len(clothing) + len(goods),
         figures_count=len(figures),
-        clothing_count=len(clothing)
+        clothing_count=len(clothing),
+        goods_count = len(goods)
     )
 
 @app.route('/figures')
@@ -114,6 +142,14 @@ def show_clothing():
     categories = sorted(list(set(item['category'] for item in clothing_data if item['category'])))
     return render_template('clothing/list.html', clothing=clothing_data, categories=categories)
 
+@app.route('/goods')
+def show_goods():
+    """好物列表路由：展示所有好物数据"""
+    goods_data = load_goods_data()
+    # 提取所有不重复的子类别
+    categories = sorted(list(set(item['category'] for item in goods_data if item['category'])))
+    return render_template('goods/list.html', goods=goods_data, categories=categories)
+
 @app.route('/figures/<int:item_id>')
 def figures_detail(item_id):
     """手办详情路由"""
@@ -123,6 +159,11 @@ def figures_detail(item_id):
 def clothing_detail(item_id):
     """衣服详情路由"""
     return get_item_detail('clothing', item_id)
+
+@app.route('/goods/<int:item_id>')
+def goods_detail(item_id):
+    """好物详情路由"""
+    return get_item_detail('goods', item_id)
 
 @app.route('/figures/new')
 def figures_new():
@@ -134,15 +175,22 @@ def clothing_new():
     """新建衣服页面路由"""
     return render_template('clothing/new.html')
 
+@app.route('/goods/new')
+def good_new():
+    """新建好物页面路由"""
+    return render_template('goods/new.html')
+
 def get_item_detail(item_type, item_id):
     """通用详情路由处理函数"""
     data_loader = {
         'figures': load_figures_data,
-        'clothing': load_clothing_data
+        'clothing': load_clothing_data,
+        'goods': load_goods_data
     }
     template_map = {
         'figures': 'figures/detail.html',
-        'clothing': 'clothing/detail.html'
+        'clothing': 'clothing/detail.html',
+        'goods': 'goods/detail.html'
     }
     
     item_data = data_loader[item_type]()
@@ -171,6 +219,8 @@ def update_properties():
             df = pd.read_csv('data/figures.csv')
         elif item_type == 'clothing':
             df = pd.read_csv('data/clothing.csv')
+        elif item_type == 'goods':
+            df = pd.read_csv('data/goods.csv')
         else:
             raise ValueError('无效的物品类型')
         
@@ -242,7 +292,7 @@ def create_item():
         item_type = request.form.get('item_type')
         
         # 验证物品类型
-        if item_type not in ['figures', 'clothing']:
+        if item_type not in ['figures', 'clothing', 'goods']:
             raise ValueError('无效的物品类型')
             
         # 加载现有数据
@@ -264,9 +314,16 @@ def create_item():
         new_item = {'id': new_id}
         
         # 定义字段映射（确保所有必要字段都有默认值）
+        main_category = ''
+        if item_type == 'figures':
+            main_category = '手办'
+        elif item_type == 'clothing':
+            main_category = '衣服'
+        else:
+            main_category = '好物'
         field_defaults = {
             'name': '',
-            'main_category': '手办' if item_type == 'figures' else '衣服',  # 根据类型设置主类别
+            'main_category': main_category,  # 根据类型设置主类别
             'category': '',
             'purchase_price': 0,
             'shipping_fee': 0,

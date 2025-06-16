@@ -2,7 +2,7 @@
  * @Author: Leili
  * @Date: 2025-05-21 11:26:22
  * @LastEditors: Leili
- * @LastEditTime: 2025-05-22 10:13:35
+ * @LastEditTime: 2025-06-16 14:26:35
  * @FilePath: /StorageManagement/templates/index.html
  * @Description: 
 -->
@@ -52,6 +52,17 @@
                         <div class="card-body text-center">
                             <h5 class="card-title text-gray-600">衣服数量</h5>
                             <p class="card-text display-5 text-morandi-green">{{ clothing_count }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- 好物数量卡片（添加点击跳转） -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <a href="/goods" class="text-decoration-none">
+                    <div class="card bg-white hover-card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-gray-600">好物数量</h5>
+                            <p class="card-text display-5 text-morandi-green">{{ goods_count }}</p>
                         </div>
                     </div>
                 </a>
