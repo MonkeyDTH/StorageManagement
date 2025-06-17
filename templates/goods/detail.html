@@ -43,6 +43,7 @@
                                 {{ display_attrib_filed('购买价格', '¥' ~ item.purchase_price) }}
                                 {{ display_attrib_filed('购买日期', item.purchase_date) }}
                                 {{ display_attrib_filed('购买渠道', item.purchase_channel) }}
+                                {{ display_attrib_filed('备注', item.remark if item.remark and item.remark == item.remark else '') }}
                             </ul>
                         </div>
                         
@@ -54,6 +55,7 @@
                             {{ form_field('purchase_price', '购买价格', 'number', item.purchase_price) }}
                             {{ form_field('purchase_date', '购买日期', 'date', item.purchase_date) }}
                             {{ form_field('purchase_channel', '购买渠道', value=item.purchase_channel) }}
+                            {{ form_field('remark', '备注', value=item.remark) }}
                             <div class="d-flex justify-content-end mt-3">
                                 <button type="button" class="btn btn-outline-danger me-2" id="cancelEdit">取消</button>
                                 <button type="submit" class="btn btn-primary">保存</button>

@@ -2,14 +2,6 @@
 Author: Leili
 Date: 2025-06-16 15:59:23
 LastEditors: Leili
-LastEditTime: 2025-06-16 16:22:13
-FilePath: /StorageManagement/utils/item_manager.py
-Description: 
-'''
-'''
-Author: Leili
-Date: 2025-06-16
-LastEditors: Leili
 LastEditTime: 2025-06-16 16:02:43
 FilePath: /StorageManagement/utils/item_manager.py
 Description: 物品管理类，封装物品数据的加载、保存、更新等功能
