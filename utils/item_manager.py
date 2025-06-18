@@ -2,7 +2,7 @@
 Author: Leili
 Date: 2025-06-16 15:59:23
 LastEditors: Leili
-LastEditTime: 2025-06-16 16:02:43
+LastEditTime: 2025-06-18 13:38:09
 FilePath: /StorageManagement/utils/item_manager.py
 Description: 物品管理类，封装物品数据的加载、保存、更新等功能
 '''
@@ -249,3 +249,63 @@ class ItemCategory:
         except Exception as e:
             print(f"创建失败: {str(e)}")
             return False, f'创建失败: {str(e)}', None
+    
+    def calculate_price_stats(self):
+        """
+        计算价格统计信息
+        
+        计算总买入价格（包含购买价格和运费）、总卖出价格，以及按子类别统计的价格信息
+        
+        返回:
+            tuple: (total_stats, category_stats)
+                total_stats (dict): 整体统计信息
+                category_stats (dict): 按子类别统计的价格信息
+        """
+        # 加载数据
+        items_data = self.load_data()
+        categories = self.get_categories()
+        
+        # 计算总买入价格（购买价格+运费）
+        total_stats = {
+            "total_purchase_price": 0,
+            "total_sold_price": 0,
+            "total_count": len(items_data),
+            "sold_count": 0
+        }
+        
+        # 按子类别计算价格统计
+        category_stats = {}
+        
+        # 初始化每个类别的统计数据
+        for category in categories:
+            category_stats[category] = {
+                'purchase_price': 0,
+                'sold_price': 0,
+                'count': 0,
+                'sold_count': 0
+            }
+        
+        for item in items_data:
+            # 计算买入价格（购买价格+运费）
+            purchase_price = item.get('purchase_price', 0) or 0
+            shipping_fee = item.get('shipping_fee', 0) or 0
+            item_total_price = purchase_price + shipping_fee
+            total_stats['total_purchase_price'] += item_total_price
+            
+            # 计算卖出价格
+            sold_price = item.get('sold_price', 0) or 0
+            if sold_price and sold_price == sold_price:  # 检查是否为NaN
+                total_stats['total_sold_price'] += sold_price
+                total_stats['sold_count'] += 1
+            
+            # 按类别统计
+            category = item.get('category', '')
+            if category in category_stats:
+                category_stats[category]['purchase_price'] += item_total_price
+                category_stats[category]['count'] += 1
+                if sold_price and sold_price == sold_price:  # 检查是否为NaN
+                    category_stats[category]['sold_price'] += sold_price
+                    category_stats[category]['sold_count'] += 1
+        
+        return total_stats, category_stats
+    

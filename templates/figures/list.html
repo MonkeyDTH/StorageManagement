@@ -2,7 +2,7 @@
  * @Author: Leili
  * @Date: 2025-05-18 21:05:15
  * @LastEditors: Leili
- * @LastEditTime: 2025-06-18 11:04:22
+ * @LastEditTime: 2025-06-18 14:32:50
  * @FilePath: /StorageManagement/templates/figures/list.html
  * @Description: 
 -->
@@ -101,8 +101,8 @@
                             </div>
                             <div>
                                 <h5 class="mb-0">总买入价格 <span id="categoryLabel" class="badge bg-info d-none"></span></h5>
-                                <h3 class="mb-0 fw-bold" id="purchasePriceDisplay">¥{{ '{:,.2f}'.format(total_purchase_price) }}</h3>
-                                <small class="text-muted">包含购买价格和运费 <span id="itemCountDisplay"></span></small>
+                                <h3 class="mb-0 fw-bold" id="purchasePriceDisplay">¥{{ '{:,.2f}'.format(total_stats['total_purchase_price']) }}</h3>
+                                <small class="text-muted">包含购买价格和运费 <span id="itemCountDisplay">({{ total_stats['total_count'] }}件)</span></small>
                             </div>
                         </div>
                     </div>
@@ -113,14 +113,14 @@
                             </div>
                             <div>
                                 <h5 class="mb-0">总卖出价格</h5>
-                                <h3 class="mb-0 fw-bold" id="soldPriceDisplay">¥{{ '{:,.2f}'.format(total_sold_price) }}</h3>
-                                <small class="text-muted">已卖出物品收入 <span id="soldCountDisplay"></span></small>
+                                <h3 class="mb-0 fw-bold" id="soldPriceDisplay">¥{{ '{:,.2f}'.format(total_stats['total_sold_price']) }}</h3>
+                                <small class="text-muted">已卖出物品收入 <span id="soldCountDisplay">({{ total_stats['sold_count'] }}件)</span></small>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="d-flex align-items-center">
-                            {% set profit = total_sold_price - total_purchase_price %}
+                            {% set profit = total_stats['total_sold_price'] - total_stats['total_purchase_price'] %}
                             <div id="profitIconContainer" class="stat-icon me-3 {% if profit >= 0 %}bg-success bg-opacity-10{% else %}bg-danger bg-opacity-10{% endif %}">
                                 {% if profit >= 0 %}
                                 <i id="profitIcon" class="fas fa-chart-line text-success"></i>
@@ -141,27 +141,6 @@
             </div>
         </div>
         
-        <!-- 传递类别统计数据到JavaScript -->
-        <script>
-            // 将后端传递的类别统计数据转换为JavaScript对象
-            const categoryStats = {
-                {% for category, stats in category_stats.items() %}
-                "{{ category }}": {
-                    purchasePrice: {{ stats.purchase_price }},
-                    soldPrice: {{ stats.sold_price }},
-                    count: {{ stats.count }},
-                    soldCount: {{ stats.sold_count }}
-                },
-                {% endfor %}
-                "all": {
-                    purchasePrice: {{ total_purchase_price }},
-                    soldPrice: {{ total_sold_price }},
-                    count: {{ figures|length }},
-                    soldCount: {{ figures|selectattr('sold_price')|selectattr('sold_price', 'defined')|list|length }}
-                }
-            };
-        </script>
-
         <!-- 响应式表格 -->
         <div class="table-responsive">
             <table class="table table-striped table-hover bg-white rounded">

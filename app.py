@@ -2,7 +2,7 @@
 Author: Leili
 Date: 2025-05-18 20:41:27
 LastEditors: Leili
-LastEditTime: 2025-06-18 10:43:35
+LastEditTime: 2025-06-18 14:33:12
 FilePath: /StorageManagement/app.py
 Description: 
 '''
@@ -113,48 +113,13 @@ def show_figures():
     figures_data = figures_category.load_data()
     categories = figures_category.get_categories()
     
-    # 计算总买入价格（购买价格+运费）
-    total_purchase_price = 0
-    total_sold_price = 0
-    
-    # 按子类别计算价格统计
-    category_stats = {}
-    
-    # 初始化每个类别的统计数据
-    for category in categories:
-        category_stats[category] = {
-            'purchase_price': 0,
-            'sold_price': 0,
-            'count': 0,
-            'sold_count': 0
-        }
-    
-    for item in figures_data:
-        # 计算买入价格（购买价格+运费）
-        purchase_price = item.get('purchase_price', 0) or 0
-        shipping_fee = item.get('shipping_fee', 0) or 0
-        item_total_price = purchase_price + shipping_fee
-        total_purchase_price += item_total_price
-        
-        # 计算卖出价格
-        sold_price = item.get('sold_price', 0) or 0
-        if sold_price and sold_price == sold_price:  # 检查是否为NaN
-            total_sold_price += sold_price
-        
-        # 按类别统计
-        category = item.get('category', '')
-        if category in category_stats:
-            category_stats[category]['purchase_price'] += item_total_price
-            category_stats[category]['count'] += 1
-            if sold_price and sold_price == sold_price:  # 检查是否为NaN
-                category_stats[category]['sold_price'] += sold_price
-                category_stats[category]['sold_count'] += 1
+    # 使用ItemCategory类的calculate_price_stats方法计算价格统计信息
+    total_stats, category_stats = figures_category.calculate_price_stats()
     
     return render_template('figures/list.html', 
                            figures=figures_data, 
                            categories=categories,
-                           total_purchase_price=total_purchase_price,
-                           total_sold_price=total_sold_price,
+                           total_stats=total_stats,
                            category_stats=category_stats)
 
 @app.route('/clothing')
