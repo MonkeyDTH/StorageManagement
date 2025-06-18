@@ -15,9 +15,11 @@
 </head>
 
 <!-- 引入共享宏 -->
-{% from "macros.html" import display_attrib_filed, form_field, file_upload_field %}
+{% from "macros.html" import display_attrib_filed, form_field, file_upload_field, navbar %}
 
 <body class="bg-morandi-cream">
+    <!-- 导航栏 -->
+    {{ navbar('goods') }}
     <div class="container py-5">        
         <div class="card shadow-sm">
             <div class="card-header bg-morandi-green">

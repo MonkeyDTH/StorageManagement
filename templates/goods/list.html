@@ -22,6 +22,10 @@
     <link rel="stylesheet" href="/static/css/list.css">
 </head>
 <body class="bg-morandi-cream">
+    <!-- 导航栏，引入共享宏 -->
+    {% from "macros.html" import navbar %}
+    {{ navbar('goods') }}
+    
     <div class="container mt-5">
         <!-- 标题 & 返回按钮 -->
         <div class="d-flex justify-content-between align-items-center mb-4">

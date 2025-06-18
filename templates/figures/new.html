@@ -16,9 +16,11 @@
 </head>
 
 <!-- 引入共享宏 -->
-{% from "macros.html" import form_field, file_upload_field %}
+{% from "macros.html" import form_field, file_upload_field, navbar %}
 
 <body class="bg-morandi-cream">
+    <!-- 导航栏 -->
+    {{ navbar('figures') }}
     <div class="container py-5">
         <a href="/figures" class="btn btn-secondary mb-3">返回列表</a>
         

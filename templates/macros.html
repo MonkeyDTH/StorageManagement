@@ -34,3 +34,42 @@
     <div class="form-text">支持JPG、PNG格式图片</div>
 </div>
 {%- endmacro %}
+
+{% macro navbar(active_page='home') -%}
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{{ url_for('static', filename='icon/物品管理.svg') }}" alt="Logo" height="30" class="me-2">
+            <span>家庭物品管理</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="/">
+                        <i class="fas fa-home me-1"></i>首页
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page == 'figures' %}active{% endif %}" href="/figures">
+                        <i class="fas fa-trophy me-1"></i>手办
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page == 'clothing' %}active{% endif %}" href="/clothing">
+                        <i class="fas fa-tshirt me-1"></i>衣服
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_page == 'goods' %}active{% endif %}" href="/goods">
+                        <i class="fas fa-gift me-1"></i>好物
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{%- endmacro %}

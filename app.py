@@ -2,7 +2,7 @@
 Author: Leili
 Date: 2025-05-18 20:41:27
 LastEditors: Leili
-LastEditTime: 2025-06-16 16:22:39
+LastEditTime: 2025-06-17 18:56:00
 FilePath: /StorageManagement/app.py
 Description: 
 '''
@@ -87,20 +87,24 @@ def check_and_convert_images():
 def home():
     """
     主页路由：展示物品统计概况
+    
+    返回:
+        渲染后的主页模板，包含物品统计数据
     """
     # 自动检查并转换图片
     check_and_convert_images()
     
-    # 加载数据并渲染模板
+    # 加载数据
     figures = load_figures_data()
     clothing = load_clothing_data()
     goods = load_goods_data()
+
     return render_template(
         'index.html',
         total=len(figures) + len(clothing) + len(goods),
         figures_count=len(figures),
         clothing_count=len(clothing),
-        goods_count = len(goods)
+        goods_count=len(goods)
     )
 
 @app.route('/figures')
