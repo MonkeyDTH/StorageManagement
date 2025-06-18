@@ -2,7 +2,7 @@
  * @Author: Leili
  * @Date: 2025-05-18 21:05:15
  * @LastEditors: Leili
- * @LastEditTime: 2025-06-18 14:32:50
+ * @LastEditTime: 2025-06-18 15:07:55
  * @FilePath: /StorageManagement/templates/figures/list.html
  * @Description: 
 -->
@@ -141,6 +141,27 @@
             </div>
         </div>
         
+        <!-- 传递类别统计数据到JavaScript -->
+        <script>
+            // 将后端传递的类别统计数据转换为JavaScript对象
+            const categoryStats = {
+                {% for category, stats in category_stats.items() %}
+                "{{ category }}": {
+                    purchasePrice: {{ stats.purchase_price }},
+                    soldPrice: {{ stats.sold_price }},
+                    count: {{ stats.count }},
+                    soldCount: {{ stats.sold_count }}
+                },
+                {% endfor %}
+                "all": {
+                    purchasePrice: {{ total_stats.total_purchase_price }},
+                    soldPrice: {{ total_stats.total_sold_price }},
+                    count: {{ total_stats.total_count }},
+                    soldCount: {{ total_stats.sold_count }}
+                }
+            };
+        </script>
+
         <!-- 响应式表格 -->
         <div class="table-responsive">
             <table class="table table-striped table-hover bg-white rounded">
