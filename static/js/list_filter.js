@@ -61,6 +61,11 @@ class ListFilterController {
             
             // 应用筛选
             this.applyFilter();
+        } else {
+            // 如果没有保存的筛选设置，但在figures页面且存在categoryStats，也需要初始化价格统计显示
+            if (this.pageType === 'figures' && typeof categoryStats !== 'undefined') {
+                this.updatePriceStats('');
+            }
         }
     }
     
@@ -103,6 +108,83 @@ class ListFilterController {
             this.$noDataMessage.classList.remove('d-none');
         } else {
             this.$noDataMessage.classList.add('d-none');
+        }
+        
+        // 更新价格统计显示（如果在figures页面且存在categoryStats）
+        if (this.pageType === 'figures' && typeof categoryStats !== 'undefined') {
+            this.updatePriceStats(categoryValue);
+        }
+    }
+    
+    /**
+     * 更新价格统计显示
+     * @param {string} category 当前筛选的类别
+     */
+    updatePriceStats(category) {
+        // 获取价格统计显示元素
+        const purchasePriceDisplay = document.getElementById('purchasePriceDisplay');
+        const soldPriceDisplay = document.getElementById('soldPriceDisplay');
+        const profitDisplay = document.getElementById('profitDisplay');
+        const categoryLabel = document.getElementById('categoryLabel');
+        const itemCountDisplay = document.getElementById('itemCountDisplay');
+        const soldCountDisplay = document.getElementById('soldCountDisplay');
+        const profitIconContainer = document.getElementById('profitIconContainer');
+        const profitIcon = document.getElementById('profitIcon');
+        
+        // 如果元素不存在，则返回
+        if (!purchasePriceDisplay || !soldPriceDisplay || !profitDisplay) return;
+        
+        // 确定要显示的统计数据
+        const statsKey = category || 'all';
+        const stats = categoryStats[statsKey] || categoryStats['all'];
+        
+        // 格式化价格显示
+        const formatPrice = (price) => {
+            return new Intl.NumberFormat('zh-CN', { 
+                style: 'currency', 
+                currency: 'CNY',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2 
+            }).format(price).replace('CN¥', '¥');
+        };
+        
+        // 更新价格显示
+        purchasePriceDisplay.textContent = formatPrice(stats.purchasePrice);
+        soldPriceDisplay.textContent = formatPrice(stats.soldPrice);
+        
+        // 计算利润
+        const profit = stats.soldPrice - stats.purchasePrice;
+        const profitText = (profit >= 0 ? '+' : '') + formatPrice(profit);
+        profitDisplay.textContent = profitText;
+        
+        // 更新利润样式
+        profitDisplay.className = 'mb-0 fw-bold ' + (profit >= 0 ? 'profit-positive' : 'profit-negative');
+        profitIconContainer.className = 'stat-icon me-3 ' + 
+            (profit >= 0 ? 'bg-success bg-opacity-10' : 'bg-danger bg-opacity-10');
+        
+        // 更新利润图标
+        profitIcon.className = 'fas fa-chart-line ' + 
+            (profit >= 0 ? 'text-success' : 'text-danger fa-rotate-180');
+        
+        // 更新类别标签
+        if (category) {
+            categoryLabel.textContent = category;
+            categoryLabel.classList.remove('d-none');
+        } else {
+            categoryLabel.classList.add('d-none');
+        }
+        
+        // 更新数量显示
+        if (stats.count > 0) {
+            itemCountDisplay.textContent = `(${stats.count}件)`;
+        } else {
+            itemCountDisplay.textContent = '';
+        }
+        
+        if (stats.soldCount > 0) {
+            soldCountDisplay.textContent = `(${stats.soldCount}件)`;
+        } else {
+            soldCountDisplay.textContent = '';
         }
     }
     
