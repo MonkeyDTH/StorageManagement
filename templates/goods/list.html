@@ -70,6 +70,7 @@
                         <th>子类别</th>
                         <th>购买价格</th>
                         <th>购买日期</th>
+                        <th>状态</th>
                     </tr>
                 </thead>
                 <tbody id="itemsTableBody">
@@ -79,6 +80,19 @@
                         <td>{{ item.category }}</td>
                         <td>¥{{ item.purchase_price }}</td>
                         <td class="no-wrap">{{ item.purchase_date }}</td>
+                        <td>
+                            {% if item.sold_price and item.sold_price == item.sold_price %}
+                            <span class="sold-badge">
+                                已卖出
+                                <div class="sold-tooltip">
+                                    卖出价格: ¥{{ item.sold_price }}<br>
+                                    卖出日期: {{ item.sold_date }}
+                                </div>
+                            </span>
+                            {% else %}
+                            持有中
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

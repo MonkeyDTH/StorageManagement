@@ -40,6 +40,8 @@
                             {{ form_field('purchase_date', '购买日期', 'date') }}
                             {{ form_field('purchase_channel', '购买渠道') }}
                             {{ form_field('remark', '备注') }}
+                            {{ form_field('sold_price', '出售价格', 'number', step='0.01') }}
+                            {{ form_field('sold_date', '出售日期', 'date') }}
                             
                             <div class="d-flex justify-content-end mt-4">
                                 <a href="/goods" class="btn btn-outline-secondary me-2">取消</a>

@@ -46,6 +46,12 @@
                                 {{ display_attrib_filed('购买日期', item.purchase_date) }}
                                 {{ display_attrib_filed('购买渠道', item.purchase_channel) }}
                                 {{ display_attrib_filed('备注', item.remark if item.remark and item.remark == item.remark else '') }}
+                                {% if item.sold_price and item.sold_price == item.sold_price %}
+                                {{ display_attrib_filed('卖出价格', '¥' ~ item.sold_price ) }}
+                                {{ display_attrib_filed('卖出日期', item.sold_date) }}
+                                {% else %}
+                                {{ display_attrib_filed('状态', '持有中'|safe) }}
+                                {% endif %}
                             </ul>
                         </div>
                         
@@ -58,6 +64,8 @@
                             {{ form_field('purchase_date', '购买日期', 'date', item.purchase_date) }}
                             {{ form_field('purchase_channel', '购买渠道', value=item.purchase_channel) }}
                             {{ form_field('remark', '备注', value=item.remark) }}
+                            {{ form_field('sold_price', '出售价格', 'number', item.sold_price) }}
+                            {{ form_field('sold_date', '出售日期', 'date', item.sold_date) }}
                             <div class="d-flex justify-content-end mt-3">
                                 <button type="button" class="btn btn-outline-danger me-2" id="cancelEdit">取消</button>
                                 <button type="submit" class="btn btn-primary">保存</button>
