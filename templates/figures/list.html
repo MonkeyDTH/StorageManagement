@@ -2,7 +2,7 @@
  * @Author: Leili
  * @Date: 2025-05-18 21:05:15
  * @LastEditors: Leili
- * @LastEditTime: 2025-06-27 18:14:41
+ * @LastEditTime: 2025-07-02 17:36:10
  * @FilePath: /StorageManagement/templates/figures/list.html
  * @Description: 
 -->
@@ -87,46 +87,47 @@
         <div class="card shadow-sm mb-4 bg-morandi-blue price-stats-card">
             <div class="card-body py-3">
                 <div class="row align-items-center">
+                    <!-- 持有物品总价 -->
                     <div class="col-md-4 mb-3 mb-md-0">
                         <div class="d-flex align-items-center">
                             <div class="stat-icon me-3 bg-success bg-opacity-10">
-                                <i class="fas fa-money-bill-wave text-success"></i>
+                                <i class="fas fa-boxes text-success"></i>
                             </div>
                             <div>
-                                <h5 class="mb-0">总买入价格 <span id="categoryLabel" class="badge bg-info d-none"></span></h5>
-                                <h3 class="mb-0 fw-bold" id="purchasePriceDisplay">¥{{ '{:,.2f}'.format(total_stats['total_purchase_price']) }}</h3>
-                                <small class="text-muted">包含购买价格和运费 <span id="itemCountDisplay">({{ total_stats['total_count'] }}件)</span></small>
+                                <h5 class="mb-0">持有物品总价 <span id="categoryLabel" class="badge bg-info d-none"></span></h5>
+                                <h3 class="mb-0 fw-bold" id="existingPriceDisplay">¥{{ '{:,.2f}'.format(total_stats['total_purchase_price_existing']) }}</h3>
+                                <small class="text-muted">持有物品数 <span id="existingCountDisplay">({{ total_stats['existing_count'] }}件)</span></small>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- 已出售物品盈亏 -->
                     <div class="col-md-4 mb-3 mb-md-0">
                         <div class="d-flex align-items-center">
-                            <div class="stat-icon me-3 bg-primary bg-opacity-10">
-                                <i class="fas fa-hand-holding-usd text-primary"></i>
+                            {% set profit = total_stats['total_sold_price'] - total_stats['total_purchase_price_sold'] %}
+                            <div id="profitIconContainer" class="stat-icon me-3 {% if profit >= 0 %}bg-success bg-opacity-10{% else %}bg-danger bg-opacity-10{% endif %}">
+                                <i id="profitIcon" class="fas fa-chart-line {% if profit >= 0 %}text-success{% else %}text-danger fa-rotate-180{% endif %}"></i>
                             </div>
                             <div>
-                                <h5 class="mb-0">总卖出价格</h5>
-                                <h3 class="mb-0 fw-bold" id="soldPriceDisplay">¥{{ '{:,.2f}'.format(total_stats['total_sold_price']) }}</h3>
-                                <small class="text-muted">已卖出物品收入 <span id="soldCountDisplay">({{ total_stats['sold_count'] }}件)</span></small>
+                                <h5 class="mb-0">已出售物品盈亏</h5>
+                                <h3 class="mb-0 fw-bold {% if profit >= 0 %}text-success{% else %}text-danger{% endif %}" id="profitDisplay">
+                                    {{ '+' if profit >= 0 else '' }}¥{{ '{:,.2f}'.format(profit) }}
+                                </h3>
+                                <small class="text-muted" id="profitDetail">¥{{ '{:,.2f} - {:,.2f}'.format(total_stats['total_sold_price'], total_stats['total_purchase_price_sold']) }}</small>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- 总投入价格 -->
                     <div class="col-md-4">
                         <div class="d-flex align-items-center">
-                            {% set profit = total_stats['total_sold_price'] - total_stats['total_purchase_price'] %}
-                            <div id="profitIconContainer" class="stat-icon me-3 {% if profit >= 0 %}bg-success bg-opacity-10{% else %}bg-danger bg-opacity-10{% endif %}">
-                                {% if profit >= 0 %}
-                                <i id="profitIcon" class="fas fa-chart-line text-success"></i>
-                                {% else %}
-                                <i id="profitIcon" class="fas fa-chart-line text-danger fa-rotate-180"></i>
-                                {% endif %}
+                            <div class="stat-icon me-3 bg-info bg-opacity-10">
+                                <i class="fas fa-money-bill-wave text-info"></i>
                             </div>
                             <div>
-                                <h5 class="mb-0">盈亏情况</h5>
-                                <h3 class="mb-0 fw-bold" id="profitDisplay" class="{% if profit >= 0 %}profit-positive{% else %}profit-negative{% endif %}">
-                                    {{ '+' if profit >= 0 else '' }}¥{{ '{:,.2f}'.format(profit) }}
-                                </h3>
-                                <small class="text-muted">卖出价格 - 买入价格</small>
+                                <h5 class="mb-0">总投入价格</h5>
+                                <h3 class="mb-0 fw-bold text-info" id="totalPriceDisplay">¥{{ '{:,.2f}'.format(total_stats['total_purchase_price']) }}</h3>
+                                <small class="text-muted">所有物品买入总价 <span id="totalCountDisplay">({{ total_stats['total_count'] }}件)</span></small>
                             </div>
                         </div>
                     </div>
@@ -141,19 +142,26 @@
                 {% for category, stats in category_stats.items() %}
                 "{{ category }}": {
                     purchasePrice: {{ stats.purchase_price }},
+                    purchasePriceExisting: {{ stats.purchase_price_existing }},
+                    purchasePriceSold: {{ stats.purchase_price_sold }},
                     soldPrice: {{ stats.sold_price }},
                     count: {{ stats.count }},
+                    existingCount: {{ stats.existing_count }},
                     soldCount: {{ stats.sold_count }}
                 },
                 {% endfor %}
                 "all": {
                     purchasePrice: {{ total_stats.total_purchase_price }},
+                    purchasePriceExisting: {{ total_stats.total_purchase_price_existing }},
+                    purchasePriceSold: {{ total_stats.total_purchase_price_sold }},
                     soldPrice: {{ total_stats.total_sold_price }},
                     count: {{ total_stats.total_count }},
+                    existingCount: {{ total_stats.existing_count }},
                     soldCount: {{ total_stats.sold_count }}
                 }
             };
         </script>
+        
         <!-- 响应式表格 -->
         <div class="table-responsive">
             <table class="table table-striped table-hover bg-white rounded">

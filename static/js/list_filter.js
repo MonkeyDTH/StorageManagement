@@ -23,7 +23,18 @@ class ListFilterController {
         this.$tableBody = document.getElementById('itemsTableBody');
         this.$noDataMessage = document.getElementById('noDataMessage');
         
-        // 获取当前页面类型（figures或clothing）
+        // 获取统计显示元素
+        this.$categoryLabel = document.getElementById('categoryLabel');
+        this.$existingPriceDisplay = document.getElementById('existingPriceDisplay');
+        this.$existingCountDisplay = document.getElementById('existingCountDisplay');
+        this.$profitDisplay = document.getElementById('profitDisplay');
+        this.$profitDetail = document.getElementById('profitDetail');
+        this.$profitIcon = document.getElementById('profitIcon');
+        this.$profitIconContainer = document.getElementById('profitIconContainer');
+        this.$totalPriceDisplay = document.getElementById('totalPriceDisplay');
+        this.$totalCountDisplay = document.getElementById('totalCountDisplay');
+        
+        // 获取当前页面类型(figures或clothing)
         this.pageType = window.location.pathname.split('/')[1] || '';
         
         // 绑定事件
@@ -62,10 +73,8 @@ class ListFilterController {
             // 应用筛选
             this.applyFilter();
         } else {
-            // 如果没有保存的筛选设置，但在figures页面且存在categoryStats，也需要初始化价格统计显示
-            if (this.pageType === 'figures' && typeof categoryStats !== 'undefined') {
-                this.updatePriceStats('');
-            }
+            // 如果没有保存的筛选设置，显示全部数据的统计
+            this.updateStatsDisplay('');
         }
     }
     
@@ -91,7 +100,7 @@ class ListFilterController {
         rows.forEach(row => {
             const rowCategory = row.getAttribute('data-category');
             
-            // 如果没有选择类别或类别匹配，则显示行
+            // 如果没有选择类别或类别匹配,则显示行
             if (!categoryValue || rowCategory === categoryValue) {
                 row.classList.remove('d-none');
                 visibleCount++;
@@ -110,29 +119,17 @@ class ListFilterController {
             this.$noDataMessage.classList.add('d-none');
         }
         
-        // 更新价格统计显示（如果在figures页面且存在categoryStats）
-        if (this.pageType === 'figures' && typeof categoryStats !== 'undefined') {
-            this.updatePriceStats(categoryValue);
-        }
+        // 更新统计信息显示
+        this.updateStatsDisplay(categoryValue);
     }
     
     /**
-     * 更新价格统计显示
+     * 更新统计信息显示
      * @param {string} category 当前筛选的类别
      */
-    updatePriceStats(category) {
-        // 获取价格统计显示元素
-        const purchasePriceDisplay = document.getElementById('purchasePriceDisplay');
-        const soldPriceDisplay = document.getElementById('soldPriceDisplay');
-        const profitDisplay = document.getElementById('profitDisplay');
-        const categoryLabel = document.getElementById('categoryLabel');
-        const itemCountDisplay = document.getElementById('itemCountDisplay');
-        const soldCountDisplay = document.getElementById('soldCountDisplay');
-        const profitIconContainer = document.getElementById('profitIconContainer');
-        const profitIcon = document.getElementById('profitIcon');
-        
-        // 如果元素不存在，则返回
-        if (!purchasePriceDisplay || !soldPriceDisplay || !profitDisplay) return;
+    updateStatsDisplay(category) {
+        // 如果统计元素不存在，则返回
+        if (!this.$existingPriceDisplay || typeof categoryStats === 'undefined') return;
         
         // 确定要显示的统计数据
         const statsKey = category || 'all';
@@ -140,51 +137,66 @@ class ListFilterController {
         
         // 格式化价格显示
         const formatPrice = (price) => {
-            return new Intl.NumberFormat('zh-CN', { 
-                style: 'currency', 
-                currency: 'CNY',
+            return '¥' + price.toLocaleString('zh-CN', { 
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2 
-            }).format(price).replace('CN¥', '¥');
+            });
         };
         
-        // 更新价格显示
-        purchasePriceDisplay.textContent = formatPrice(stats.purchasePrice);
-        soldPriceDisplay.textContent = formatPrice(stats.soldPrice);
-        
-        // 计算利润
-        const profit = stats.soldPrice - stats.purchasePrice;
-        const profitText = (profit >= 0 ? '+' : '') + formatPrice(profit);
-        profitDisplay.textContent = profitText;
-        
-        // 更新利润样式
-        profitDisplay.className = 'mb-0 fw-bold ' + (profit >= 0 ? 'profit-positive' : 'profit-negative');
-        profitIconContainer.className = 'stat-icon me-3 ' + 
-            (profit >= 0 ? 'bg-success bg-opacity-10' : 'bg-danger bg-opacity-10');
-        
-        // 更新利润图标
-        profitIcon.className = 'fas fa-chart-line ' + 
-            (profit >= 0 ? 'text-success' : 'text-danger fa-rotate-180');
-        
         // 更新类别标签
-        if (category) {
-            categoryLabel.textContent = category;
-            categoryLabel.classList.remove('d-none');
-        } else {
-            categoryLabel.classList.add('d-none');
+        if (category && this.$categoryLabel) {
+            this.$categoryLabel.textContent = category;
+            this.$categoryLabel.classList.remove('d-none');
+        } else if (this.$categoryLabel) {
+            this.$categoryLabel.classList.add('d-none');
         }
         
-        // 更新数量显示
-        if (stats.count > 0) {
-            itemCountDisplay.textContent = `(${stats.count}件)`;
-        } else {
-            itemCountDisplay.textContent = '';
+        // 更新持有物品统计
+        if (this.$existingPriceDisplay && stats.purchasePriceExisting !== undefined) {
+            this.$existingPriceDisplay.textContent = formatPrice(stats.purchasePriceExisting);
+        }
+        if (this.$existingCountDisplay && stats.existingCount !== undefined) {
+            this.$existingCountDisplay.textContent = `(${stats.existingCount}件)`;
         }
         
-        if (stats.soldCount > 0) {
-            soldCountDisplay.textContent = `(${stats.soldCount}件)`;
-        } else {
-            soldCountDisplay.textContent = '';
+        // 计算并更新盈亏统计
+        if (this.$profitDisplay && stats.soldPrice !== undefined && stats.purchasePriceSold !== undefined) {
+            const profit = stats.soldPrice - stats.purchasePriceSold;
+            const profitText = (profit >= 0 ? '+' : '') + formatPrice(profit);
+            this.$profitDisplay.textContent = profitText;
+            
+            // 更新盈亏样式和图标
+            if (profit >= 0) {
+                this.$profitDisplay.className = 'mb-0 fw-bold text-success';
+                if (this.$profitIcon) {
+                    this.$profitIcon.className = 'fas fa-chart-line text-success';
+                }
+                if (this.$profitIconContainer) {
+                    this.$profitIconContainer.className = 'stat-icon me-3 bg-success bg-opacity-10';
+                }
+            } else {
+                this.$profitDisplay.className = 'mb-0 fw-bold text-danger';
+                if (this.$profitIcon) {
+                    this.$profitIcon.className = 'fas fa-chart-line text-danger fa-rotate-180';
+                }
+                if (this.$profitIconContainer) {
+                    this.$profitIconContainer.className = 'stat-icon me-3 bg-danger bg-opacity-10';
+                }
+            }
+            
+            // 更新盈亏详情
+            if (this.$profitDetail) {
+                this.$profitDetail.textContent = 
+                    formatPrice(stats.soldPrice) + ' - ' + formatPrice(stats.purchasePriceSold);
+            }
+        }
+        
+        // 更新总投入统计
+        if (this.$totalPriceDisplay && stats.purchasePrice !== undefined) {
+            this.$totalPriceDisplay.textContent = formatPrice(stats.purchasePrice);
+        }
+        if (this.$totalCountDisplay && stats.count !== undefined) {
+            this.$totalCountDisplay.textContent = `(${stats.count}件)`;
         }
     }
     
@@ -218,7 +230,7 @@ class ListFilterController {
             localStorage.removeItem(`${this.pageType}_category_filter`);
         }
         
-        // 重新应用筛选（实际上是显示所有行）
+        // 重新应用筛选(实际上是显示所有行)
         this.applyFilter();
     }
 }
